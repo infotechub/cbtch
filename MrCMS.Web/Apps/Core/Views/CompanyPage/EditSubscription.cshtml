@@ -1,0 +1,166 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.Subscription
+@{
+    ViewBag.Title = "Edit subscription";
+}
+ @helper DateShort(DateTime? input)
+{
+     var resp = Convert.ToDateTime(input).ToString("dd/MM/yyyy");
+
+@resp;
+ }
+
+@using (Html.BeginForm("EditSubscription","CompanyPage",FormMethod.Post,new {@id="Subscriptionform"}))
+    {
+      
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Edit subscription </h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.HiddenFor(x=>x.Id)
+        @Html.Label("Subscription Code")
+        @Html.TextBox( "subCode",Model.SubscriptionCode, new { @class = "form-control",@placeholder="Staff Full Name",@readonly="true" })
+        @Html.ValidationMessageFor(x=>x.SubscriptionCode )
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Company")
+                @Html.DropDownListFor(x=>x.CompanyId,new SelectList(ViewBag.CompanyList, "Id", "Name",Model.CompanyId),new { @class = "form-control",@id="CompanyId",@onchange= "SelectChangeSubsidiary(this)" })
+                @Html.ValidationMessageFor(x=>x.CompanyId)
+        
+    </div>
+    <div class="form-group" >
+        @Html.Label("SubsidiaryID")
+
+        @Html.DropDownList("SubsidiaryID", new SelectList(ViewBag.SubsidiaryList, "Value", "Text", Model.Subsidiary.Id) , new { @class = "form-control", @id = "SubsidiaryID"})
+    </div>
+    <div class="form-group">
+        @Html.Label("Subscription Plan(s)")
+                @Html.ListBox("Planid",ViewBag.subplansbag as MultiSelectList,
+                                  new { @class = "form-control chzn-select", data_placeholder = "Choose  Plans..."  })
+                @Html.ValidationMessageFor(x=>x.Companyplans)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Start Date")
+
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+
+                    @Html.TextBox("startdate", DateShort(Model.Startdate)
+                     , new { @class = "form-control",@placeholder= "DD/MM/YYYY" })
+                @Html.ValidationMessageFor(x=>x.Startdate)
+                </div>
+        <!-- /.input group -->
+    </div>
+
+
+    <div class="form-group">
+        @Html.Label("Duration")
+        @Html.DropDownListFor(x=>x.Duration,new SelectList(ViewBag.Durationbag, "Id", "Name",Model.Duration),new { @class = "form-control",@id="Duration"})
+      
+    </div>
+
+
+    <div class="form-group">
+        @Html.Label("End Date")
+
+        <div class="input-group date">
+            <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </div>
+
+            @Html.TextBox("enddate", DateShort(Model.Expirationdate)
+                     , new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+            @Html.ValidationMessageFor(x => x.Expirationdate)
+
+        </div>
+        <!-- /.input group -->
+    </div>
+    <div class="form-group">
+        @Html.Label("Note")
+                @Html.TextAreaFor( x=>x.Note, new { @class = "form-control",@placeholder="Note" })
+               
+        
+    </div>
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="button" id="btnSave" onclick="">Save </button>
+</div>
+
+}
+
+<script>
+    //SelectChange(document.getElementById("CompanyId"));
+    $(function () {
+
+        $('#startdate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+
+        $('#enddate').datepicker({
+
+
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+
+        $('#startdate').datepicker().on('changeDate', function (ev) {
+            $("#Duration").val("-1");
+            $('#enddate').val('');
+        });
+
+        $("#Duration").change(function () {
+            var currentDate = moment($('#startdate').val(), "DD/MM/YYYY");
+            if ($("#Duration").val() == 0) {
+                $('#enddate').val(moment(currentDate).add(3, 'M').subtract(1, 'days').format("DD/MM/YYYY"));
+            }
+            if ($("#Duration").val() == 1) {
+                $('#enddate').val(moment(currentDate).add(6, 'M').subtract(1, 'days').format("DD/MM/YYYY"));
+            }
+            if ($("#Duration").val() == 2) {
+                $('#enddate').val(moment(currentDate).add(12, 'M').subtract(1, 'days').format("DD/MM/YYYY"));
+            }
+        });
+        $("#modal-container").delegate("#btnSave", "click", function () {
+
+            if ($('#startdate').val() == '') {
+                $('#startdate').notify("You have to enter start date", "error");
+                $('#startdate').focus();
+                return false;
+
+            }
+
+            if ($('#enddate').val() == '') {
+                $('#enddate').notify("You have to enter end date", "error");
+                $('#enddate').focus();
+                return false;
+
+            }
+
+
+
+
+            editSubscription();
+
+
+        });
+
+    });
+
+
+</script>
+
+
+

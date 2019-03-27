@@ -1,0 +1,11 @@
+﻿@model MrCMS.Web.Apps.Faqs.Pages.ShowFaqs
+@Editable(Model, faqs => faqs.BodyContent, true)
+<div class="list-group">
+    @foreach (var faq in Model.Faqs)
+    {
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">@faq.Question</h4>
+            <p class="list-group-item-text">@Html.Raw(faq.Answer)</p>
+        </div>
+    }
+</div>

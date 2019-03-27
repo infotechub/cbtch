@@ -1,0 +1,243 @@
+﻿@model MrCMS.Web.Apps.Core.Models.Provider.ProviderVm
+
+@{
+    ViewBag.Title = "Provider Details";
+}
+
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Provider Details</h4>
+ </div>
+<div class="modal-body">
+    <div class="callout-info callout ">
+        <h4>DETAILS FOR  @Html.DisplayFor(x=>x.Name) .</h4>
+        <p>Has a total of @Html.DisplayFor(x=>x.Numberofenrollees) enrollee.</p>
+    </div>
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="false">Details</a></li>
+            <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="true">Services & Opening Hours</a></li>
+
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane  active" id="tab_1">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        <tr>
+
+                            <th>Field</th>
+                            <th>Value</th>
+
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>@Html.DisplayFor(x => x.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Code</td>
+                            <td>@Html.DisplayFor(x => x.Code)</td>
+                        </tr>
+                        <tr>
+                            <td>Subcode</td>
+                            <td>@Html.DisplayFor(x => x.SubCode)</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>@Html.DisplayFor(x => x.Email)</td>
+                        </tr>
+
+                        <tr>
+                            <td>Phone</td>
+                            <td>@Html.DisplayFor(x => x.Phone)</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile</td>
+                            <td>@Html.DisplayFor(x => x.Phone2)</td>
+                        </tr>
+                        <tr>
+                            <td>Website</td>
+                            <td>@Html.DisplayFor(x => x.Website)</td>
+                        </tr>
+                        <tr>
+                            <td>Zone</td>
+                            <td>@Html.DisplayFor(x => x.Zone)</td>
+                        </tr>
+                        <tr>
+                            <td>State</td>
+                            <td>@Html.DisplayFor(x => x.State.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>LGA</td>
+                            <td>@Html.DisplayFor(x => x.Lganame)</td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td>@Html.DisplayFor(x => x.Address)</td>
+                        </tr>
+                        <tr>
+                            <td>Services</td>
+                            <td>@Html.DisplayFor(x => x.Providerservices)</td>
+                        </tr>
+                        <tr>
+                            <td>Area</td>
+                            <td>@Html.DisplayFor(x => x.Area)</td>
+                        </tr>
+                        <tr>
+                            <td>Plans</td>
+                            <td>@Html.DisplayFor(x => x.Providerplans)</td>
+                        </tr>
+                        <tr>
+                            <td>Tariffs</td>
+                            <td>@Html.DisplayFor(x => x.ProviderTariffs)</td>
+                        </tr>
+                     
+                      
+                        <tr>
+                            <td>Category</td>
+                            <td>@Html.DisplayFor(x => x.CategoryString)</td>
+                        </tr>
+                        <tr>
+                            <td>Bank Account Details</td>
+                            <td>
+
+                                <table class="table table-condensed table-striped">
+                                    <tr>
+                                        <td>Provider Bank Name</td>
+                                        <td>@Html.DisplayFor(x => x.BankName)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Account Name</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount.Bankaccountname)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Account Number</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount.Bankaccountnum)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Branch</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount.Bankbranch)</td>
+                                    </tr>
+                                </table>
+
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bank Account Details</td>
+                            <td>
+
+                                <table class="table table-condensed table-striped">
+                                    <tr>
+                                        <td>Provider Bank Name</td>
+                                        <td>@Html.DisplayFor(x => x.BankName2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Account Name</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount2.Bankaccountname)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Account Number</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount2.Bankaccountnum)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Branch</td>
+                                        <td>@Html.DisplayFor(x => x.Provideraccount2.Bankbranch)</td>
+                                    </tr>
+                                </table>
+
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Additional Details</td>
+                            <td>
+
+                                <table class="table table-condensed table-striped">
+                                    <tr>
+                                        <td>Created By</td>
+                                        <td>@Html.DisplayFor(x => x.CreatedBy)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created On</td>
+                                        <td>@Html.DisplayFor(x => x.CreatedDate)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Authorization Status</td>
+                                        <td>@Html.DisplayFor(x => x.AuthorizationStatusStr)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Authorized By</td>
+                                        <td>@Html.DisplayFor(x => x.AuthorizedByString)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Authorization Date</td>
+                                        <td>@Html.DisplayFor(x => x.AuthorizedDate)</td>
+                                    </tr>
+                                </table>
+
+
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_2">
+                <table class="table table-responsive">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Open Hours</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @{
+                            if (Model.services != null)
+                            {
+                                foreach (var item in Model.services)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.OpeningDays</td>
+                                    </tr>
+                                }
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.tab-pane -->
+           
+            <!-- /.tab-pane -->
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- nav-tabs-custom -->
+
+
+</div>
+
+
+<div class="modal-footer">
+    <button data-dismiss="modal" class="btn btn-default pull-right modal-close-btn" type="button">Close</button>
+</div>
+
+
+
+<script>
+
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

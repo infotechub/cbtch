@@ -1,0 +1,85 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.Staff
+@{
+    ViewBag.Title = "Add new Benefit";
+}
+ 
+
+@using (Html.BeginForm("AddStaff","CompanyPage",FormMethod.Post,new {@id="Staffform"}))
+    {
+      
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Add new staff </h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.Label("Company")
+        @Html.DropDownListFor(x=>x.CompanyId,new SelectList(ViewBag.CompanyList, "Id", "Name"),new { @class = "form-control",@id="CompanyId",@onchange="SelectChange(this)"})
+        @Html.ValidationMessageFor(x=>x.CompanyId)
+        
+    </div>
+ <div class="form-group">
+        @Html.Label("Subsidiary")
+       @Html.DropDownListFor(x=>x.CompanySubsidiary,new SelectList(ViewBag.SubsidiaryList, "Id", "Name"),new { @class = "form-control",@id="CompanySubsidiary"})
+        @Html.ValidationMessageFor(x=>x.CompanySubsidiary)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Staff Full Name")
+@Html.TextBoxFor( x=>x.StaffFullname, new { @class = "form-control",@placeholder="Staff Full Name" })
+@Html.ValidationMessageFor(x=>x.StaffFullname)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Staff Id (Optional)")
+        @Html.TextBoxFor(x => x.StaffId, new { @class = "form-control", @placeholder = "Staff ID" })
+        @Html.ValidationMessageFor(x => x.StaffId)
+
+    </div>
+    <div class="form-group">
+        @Html.Label("Plan")
+       @Html.DropDownListFor(x=>x.StaffPlanid,new SelectList(ViewBag.PlanList, "Id", "Name"),new { @class = "form-control",@id="Planid"})
+     
+        
+    </div>
+
+  
+        
+        <div class="input-group">
+          @Html.Label("Override staff name check")
+            <span class="input-group-addon">
+                <input type="checkbox" id="overridenamecheck" name="overridenamecheck" >
+            </span>
+        </div>
+      
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="button" id="btnSave" onclick="addStaff()">Save </button>
+</div>
+
+}
+
+<script>
+    SelectChange(document.getElementById("CompanyId"));
+    $(function () {
+        
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+   
+          
+
+        });
+
+
+    });
+
+
+</script>
+
+
+

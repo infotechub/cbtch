@@ -1,0 +1,222 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.HomePage
+@using MrCMS.Web.Apps.Core.Utility
+@{
+    ViewBag.Title = "Home  Page";
+
+}
+<div class="col-lg-12">
+   
+
+
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-aqua">
+                        <span class="info-box-icon"><i class="fa fa-hospital-o"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Providers</span>
+                            <span class="info-box-number">@ViewBag.ProviderCount</span>
+
+                        </div><!-- /.info-box-content -->
+                    </div><!-- /.info-box -->
+                </div><!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-green">
+                        <span class="info-box-icon"><i class="fa fa-building"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Clients</span>
+                            <span class="info-box-number">@ViewBag.CompanyCount</span>
+
+                        </div><!-- /.info-box-content -->
+                    </div><!-- /.info-box -->
+                </div><!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-maroon">
+                        <span class="info-box-icon"><i class="fa fa-user"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Enrollee's</span>
+                            <span class="info-box-number">@ViewBag.EnrolleeCount</span>
+
+                        </div><!-- /.info-box-content -->
+                    </div><!-- /.info-box -->
+                </div><!-- /.col -->
+
+                <div class="col-md-3 col-sm-6 col-xs-12 col-lg-3">
+                    <div class="info-box bg-red">
+                        <span class="info-box-icon"><i class="fa fa-bed"></i></span>
+                        <div class="info-box-content" title="@ViewBag.plannara">
+                            <span class="info-box-text">On Admission this week</span>
+
+                            <span class="info-box-number" >@ViewBag.AdmissionCount</span>
+
+                        </div><!-- /.info-box-content -->
+                    </div><!-- /.info-box -->
+                </div><!-- /.col -->
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="box box-solid bg-green-gradient">
+                        <div class="box-header ui-sortable-handle" style="cursor: move;">
+                            <i class="fa fa-calendar"></i>
+                            <h3 class="box-title">Calendar</h3>
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <!-- button with a dropdown -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Add new event</a></li>
+                                        <li><a href="#">Clear events</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">View calendar</a></li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="btn btn-success btn-sm" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm" data-widget="remove">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <!-- /. tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <!--The calendar -->
+                            <div id="calendar" style="width: 100%"></div>
+                        </div>
+                        <!-- /.box-body -->
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <!-- Custom Tabs (Pulled to the right) -->
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs pull-left">
+                            <li class="active" id="clickk"><a href="#tab_1-1" data-toggle="tab">Monthly Company Utilization</a></li>
+                            <li><a href="#tab_2-2" id="clickk2" data-toggle="tab">Monthly Provider Utilization</a></li>
+                        
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1-1">
+                                <canvas id="pieChart" style="height:250px"></canvas>
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane " id="tab_2-2">
+                                <canvas id="pieChart2" style="height:250px"></canvas>
+                            </div>
+                            <!-- /.tab-pane -->
+                          
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div>
+                    <!-- nav-tabs-custom -->
+                </div>
+ 
+
+
+                
+
+            </div>
+    
+</div>
+
+
+<script>
+    $(function () {
+
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            pieChart.Doughnut(PieData, pieOptions);
+            pieChart2.Doughnut(PieData2, pieOptions);
+        });
+        // The Calender
+        $('#calendar').datepicker("setDate", new Date());
+    
+        
+        // Get context with jQuery - using jQuery's .get() method.
+        var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+        var pieChart = new Chart(pieChartCanvas);
+
+        var pieChartCanvas2 = $("#pieChart2").get(0).getContext("2d");
+        var pieChart2 = new Chart(pieChartCanvas2);
+
+        var PieData = [
+
+            @{
+                foreach(var item in (List<homechart>)ViewBag.utilReport)
+                {
+  <text>
+            {
+                value: @item.value,
+                color: "@item.color",
+                highlight: "@item.highlight",
+                label: "@item.label"
+            },
+            </text>
+                }
+            }
+
+        ];
+
+
+
+
+        var PieData2 = [
+
+        @{
+            foreach(var item in (List<homechart>)ViewBag.utilHReport)
+                {
+                    <text>
+                              {
+                                  value: @item.value,
+                                  color: "@item.color",
+                                  highlight: "@item.highlight",
+                                  label: "@item.label"
+                              },
+                              </text>
+                }
+            }
+
+        ];
+        var pieOptions = {
+            //Boolean - Whether we should show a stroke on each segment
+            segmentShowStroke: true,
+            //String - The colour of each segment stroke
+            segmentStrokeColor: "#fff",
+            //Number - The width of each segment stroke
+            segmentStrokeWidth: 2,
+            //Number - The percentage of the chart that we cut out of the middle
+            percentageInnerCutout: 50, // This is 0 for Pie charts
+            //Number - Amount of animation steps
+            animationSteps: 100,
+            //String - Animation easing effect
+            animationEasing: "easeOutBounce",
+            //Boolean - Whether we animate the rotation of the Doughnut
+            animateRotate: true,
+            //Boolean - Whether we animate scaling the Doughnut from the centre
+            animateScale: false,
+            //Boolean - whether to make the chart responsive to window resizing
+            responsive: true,
+            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+            maintainAspectRatio: true,
+            //String - A legend template
+            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+        };
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        
+
+        pieChart2.Doughnut(PieData2, pieOptions);
+        pieChart.Doughnut(PieData, pieOptions);
+    });
+
+</script>

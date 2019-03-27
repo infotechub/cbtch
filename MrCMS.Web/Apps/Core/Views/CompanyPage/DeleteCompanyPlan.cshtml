@@ -1,0 +1,62 @@
+﻿@model MrCMS.Web.Apps.Core.Entities.CompanyPlan
+
+@{
+    ViewBag.Title = "Delete company plan";
+}
+
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Delete company plan</h4>
+ </div>
+<div class="modal-body">
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+        Are you sure you want to delete the company plan?
+    </div>
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+
+                <th>Field</th>
+                <th>Value</th>
+
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>@Html.DisplayFor(x=>x.Planfriendlyname)</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>@Html.DisplayFor(x=>x.Description)</td>
+            </tr>
+       
+
+
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal-footer">
+    @using (Html.BeginForm("DeleteCompanyPlan","CompanyPage",FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+@Html.HiddenFor(x=>x.Id)
+
+                <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-success" type="submit" id="btnSave">Confirm </button>
+    }
+</div>
+
+
+
+<script>
+
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

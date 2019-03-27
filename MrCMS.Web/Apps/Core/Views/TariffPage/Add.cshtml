@@ -1,0 +1,77 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.Tariff
+@{
+    ViewBag.Title = "Add Tariff";
+}
+ 
+
+@using (Html.BeginForm("Add","TariffPage",FormMethod.Post))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Add new Tariff</h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+         @Html.Label("Tariff Name")
+@Html.TextBoxFor( x=>x.Name, new { @class = "form-control",@placeholder="Tariff Name" })
+@Html.ValidationMessageFor(x=>x.Name)
+        
+    </div>
+ 
+ <div class="form-group">
+        @Html.Label("Tariff Description")
+@Html.TextBoxFor( x=>x.Description, new { @class = "form-control",@placeholder="Tariff Description" })
+@Html.ValidationMessageFor(x=>x.Description)
+        
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Assign To Provider")
+    
+        @Html.DropDownListFor(x=>x.defaultProvider,(SelectList)ViewBag.providerlistsss, new { @class = "form-control chosen-select", @id = "providerlistsss", @multiple =""})
+      
+
+
+    </div>
+    <div class="form-group">
+        @Html.Label("Tariff Status")
+        @Html.CheckBoxFor(x => x.Status)
+
+
+    </div>
+</div>
+        <div class="modal-footer">
+            
+            <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit" id="btnSave">Save </button>
+        </div>
+
+}
+
+<script>
+
+    $(function () {
+        $('#modal-container').on('shown.bs.modal', function () {
+            $("#providerlistsss").chosen({
+                no_results_text: "Oops, nothing found!",
+                width: '100%',
+                max_shown_results: 10,
+                max_selected_options: 1,
+
+            });
+        });
+
+//Do validation for yourself.
+        $('#btnSave').click(function (e) {
+           
+            $('#modal-container').modal('hide');
+        });
+        
+        
+    });
+</script>
+
+
+

@@ -1,0 +1,97 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.CompanyPlan
+@{
+    ViewBag.Title = "Add Company Plan";
+}
+ 
+
+@using (Html.BeginForm("AddCompanyPlan","CompanyPage",FormMethod.Post,new {@id="CompanyPlanform"}))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Add new company plan</h4>
+ </div>
+<div class="modal-body">
+
+    <div class="form-group">
+        @Html.Label("Company")
+                @Html.DropDownList("companyList",new SelectList( ViewBag.Companylistbag, "Id", "Name"),new { @class = "form-control",@id="companyList"})
+        
+    </div>
+
+
+    <div class="form-group">
+        @Html.Label("Plan Type")
+        @Html.DropDownList("PlanType",new SelectList( ViewBag.PlanTypeList, "Id", "Name"),new { @class = "form-control",@id="PlanType"})
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Company Plan Name")
+                @Html.TextBoxFor( x=>x.Planfriendlyname, new { @class = "form-control",@placeholder="Company Plan Name" })
+                  @Html.ValidationMessageFor(x=>x.Planfriendlyname)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Description")
+        @Html.TextBoxFor( x=>x.Description, new { @class = "form-control",@placeholder="Company Plan Description" })
+        @Html.ValidationMessageFor(x=>x.Description)
+        
+    </div>
+  
+ <div class="form-group">
+        @Html.Label("Annual Premium Price")
+        @Html.TextBox("AnnualPremium",0.00, new { @class = "form-control",@placeholder="0.00",@type="number" })
+        @Html.ValidationMessageFor(x=>x.AnnualPremium)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Discount Per Enrollee")
+        @Html.TextBox("discountEnrollee",0.00, new { @class = "form-control",@placeholder="0.00",@type="number" })
+        @Html.ValidationMessageFor(x=>x.Discountperenrollee)
+        
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Discount On Total")
+        @Html.TextBox("discountLump",0.00, new { @class = "form-control",@placeholder="0.00",@type="number" })
+        @Html.ValidationMessageFor(x=>x.Discountlump)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Allow Dependant Enrollee")
+        @Html.CheckBoxFor(x=>x.AllowChildEnrollee)
+      
+        
+    </div>
+    
+  
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+     <button class="btn btn-primary" type="button" id="btnSave" onclick="addCompanyPlan()">Save </button>
+</div>
+
+}
+
+<script>
+
+    $(function () {
+
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+
+
+
+
+           
+           
+        });
+
+
+    });
+</script>
+
+
+

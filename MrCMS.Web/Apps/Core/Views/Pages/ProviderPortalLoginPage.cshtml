@@ -1,0 +1,74 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Pages
+@model MrCMS.Web.Apps.Core.Pages.ProviderPortalLoginPage
+  @using (Html.BeginForm("ProviderPortalLogin", "ProviderPage", FormMethod.Post))
+  {
+      <section class="section-account">
+			
+          <div class="spacer"></div>
+          <div class="card contain-sm style-transparent">
+              <div class="card-body" style="background-color: white">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="row">
+                              <div class="col-3">
+                                  <img src="~/Apps/../Apps/Core/Content/Images/logo.png" alt="Smiley face" height="52" width="300"> 
+                                  
+                              </div>
+                              <div class="col-lg-9">
+                                  <h2>Provider Portal Login</h2>
+                              </div>
+                          </div>
+                          <div>
+                              <p>Kindly fill the form to login.</p>
+                              <br/>
+                              <div>
+                                  <div class="form-group">
+                                      <b>Unique Provider Number (UPN)</b>
+                                  @Html.TextBox("Providercode",null, new { @class = "form-control",@placeholder="Enter Provider Number...",@id="providercode" })
+               
+                                  </div>
+                                  <div class="form-group">
+                                      <b>Password</b>
+                                             @Html.Password("password",null, new { @class = "form-control"})
+               
+                                  </div>
+
+                                  <div class="form-group">
+                                      <b>User Role</b>
+                                      <select class="form-control input-lg" id="userrole" name="userrole">
+                                          <option value="1">Front Desk</option>
+                                          <option value="2">Billing Desk</option>
+                                      </select>
+                                  </div>
+                                
+
+                                  <div class="col-xs-12 text-right ">
+                                        
+                                      <button type="submit" value="Proceed" class="btn btn-primary btn-raised"><span class="glyphicon glyphicon-ok"></span> Proceed</button>
+                                  </div><!--end .col -->
+                              </div>
+
+                          </div>
+                      </div><!--end .col -->
+                     
+                  </div><!--end .row -->
+                  @if (!String.IsNullOrEmpty((string)Session["ErrormessageProviderPortalLogin"]))
+                  {
+
+                      <br />
+                      <br />
+                      <div class="alert alert-danger">@Convert.ToString(Session["ErrormessageProviderPortalLogin"]) </div>
+
+
+                      
+                          Session["ErrormessageProviderPortalLogin"] = string.Empty;
+                      
+                  }
+              </div><!--end .card-body -->
+          </div><!--end .card -->
+
+
+      </section>
+
+  }

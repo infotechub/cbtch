@@ -1,0 +1,190 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ManageSponsorPage 
+@{
+    ViewBag.Title = "Manage Sponsors List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Manage ConnectCare Sponsors and Beneficiary.</p>
+        </div>
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">ConnectCare Sponsors</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="managesponsors" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Local Id</th>
+                            <th>Sponsor ID</th>
+                            <th>Full name</th>
+                            <th>Policy Number</th>
+                            <th>Gender</th>
+                            <th>Country</th>
+                            <th>State</th>
+                            <th>Addres</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>No of Beneficiary</th>
+                            <th>Data Pushed</th>
+                            <th>Push Date</th>
+                            <th>Date Created</th>
+                            <th></th>
+                            
+                        </tr>
+                    </thead>
+                 
+                   
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+
+       
+
+
+
+     
+
+<script type="text/javascript">
+    $(function () {
+        $('#managesponsors').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "sAjaxSource": '../connectcare/QueryConnectCareSponsors',
+           
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                
+                aoData.push({ "name": "src_policynumber", "value": "" }
+                , { "name": "scr_fullname", "value": "" }
+                , { "name": "scr_senttomatontine", "value": "-1" }
+                , { "name": "scr_useDate", "value": "0" }
+                , { "name": "datepicker", "value": "" }
+                , { "name": "datepicker2", "value": "" }
+                    , { "name": "sSearch", "value": "" }
+                    );
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Sponsor.Id", "bVisible": true },
+                { "mDataProp": "Sponsor.sponsorSTRID" },
+
+                { "mDataProp": "Sponsor.fullname" },
+                  { "mDataProp": "Sponsor.policynumber" },
+                { "mDataProp": "Sponsor.gender" },
+                    { "mDataProp": "Sponsor.country" },
+                 { "mDataProp": "Sponsor.state" },
+                   { "mDataProp": "Sponsor.address" },
+                       { "mDataProp": "Sponsor.email" },
+                        { "mDataProp": "Sponsor.phonenumber" },
+                        { "mDataProp": "benecount" },
+                        { "mDataProp": "Sponsor.pushedtoMatontine" },
+                        { "mDataProp": "Sponsor.pushedDate" },
+                        
+                { "mDataProp": "Sponsor.CreatedOn" },
+                 {
+                     "mRender": function (data, type, row) {
+                         return '<a href="/connectcare/expandsponsor?id=' + row.Sponsor.Id + '" class="btn btn-info btn-flat btn-xs">Manage</a>';
+                     }
+                 }
+            
+            ]
+
+
+        });
+
+
+    });
+</script>
+

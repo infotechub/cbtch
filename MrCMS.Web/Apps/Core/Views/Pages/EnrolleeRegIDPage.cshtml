@@ -1,0 +1,460 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.EnrolleeRegIDPage
+@{
+    ViewBag.Title = "Novo Health Africa Online Enrollment Platform";
+}
+
+<div class="col-md-8" s>
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">Principal</a></li>
+
+            @{
+
+                if (Model.Enrollee.addspouse)
+                {
+                    <li><a href="#tab_2" data-toggle="tab">Spouse</a></li>
+                }
+                if (Model.Enrollee.addchild1)
+                {
+                    <li><a href="#tab_3" data-toggle="tab">Child 1</a></li>
+                }
+
+
+                if (Model.Enrollee.addchild2)
+                {
+                    <li><a href="#tab_4" data-toggle="tab">Child 2</a></li>
+                }
+                if (Model.Enrollee.addchild3)
+                {
+
+                    <li><a href="#tab_5" data-toggle="tab">Child 3</a></li>
+                }
+                if (Model.Enrollee.addchild4)
+                {
+
+                    <li><a href="#tab_6" data-toggle="tab">Child 4</a></li>
+                }
+            }
+          
+
+            <li class="pull-right"><a href="JavaScript:window.print();" class="text-muted"><i class="fa fa-print"></i>Print</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+                <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                    <div class="box-header with-border">
+                        <img class="img-responsive round pull-left" src="http://www.novohubonline.com/content/upload/1/root/novologo_w100_h100.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                        <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                    </div>
+                    <div class="box-body" style="font-size:19px;">
+                        <table class="table">
+                            <tr>
+
+                                <td>
+                                    <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportP" alt="Photo" style="max-height:150px;max-width:150px;">
+                                </td>
+
+                                <td>
+                                    <table class="table">
+                                        <tr>
+                                            <td><b>Name</b></td>
+                                            <td>@Model.Enrollee.Surname.ToUpper()  @Model.Enrollee.Othernames.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Address</b></td>
+                                            <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><b>Company</b></td>
+                                            <td>@ViewBag.companyname.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Staff ID</b></td>
+                                            <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                        </tr>
+
+                                        @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                        {
+                                            <tr>
+                                                <td><b>Policy Number</b></td>
+                                                <td>@Model.Enrollee.Policynumber.ToUpper()</td>
+                                            </tr>
+                                        }
+                                      
+                                        <tr>
+                                            <td><b>Hospital</b></td>
+                                            <td>@Model.Enrollee.Primaryprovider.ToUpper()</td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+
+                    <div class="box-footer text-center">
+                        <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                        <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+
+            @{
+                if (Model.Enrollee.addspouse)
+                {
+                    <div class="tab-pane" id="tab_2">
+                        <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                            <div class="box-header with-border">
+                                <img class="img-responsive round pull-left" src="http://localhost:8812/content/upload/1/root/novologo.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                                <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                            </div>
+                            <div class="box-body" style="font-size:19px;">
+                                <table class="table">
+                                    <tr>
+
+                                        <td>
+                                            <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportS" alt="Photo" style="max-height:150px;max-width:150px;">
+                                        </td>
+
+                                        <td>
+                                            <table class="table">
+                                                <tr>
+                                                    <td><b>Name</b></td>
+                                                    <td>@Model.Enrollee.s_Surname.ToUpper()  @Model.Enrollee.s_Othernames.ToUpper()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Address</b></td>
+                                                    <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><b>Company</b></td>
+                                                    <td>@ViewBag.companyname.ToUpper()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Staff ID</b></td>
+                                                    <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                                </tr>
+                                                @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                                {
+                                                    <tr>
+                                                        <td><b>Policy Number</b></td>
+                                                        <td>@Model.Enrollee.Policynumber.ToUpper()-1</td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td><b>Hospital</b></td>
+                                                    <td>@Model.Enrollee.S_hospital.ToUpper()</td>
+                                                </tr>
+
+                                            </table>
+                                        </td>
+
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+
+                            <div class="box-footer text-center">
+                                <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                                <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+           
+            <!-- /.tab-pane -->
+
+            @{
+                if (Model.Enrollee.addchild1)
+                {
+                    <div class="tab-pane" id="tab_3">
+                        <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                            <div class="box-header with-border">
+                                <img class="img-responsive round pull-left" src="http://localhost:8812/content/upload/1/root/novologo.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                                <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                            </div>
+                            <div class="box-body" style="font-size:19px;">
+                                <table class="table">
+                                    <tr>
+
+                                        <td>
+                                            <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportC1" alt="Photo" style="max-height:150px;max-width:150px;">
+                                        </td>
+
+                                        <td>
+                                            <table class="table">
+                                                <tr>
+                                                    <td><b>Name</b></td>
+                                                    <td>@Model.Enrollee.child1_Surname.ToUpper()  @Model.Enrollee.child1_Othernames.ToUpper()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Address</b></td>
+                                                    <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td><b>Company</b></td>
+                                                    <td>@ViewBag.companyname.ToUpper()</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Staff ID</b></td>
+                                                    <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                                </tr>
+                                                @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                                {
+                                                    <tr>
+                                                        <td><b>Policy Number</b></td>
+                                                        <td>@Model.Enrollee.Policynumber.ToUpper()-2</td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td><b>Hospital</b></td>
+                                                    <td>@Model.Enrollee.child1_hospital.ToUpper()</td>
+                                                </tr>
+
+                                            </table>
+                                        </td>
+
+                                    </tr>
+
+
+                                </table>
+
+                            </div>
+
+                            <div class="box-footer text-center">
+                                <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                                <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+           
+
+
+            @{
+
+                if (Model.Enrollee.addchild2)
+                { <div class="tab-pane" id="tab_4">
+                <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                    <div class="box-header with-border">
+                        <img class="img-responsive round pull-left" src="http://localhost:8812/content/upload/1/root/novologo.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                        <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                    </div>
+                    <div class="box-body" style="font-size:19px;">
+                        <table class="table">
+                            <tr>
+
+                                <td>
+                                    <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportC2" alt="Photo" style="max-height:150px;max-width:150px;">
+                                </td>
+
+                                <td>
+                                    <table class="table">
+                                        <tr>
+                                            <td><b>Name</b></td>
+                                            <td>@Model.Enrollee.child2_Surname.ToUpper()  @Model.Enrollee.child2_Othernames.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Address</b></td>
+                                            <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><b>Company</b></td>
+                                            <td>@ViewBag.companyname.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Staff ID</b></td>
+                                            <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                        </tr>
+                                        @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                        {
+                                            <tr>
+                                                <td><b>Policy Number</b></td>
+                                                <td>@Model.Enrollee.Policynumber.ToUpper()-3</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td><b>Hospital</b></td>
+                                            <td>@Model.Enrollee.child2_hospital.ToUpper()</td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+
+                    <div class="box-footer text-center">
+                        <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                        <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                    </div>
+                </div>
+            </div>
+                }
+            }
+           
+
+            @{ if (Model.Enrollee.addchild3)
+                {  <div class="tab-pane" id="tab_5">
+                <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                    <div class="box-header with-border">
+                        <img class="img-responsive round pull-left" src="http://localhost:8812/content/upload/1/root/novologo.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                        <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                    </div>
+                    <div class="box-body" style="font-size:19px;">
+                        <table class="table">
+                            <tr>
+
+                                <td>
+                                    <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportC3" alt="Photo" style="max-height:150px;max-width:150px;">
+                                </td>
+
+                                <td>
+                                    <table class="table">
+                                        <tr>
+                                            <td><b>Name</b></td>
+                                            <td>@Model.Enrollee.child3_Surname.ToUpper()  @Model.Enrollee.child3_Othernames.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Address</b></td>
+                                            <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><b>Company</b></td>
+                                            <td>@ViewBag.companyname.ToUpper()</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Staff ID</b></td>
+                                            <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                        </tr>
+                                        @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                        {
+                                            <tr>
+                                                <td><b>Policy Number</b></td>
+                                                <td>@Model.Enrollee.Policynumber.ToUpper()-4</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td><b>Hospital</b></td>
+                                            <td>@Model.Enrollee.child3_hospital.ToUpper()</td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+
+                    <div class="box-footer text-center">
+                        <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                        <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                    </div>
+                </div>
+            </div>}
+            }
+          @{
+              if (Model.Enrollee.addchild4)
+              {
+                <div class="tab-pane" id="tab_6">
+                    <div class="box" style="max-height:500px;max-width:600%" id="idcard">
+                        <div class="box-header with-border">
+                            <img class="img-responsive round pull-left" src="http://localhost:8812/content/upload/1/root/novologo.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                            <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+                        </div>
+                        <div class="box-body" style="font-size:19px;">
+                            <table class="table">
+                                <tr>
+
+                                    <td>
+                                        <img class="img-responsive pad" src="data:image/png;base64,@ViewBag.PassportC4" alt="Photo" style="max-height:150px;max-width:150px;">
+                                    </td>
+
+                                    <td>
+                                        <table class="table">
+                                            <tr>
+                                                <td><b>Name</b></td>
+                                                <td>@Model.Enrollee.child4_Surname.ToUpper()  @Model.Enrollee.child4_Othernames.ToUpper()</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Address</b></td>
+                                                <td>@Model.Enrollee.Residentialaddress.ToUpper()</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><b>Company</b></td>
+                                                <td>@ViewBag.companyname.ToUpper()</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Staff ID</b></td>
+                                                <td>@Model.Enrollee.staffid.ToUpper()</td>
+                                            </tr>
+                                            @if (!string.IsNullOrEmpty(Model.Enrollee.Policynumber))
+                                            {
+                                                <tr>
+                                                    <td><b>Policy Number</b></td>
+                                                    <td>@Model.Enrollee.Policynumber.ToUpper()-5</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td><b>Hospital</b></td>
+                                                <td>@Model.Enrollee.child4_hospital.ToUpper()</td>
+                                            </tr>
+
+                                        </table>
+                                    </td>
+
+                                </tr>
+
+
+                            </table>
+
+                        </div>
+
+                        <div class="box-footer text-center">
+                            <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.expirition </b></span><br />
+                            <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                        </div>
+                    </div>
+                </div>
+              }
+        }
+            
+            <!-- /.tab-pane -->
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- nav-tabs-custom -->
+</div>
+
+
+<script>
+    $("body").toggleClass('sidebar-collapse');
+   
+
+
+</script>

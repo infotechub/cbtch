@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.matontine.online:82/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.matontine.online:82/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.matontine.online:82/">
+      <s:element name="SENDINSURDTLS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="psponsordata" type="tns:sponsordata" />
+            <s:element minOccurs="0" maxOccurs="1" name="plstbeneficiarydata" type="tns:ArrayOfBeneficiarydata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="sponsordata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sponsorid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="fullname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecondarySponsor" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="gender" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="zipcode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="occupation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="phonenumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="addon" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Policynumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Instalment" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SponsorStartDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PolicyStartDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PolicyEndDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="Policynotificationconfig" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBeneficiarydata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="beneficiarydata" nillable="true" type="tns:beneficiarydata" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="beneficiarydata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sponsorid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="beneficiaryid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="fullname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateofbirth" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="BeneficiaryStartDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="relationship" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="gender" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="phonenumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="city" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="lga" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="guardianphone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="guardianemail" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="suggestedprovider" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="suggestedplan" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Policynumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="category" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="VerificationStatus" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="addon" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SENDINSURDTLSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SENDINSURDTLSResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SENDVERIFIEDBENDTLS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pbeneficiarydata" type="tns:beneficiarydata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SENDVERIFIEDBENDTLSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SENDVERIFIEDBENDTLSResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RECVPAYMTDTLS">
+        <s:complexType />
+      </s:element>
+      <s:element name="RECVPAYMTDTLSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RECVPAYMTDTLSResult" type="tns:ArrayOfPaymentdata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPaymentdata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="paymentdata" nillable="true" type="tns:paymentdata" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="paymentdata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="sponsorid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="beneficiaryid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="policyid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="paymentid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="amountpaid" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="planpurchased" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="paymentdate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="addon" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SENDPOLICYNUMBER">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="psponsordata" type="tns:sponsordata" />
+            <s:element minOccurs="0" maxOccurs="1" name="plstbeneficiarydata" type="tns:ArrayOfBeneficiarydata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SENDPOLICYNUMBERResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SENDPOLICYNUMBERResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RECVBENDTLS">
+        <s:complexType />
+      </s:element>
+      <s:element name="RECVBENDTLSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RECVBENDTLSResult" type="tns:ArrayOfBeneficiarydata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Preauthorization">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PreauthorizationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PreauthorizationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Transaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="TransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TransactionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SENDINSURDTLSSoapIn">
+    <wsdl:part name="parameters" element="tns:SENDINSURDTLS" />
+  </wsdl:message>
+  <wsdl:message name="SENDINSURDTLSSoapOut">
+    <wsdl:part name="parameters" element="tns:SENDINSURDTLSResponse" />
+  </wsdl:message>
+  <wsdl:message name="SENDVERIFIEDBENDTLSSoapIn">
+    <wsdl:part name="parameters" element="tns:SENDVERIFIEDBENDTLS" />
+  </wsdl:message>
+  <wsdl:message name="SENDVERIFIEDBENDTLSSoapOut">
+    <wsdl:part name="parameters" element="tns:SENDVERIFIEDBENDTLSResponse" />
+  </wsdl:message>
+  <wsdl:message name="RECVPAYMTDTLSSoapIn">
+    <wsdl:part name="parameters" element="tns:RECVPAYMTDTLS" />
+  </wsdl:message>
+  <wsdl:message name="RECVPAYMTDTLSSoapOut">
+    <wsdl:part name="parameters" element="tns:RECVPAYMTDTLSResponse" />
+  </wsdl:message>
+  <wsdl:message name="SENDPOLICYNUMBERSoapIn">
+    <wsdl:part name="parameters" element="tns:SENDPOLICYNUMBER" />
+  </wsdl:message>
+  <wsdl:message name="SENDPOLICYNUMBERSoapOut">
+    <wsdl:part name="parameters" element="tns:SENDPOLICYNUMBERResponse" />
+  </wsdl:message>
+  <wsdl:message name="RECVBENDTLSSoapIn">
+    <wsdl:part name="parameters" element="tns:RECVBENDTLS" />
+  </wsdl:message>
+  <wsdl:message name="RECVBENDTLSSoapOut">
+    <wsdl:part name="parameters" element="tns:RECVBENDTLSResponse" />
+  </wsdl:message>
+  <wsdl:message name="PreauthorizationSoapIn">
+    <wsdl:part name="parameters" element="tns:Preauthorization" />
+  </wsdl:message>
+  <wsdl:message name="PreauthorizationSoapOut">
+    <wsdl:part name="parameters" element="tns:PreauthorizationResponse" />
+  </wsdl:message>
+  <wsdl:message name="TransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:Transaction" />
+  </wsdl:message>
+  <wsdl:message name="TransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="SENDINSURDTLS">
+      <wsdl:input message="tns:SENDINSURDTLSSoapIn" />
+      <wsdl:output message="tns:SENDINSURDTLSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SENDVERIFIEDBENDTLS">
+      <wsdl:input message="tns:SENDVERIFIEDBENDTLSSoapIn" />
+      <wsdl:output message="tns:SENDVERIFIEDBENDTLSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RECVPAYMTDTLS">
+      <wsdl:input message="tns:RECVPAYMTDTLSSoapIn" />
+      <wsdl:output message="tns:RECVPAYMTDTLSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SENDPOLICYNUMBER">
+      <wsdl:input message="tns:SENDPOLICYNUMBERSoapIn" />
+      <wsdl:output message="tns:SENDPOLICYNUMBERSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RECVBENDTLS">
+      <wsdl:input message="tns:RECVBENDTLSSoapIn" />
+      <wsdl:output message="tns:RECVBENDTLSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Preauthorization">
+      <wsdl:input message="tns:PreauthorizationSoapIn" />
+      <wsdl:output message="tns:PreauthorizationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Transaction">
+      <wsdl:input message="tns:TransactionSoapIn" />
+      <wsdl:output message="tns:TransactionSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SENDINSURDTLS">
+      <soap:operation soapAction="http://www.matontine.online:82/SENDINSURDTLS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SENDVERIFIEDBENDTLS">
+      <soap:operation soapAction="http://www.matontine.online:82/SENDVERIFIEDBENDTLS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RECVPAYMTDTLS">
+      <soap:operation soapAction="http://www.matontine.online:82/RECVPAYMTDTLS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SENDPOLICYNUMBER">
+      <soap:operation soapAction="http://www.matontine.online:82/SENDPOLICYNUMBER" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RECVBENDTLS">
+      <soap:operation soapAction="http://www.matontine.online:82/RECVBENDTLS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Preauthorization">
+      <soap:operation soapAction="http://www.matontine.online:82/Preauthorization" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transaction">
+      <soap:operation soapAction="http://www.matontine.online:82/Transaction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SENDINSURDTLS">
+      <soap12:operation soapAction="http://www.matontine.online:82/SENDINSURDTLS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SENDVERIFIEDBENDTLS">
+      <soap12:operation soapAction="http://www.matontine.online:82/SENDVERIFIEDBENDTLS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RECVPAYMTDTLS">
+      <soap12:operation soapAction="http://www.matontine.online:82/RECVPAYMTDTLS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SENDPOLICYNUMBER">
+      <soap12:operation soapAction="http://www.matontine.online:82/SENDPOLICYNUMBER" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RECVBENDTLS">
+      <soap12:operation soapAction="http://www.matontine.online:82/RECVBENDTLS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Preauthorization">
+      <soap12:operation soapAction="http://www.matontine.online:82/Preauthorization" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Transaction">
+      <soap12:operation soapAction="http://www.matontine.online:82/Transaction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://matontine.online:82/WebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://matontine.online:82/WebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

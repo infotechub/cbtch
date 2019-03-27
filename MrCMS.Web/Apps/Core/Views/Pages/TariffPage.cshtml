@@ -1,0 +1,228 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.TariffPage
+@{
+    ViewBag.Title = "Tariff";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+        @input
+    }
+    else
+    {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+        response =
+                "success";
+
+    }
+    else
+    {
+        response = "danger";
+
+    }
+    @response
+}
+
+@helper Showbutton(bool input)
+{
+    const string response = "display:none";
+    if (!input)
+    {
+        @response;
+    }
+    @response;
+}
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            @if (@Model.ShowEditButtonToUser)
+            {
+                <p>Manage  tariff list.Create ,Edit and delete tariff.</p>
+            }
+            else
+            {
+                <p>View provider tariff.</p>
+            }
+
+        </div>
+
+        <a href="@Url.Action("Add", "TariffPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new Tariff</i> </a>
+        <!-- @Html.ActionLink("Add Service", "Add", "TariffPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Tariff List</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="servicelist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Date Created</th>
+                            <th>Created By</th>
+                            <th>Auth Status</th>
+                            <th>Auth By</th>
+                            <th>Auth Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+@{
+    if (Model.ShowEditButtonToUser)
+    {
+        <script>
+            $(function () {
+                window.displayit = 1;
+
+
+
+            });
+
+        </script>
+    }
+    else
+    {
+        <script>
+            $(function () {
+                window.displayit = 0;
+
+
+
+            });
+
+        </script>
+    }
+}
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("#servicelist").delegate(".approvebtn", "click", function (e) {
+
+                swal({
+                    title: "Are you sure?",
+                    text: "You are about to approve this tariff.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            window.location.replace("../Tariff/ApproveTarrif?id=" + $(e.currentTarget).data("id"));
+                        } else {
+                            swal("You changed your mind!");
+                        }
+                    });
+            });
+
+
+            $('#servicelist').dataTable({
+                "sAjaxSource": '../Tariff/GetJson',
+                "bPaginate": true,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                'columnDefs': [{
+                    'targets': 0,
+                    'className': 'mdl-data-table__cell--non-numeric',
+                    'searchable': false,
+                    'orderable': false,
+
+
+                }],
+                fixedHeader: true,
+                "scrollY": '50vh',
+                "scrollX": true,
+                "aoColumns": [
+                    { "mDataProp": "Id", "bVisible": false },
+                    { "mDataProp": "Name" },
+
+                    { "mDataProp": "Description" },
+                    {
+                        "mDataProp": "Status", "mRender": function (data, type, row) {
+                            var response = "";
+                            if (data === 'True') {
+                                response = '<span class="label label-success"> Active</span>';
+                            } else {
+                                response = '<span class="label label-danger"> Inactive</span>';
+                            }
+
+                            return response;
+                        }
+                    },
+                    { "mDataProp": "CreatedDate" },
+                    { "mDataProp": "CreatedBy" },
+                    { "mDataProp": "authstatus" },
+                    { "mDataProp": "authBy" },
+                    { "mDataProp": "AuthorizedDate" },
+
+                    {
+                        "mRender": function (data, type, row) {
+                            if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id == 7371) {
+                                return '<a href="/provider/tarifflistview?id=' + row.Id + '"  class="btn btn-success btn-flat btn-xs">View Content</a> ' + '<a href="/provider/tariffContent?id=' + row.Id + '"  class="btn btn-info btn-flat btn-xs">Edit Content</a>' + '  <a href="/Tariff/Edit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/Tariff/Delete?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>' + ' <button data-id="' + row.Id + '"  class="btn bg-purple btn-flat btn-xs approvebtn"> <i class="fa fa-check" aria-hidden="true"> Approve </i></button>';
+
+
+                            }
+                            else if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id != 7371) {
+                                return '<a href="/provider/tarifflistview?id=' + row.Id + '"  class="btn btn-success btn-flat btn-xs">View Content</a> ' + '<a href="/provider/tariffContent?id=' + row.Id + '"  class="btn btn-info btn-flat btn-xs">Edit Content</a>';
+
+
+                            }
+
+                            else {
+                                return '<a href="/provider/tarifflistview?id=' + row.Id + '"  class="btn btn-info btn-flat btn-xs">View Content</a>';
+                            }
+
+                        }
+                    }
+
+
+
+
+
+                ]
+
+
+            });
+
+        });
+
+
+    </script>
+
+
+
+
+
+

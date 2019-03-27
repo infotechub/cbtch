@@ -1,0 +1,380 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+
+@model MrCMS.Web.Apps.Core.Pages.PaymentBatchListPage
+@{
+    ViewBag.Title = "Payment Batch List";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Create and manage payment batch.</p>
+        </div>
+        <button type="button" class="btn bg-green-gradient" data-toggle="modal" data-target="#createpaymentbatchmdl">
+            <i class="fa fa-plus-square"></i>  Create Payment Batch
+        </button>
+        <div class="box">
+            <div class="box-header">
+                
+            </div>
+
+            <div class="box-body">
+                <h4 class="panel-title">Search Payment Batch</h4>
+                    <div class="col-10">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="titletxt" name="titletxt" placeholder="Title" />
+
+                        </div>
+
+                        <div class="form-group hidden">
+                            <input type="text" class="form-control input-lg" id="desctxt" name="desctxt" placeholder="Description" />
+
+                        </div>
+                        <div>
+                            @Html.DropDownList("scr_paymentstatus", new SelectList(ViewBag.statuslist, "Id", "Name"), new { @class = "form-control input-lg" })
+                        </div>
+                        <br />
+                        <div class="row">
+
+
+                            <div class="col-xs-2">
+                                @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                            </div>
+                            <div class="col-xs-5">
+
+                                @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                            </div>
+                            <div class="col-xs-5">
+
+                                @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="pull-right">
+                            <button class="btn btn-lg btn-success"  id='scr_button'>Search</button>
+                        </div>
+                       <br />
+
+                        <table id="paymentbatchlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="mdl-data-table__cell--non-numeric">Id</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Title</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Description</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Count</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Total Amount</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Total Paid</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Status</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Date Payment Completed</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Mark Paid By</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Created By</th>
+                                    <th class="mdl-data-table__cell--non-numeric">Date Created</th>
+
+                                    <th class="mdl-data-table__cell--non-numeric"></th>
+
+                                   
+
+
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+               
+            </div>
+            <div class="box-footer">
+
+            </div>
+        </div>
+    </div>
+    
+
+    
+</div>
+
+
+  
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+ <script src="@Url.Content("~/Apps/Core/Content/Scripts/dataTables.buttons.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.flash.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/jszip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/pdfmake.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/vfs_fonts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.html5.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.print.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#scr_button').on('click', function (e) {
+            refreshTable();
+        });
+
+        $("#paymentbatchlist").delegate(".editbtn", "click", function (event) {
+         
+            
+            var id = $(event.target).attr("data-id");
+            var title = $(event.target).attr("data-titlee");
+            var descc = $(event.target).attr("data-desc");
+            $("#titleed").val(title);
+            $("#desced").val(descc);
+            $("#batchid").val(id);
+
+            $('#EditPaymentBatchmdl').modal('toggle');
+        });
+        $("#paymentbatchlist").delegate(".markbtn", "click", function (event) {
+
+
+            var id = $(event.target).attr("data-id");
+            swal("Mark  batch", {
+                buttons: {
+                    
+                    pending: {
+                        text: "Mark as Pending",
+                        value: "pending",
+                    },
+                    paying: {
+                        text: "Mark as Paying",
+                        value: "paying",
+                    },
+                  
+                    paid: "Mark as Paid",
+                    cancel: "Cancel",
+                },
+            })
+ .then((value) => {
+     switch (value) {
+
+         case "pending":
+             //swal("Pikachu fainted! You gained 500 XP!");
+             window.location.replace("../Claims/MarkPaymentBatch?status=1&batchid=" + id );
+             break;
+             
+         case "paying":
+             window.location.replace("../Claims/MarkPaymentBatch?status=2&batchid=" + id);
+             break;
+         case "paid":
+             window.location.replace("../Claims/MarkPaymentBatch?status=3&batchid=" + id);
+             break;
+         default:
+             swal("You didn't mark!");
+     }
+ });
+        });
+        $("#paymentbatchlist").delegate(".deletebtn", "click", function (event) {
+
+
+            var id = $(event.target).attr("data-id");
+
+            swal({
+                title: "Are you sure?",
+                text: "You are about to delete this payment batch.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+   .then((willDelete) => {
+       if (willDelete) {
+           window.location.replace("../Claims/DeletePaymentBatch?id=" + id);
+       } else {
+           swal("You changed your mind!");
+       }
+   });
+
+          
+        });
+        function refreshTable() {
+            $('#paymentbatchlist').DataTable().ajax.reload();
+        }
+        $('#paymentbatchlist').dataTable({
+
+            "sAjaxSource": '../claim/QueryPaymentBatchJson',
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': [1, 2, 6],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "titlestring", "value": $('#titletxt').val() }, { "name": "descstring", "value": $('#desctxt').val() }, { "name": "status", "value": $('#scr_paymentstatus').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": true },
+                 {
+                     "mDataProp": "Title", "bVisible": true,
+
+                     render: function (data, type, row) {
+
+                         return '<a href="@Model.urlReturn' + '?batchid=' + row.Id +'" >' + row.Title + '</a>';
+
+                     }
+                 },
+
+
+    //<i class="fa fa-star text-yellow"></i>
+    { "mDataProp": "description" },
+    { "mDataProp": "Claimcount", "bVisible": true },
+    { "mDataProp": "TotalAmount" },
+    { "mDataProp": "TotalPaid" },
+    { "mDataProp": "Status" },
+    { "mDataProp": "datepaymentcompleted" },
+    { "mDataProp": "paidby" },
+    { "mDataProp": "createdby" },
+
+    { "mDataProp": "datecreated" },
+
+    {
+        "mRender": function (data, type, row) {
+            var resp = '<button class="btn btn-xs btn-info editbtn" data-id="' + row.Id + '" data-titlee="' + row.Title + '" data-desc="' + row.description + '" > Edit </button>';
+            resp = resp + ' <button class="btn btn-xs btn-success markbtn" data-id="' + row.Id + '" > Mark </button>'
+            resp = resp + ' <button class="btn btn-xs btn-danger deletebtn" data-id="' + row.Id + '" > Delete </button>'
+            
+            return resp;
+        }
+    }
+
+
+
+            ]
+
+
+        });
+
+
+
+
+
+
+
+
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+
+    });
+    </script>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="createpaymentbatchmdl" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="../Claims/AddPaymentBatch" method="post">
+
+           
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Payment Batch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <lable>Title</lable>
+                        <input type="text" id="title" name="title" class="form-control input-lg" />
+                    </div>
+                    <div class="form-group">
+                        <lable>Description</lable>
+                        <textarea rows="3" col="40" id="desc" name="desc" class="form-control input-lg"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>
+
+
+
+<div class="modal fade" id="EditPaymentBatchmdl" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="../Claims/EditPaymentBatch" method="post">
+
+           
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Payment Batch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group" >
+                        <label>ID</label>
+                        <input type="text" class="form-control input-lg"     id="batchid" name="batchid" readonly="readonly" />
+                    </div>
+                    <div class="form-group">
+                        <lable>Title</lable>
+                        <input type="text" id="titleed" name="titleed" class="form-control input-lg" />
+                    </div>
+                    <div class="form-group">
+                        <lable>Description</lable>
+                        <textarea rows="3" col="40" id="desced" name="desced" class="form-control input-lg"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+

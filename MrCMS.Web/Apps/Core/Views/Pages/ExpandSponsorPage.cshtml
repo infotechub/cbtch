@@ -1,0 +1,736 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ExpandSponsorPage
+    @using MrCMS.Web.Apps.Core.Utility
+@{
+    ViewBag.Title = "ConnectCare Expand Sponsor";
+   
+}
+
+<style>
+    
+</style>
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Manage existing sponsor,Add new beneficiay or update.</p>
+        </div>
+
+        <div>
+            <form  action="../connectcare/TestService" method="post">
+
+
+                <input type="hidden" id="beneCount" name="beneCount" value="@ViewBag.sponsor.benecount"/>
+
+
+                <div class="box box-default">
+                    <div class="box-header">
+                        <h4 class="box-title">Sponsor Details</h4>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <input type="hidden" id="previousid" name="previousid" value="@ViewBag.sponsor.Sponsor.Id"/>
+                                <div class="form-group">
+                                    <label>Sponsor ID</label>
+                                    <input class="form-control input-lg" placeholder="Sponsor ID" type="text" readonly="readonly" value="@ViewBag.sponsor.Sponsor.sponsorSTRID">
+                                </div>
+                            </div>
+                            <div class="col-xs-8">
+
+                                <div class="form-group">
+                                    <label>Full Name **</label>
+                                    <input class="form-control input-lg" placeholder="Full name" type="text" id="fullnametxt" name="fullnametxt" value="@ViewBag.sponsor.Sponsor.fullname">
+                                </div>
+                            </div>
+                    
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Gender **</label>
+                                    <select class="form-control input-lg" id="gender" name="gender">
+                                       
+                                       @if (@ViewBag.sponsor.Sponsor.gender == "Male")
+                                       {
+                                        <option value="Male" selected>Male</option>
+                                        <option value="Female">Female</option>
+                                       }
+                                       else
+                                       {
+                                        <option value="Male">Male</option>
+                                        <option value="Female"  selected>Female</option>
+
+                                       }
+
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Country **</label>
+                                    <select class="form-control input-lg" id="country" name="country">
+                                        <option>USA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+
+                                <div class="form-group">
+                                    <label>State **</label>
+                                    <select class="form-control input-lg" id="state" name="state" aria-invalid="false">
+                                        @{<option value="@ViewBag.sponsor.Sponsor.state" selected="selected">@ViewBag.sponsor.Sponsor.state</option> }
+                                        <option value="null">--Select--</option>
+                                        <option value="Alabama">Alabama</option>
+                                        <option value="Alaska">Alaska</option>
+                                        <option value="Arizona">Arizona</option>
+                                        <option value="Arkansas">Arkansas</option>
+                                        <option value="California">California</option>
+                                        <option value="Chicago">Chicago</option>
+                                        <option value="Colorado">Colorado</option>
+                                        <option value="Connecticut">Connecticut</option>
+                                        <option value="Delaware">Delaware</option>
+                                        <option value="District Of Columbia">District Of Columbia</option>
+                                        <option value="Florida">Florida</option>
+                                        <option value="Georgia">Georgia</option>
+                                        <option value="Hawaii">Hawaii</option>
+                                        <option value="Idaho">Idaho</option>
+                                        <option value="Illinois">Illinois</option>
+                                        <option value="Indiana">Indiana</option>
+                                        <option value="Iowa">Iowa</option>
+                                        <option value="Kansas">Kansas</option>
+                                        <option value="Kentucky">Kentucky</option>
+                                        <option value="Louisiana">Louisiana</option>
+                                        <option value="Maine">Maine</option>
+                                        <option value="Maryland">Maryland</option>
+                                        <option value="Massachusetts">Massachusetts</option>
+                                        <option value="Michigan">Michigan</option>
+                                        <option value="Minnesota">Minnesota</option>
+                                        <option value="Mississippi">Mississippi</option>
+                                        <option value="Missouri">Missouri</option>
+                                        <option value="Montana">Montana</option>
+                                        <option value="Nebraska">Nebraska</option>
+                                        <option value="Nevada">Nevada</option>
+                                        <option value="New Hampshire">New Hampshire</option>
+                                        <option value="New Jersey">New Jersey</option>
+                                        <option value="New Mexico">New Mexico</option>
+                                        <option value="New York">New York</option>
+                                        <option value="North Carolina">North Carolina</option>
+                                        <option value="North Dakota">North Dakota</option>
+                                        <option value="Ohio">Ohio</option>
+                                        <option value="Oklahoma">Oklahoma</option>
+                                        <option value="Oregon">Oregon</option>
+                                        <option value="Pennsylvania">Pennsylvania</option>
+                                        <option value="Rhode Island">Rhode Island</option>
+                                        <option value="South Carolina">South Carolina</option>
+                                        <option value="South Dakota">South Dakota</option>
+                                        <option value="Tennessee">Tennessee</option>
+                                        <option value="Texas">Texas</option>
+                                        <option value="Utah">Utah</option>
+                                        <option value="Vermont">Vermont</option>
+                                        <option value="Virginia">Virginia</option>
+                                        <option value="Washington">Washington</option>
+                                        <option value="West Virginia">West Virginia</option>
+                                        <option value="Wisconsin">Wisconsin</option>
+                                        <option value="Wyoming">Wyoming</option>
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+
+                                <div class="form-group">
+                                    <label>ZipCode</label>
+                                    <input class="form-control input-lg" placeholder="Zipcode" type="text" name="zipcode" id="zipcode" value="@ViewBag.sponsor.Sponsor.zipcode">
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Address **</label>
+                                    <input class="form-control input-lg" placeholder="Address" type="text" name="address" id="address" value="@ViewBag.sponsor.Sponsor.address">
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Phone number **</label>
+                                    <input class="form-control input-lg" placeholder="phone number" type="text" id="phonenumber" name="phonenumber" value="@ViewBag.sponsor.Sponsor.phonenumber">
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Email **</label>
+                                    <input class="form-control input-lg" placeholder="Email" type="text" id="email" name="email" value="@ViewBag.sponsor.Sponsor.email">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Occupation</label>
+                                    <input class="form-control input-lg" placeholder="occupation" type="text" name="occupation" id="occupation" value="@ViewBag.sponsor.Sponsor.occupation">
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Secondary Sponsor Email</label>
+                                    <input class="form-control input-lg" placeholder="Secondary Sponsor Email" type="text" id="ssemail" name="ssemail" value="@ViewBag.sponsor.Sponsor.secondarysponsor ">
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>AddOn</label>
+                                    <select class="form-control input-lg" id="addon" name="addon">
+
+                                        @if (@ViewBag.sponsor.Sponsor.Addon)
+                                        {
+                                            <option value="0">False</option>
+                                            <option value="1" selected="selected">True</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0" selected="selected">False</option>
+                                            <option value="1" >True</option>
+                                        }
+
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Instalment</label>
+                                    <select class="form-control input-lg" id="Instalment" name="Instalment">
+                                       @if (@ViewBag.sponsor.Sponsor.instalment == 0)
+                                       {
+                                        <option value="0" selected>No Instalment</option>
+                                       }
+                                       else
+                                       {
+                                        <option value="@ViewBag.sponsor.Sponsor.instalment" selected>@ViewBag.sponsor.Sponsor.instalment Month</option>
+                                       }
+
+
+                                        <option value="0">No Instalment</option>
+                                        <option value="1">1 Month</option>
+                                        <option value="2">2 Months</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="4">4 Months</option>
+                                        <option value="5">5 Months</option>
+                                        <option value="6">6 Months</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Policy Start Date</label>
+                                    <input class="form-control input-lg dateshii" placeholder="Policy Start Date" type="text" id="policystartdate" name="policystartdate" value="@Convert.ToDateTime(@ViewBag.sponsor.Sponsor.PolicyStartDate).ToString("dd/MM/yyyy")">
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label>Policy End Date</label>
+                                    <input class="form-control input-lg dateshii" placeholder="Policy End Date" type="text" id="policyenddate" name="policyenddate" value="@Convert.ToDateTime(ViewBag.sponsor.Sponsor.PolicyEndDate).ToString("dd/MM/yyyy")">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+
+                                <div class="form-group">
+                                    <label>Policy Notification Config</label>
+                                    <select class="form-control input-lg" id="Policynotificationconfig" name="Policynotificationconfig">
+                                        @if (@ViewBag.sponsor.Sponsor.PolicynotificationConfig == 0)
+                                        {
+                                            <option value="0" selected>No Instalment</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@ViewBag.sponsor.Sponsor.PolicynotificationConfig" selected>@ViewBag.sponsor.Sponsor.PolicynotificationConfig Months</option>
+                                        }
+                                        <option value="0">No Notification</option>
+                                        <option value="1">1 Month</option>
+                                        <option value="2">2 Months</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="4">4 Months</option>
+                                        <option value="5">5 Months</option>
+                                        <option value="6">6 Months</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <hr />
+
+
+
+                        @*<button class="btn btn-lg bg-green-gradient pull-right" type="button" id="addbeneficiarybtn" name="addbeneficiarybtn"><i class="fa fa-plus"></i> Add Beneficiary</button>*@
+                        <h4 class="box-title">Beneficiaries Details</h4>
+                        <div id="beneficiary_panel">
+
+                            @{
+                                    var count = 1;
+                                    foreach (var item in ViewBag.sponsor.beneficiaries)
+                                    {
+                                    <div class="box-body seegreen" style="color:white;" id="bene_panel_@count">
+                                        <div class="box-header">
+
+                                            @if (!item.VerificationStatus)
+                                            {
+                                                <span style="color:white;background-color:red;font-size:large" class="pull-right">**Unverified</span>
+
+                                            }
+                                        </div> 
+
+
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                               
+                                                <div class="form-group">
+                                                    <label>Beneficiary ID</label>
+                                                    <input class="form-control input-lg" placeholder="" type="text" id="bbeneidstringtxt_@count" name="bbeneidstringtxt_@count" value="@item.BeneficiaryID" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Policy Number</label>
+                                                    <input class="form-control input-lg" placeholder="" type="text" id="bbenepolicynumberstringtxt_@count" name="bbeneidstringtxt_@count" value="@item.PolicyNumber" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-xs-4">
+                                                <input type="hidden" id="bIDtxt_@count" name="bIDtxt_@count" value="@item.Id" />
+                                                <div class="form-group">
+                                                    <label>First Name **</label>
+                                                    <input class="form-control input-lg" placeholder="First Name" type="text" id="bfirstnametxt_@count" name="bfirstnametxt_@count" value="@item.firstname">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Last Name **</label>
+                                                    <input class="form-control input-lg" placeholder="Last Name" type="text" id="blastnametxt_@count" name="blastnametxt_@count" value="@item.lastname">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label>Gender **</label>
+                                                    <select class="form-control input-lg" id="bgender_@count" name="bgender_@count">
+                                                        @if (Convert.ToString(item.gender).ToLower() == "male")
+                                                        {
+                                                            <option value="Male" selected>Male</option>
+                                                            <option value="Female">Female</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female" selected>Female</option>
+                                                        }
+
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Beneficiary Category **</label>
+                                                    <select class="form-control input-lg" id="bcat_@count" name="bcat_@count" aria-invalid="false">
+                                                       @{
+                                                        <option value="@item.Category" selected>@item.Category</option>
+                                                    }
+                                                        
+                                                         <option value="Adult">Adult</option>
+                                                        <option value="Child">Child</option>
+                                                        <option value="Elderly">Elderly</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>DOB **</label>
+                                                    <input class="form-control input-lg dateshii" placeholder="DOB" type="text" id="bdob_@count" name="bdob_@count" value="@Convert.ToDateTime(item.dob).ToString("dd/MM/yyyy")">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label>Relationship **</label>
+                                                    <input class="form-control input-lg" placeholder="Relationship" type="text" id="brelationship_@count" name="brelationship_@count" value="@item.relationship">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Country **</label>
+                                                    <select class="form-control input-lg" id="bcountry_@count" name="bcountry_@count" aria-invalid="false">
+
+                                                        <option selected>Nigeria</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>State **</label>
+                                                    <select class="form-control input-lg" id="bstate_@count" name="bstate_@count">
+                                                        @{
+                                                            <option value="@item.state" selected>@item.state</option>
+                                                        }
+                                                        <option value="Abia">Abia</option>
+                                                        <option value="Adamawa">Adamawa</option>
+                                                        <option value="Akwa Ibom">Akwa Ibom</option>
+                                                        <option value="Anambra">Anambra</option>
+                                                        <option value="Bauchi">Bauchi</option>
+                                                        <option value="Bayelsa">Bayelsa</option>
+                                                        <option value="Benue">Benue</option>
+                                                        <option value="Borno">Borno</option>
+                                                        <option value="Cross River">Cross River</option>
+                                                        <option value="Delta">Delta</option>
+                                                        <option value="Ebonyi">Ebonyi</option>
+                                                        <option value="Edo">Edo</option>
+                                                        <option value="Ekiti">Ekiti</option>
+                                                        <option value="Enugu">Enugu</option>
+                                                        <option value="FCT">FCT</option>
+                                                        <option value="Gombe">Gombe</option>
+                                                        <option value="Imo">Imo</option>
+                                                        <option value="Jigawa">Jigawa</option>
+                                                        <option value="Kaduna">Kaduna</option>
+                                                        <option value="Kano">Kano</option>
+                                                        <option value="Katsina">Katsina</option>
+                                                        <option value="Kebbi">Kebbi</option>
+                                                        <option value="Kogi">Kogi</option>
+                                                        <option value="Kwara">Kwara</option>
+                                                        <option value="Lagos">Lagos</option>
+                                                        <option value="Nasarawa">Nasarawa</option>
+                                                        <option value="Niger">Niger</option>
+                                                        <option value="Ogun">Ogun</option>
+                                                        <option value="Ondo">Ondo</option>
+                                                        <option value="Osun">Osun</option>
+                                                        <option value="Oyo">Oyo</option>
+                                                        <option value="Plateau">Plateau</option>
+                                                        <option value="Rivers">Rivers</option>
+                                                        <option value="Sokoto">Sokoto</option>
+                                                        <option value="Taraba">Taraba</option>
+                                                        <option value="Yobe">Yobe</option>
+                                                        <option value="Zamfara">Zamfara</option>
+
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label>City</label>
+                                                    <input class="form-control input-lg" placeholder="City" type="text" id="bcity_@count" name="bcity_@count" value="@item.city">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label>LGA</label>
+                                                    <input class="form-control input-lg" placeholder="LGA" type="text" id="blga_@count" name="blga_@count" value="@item.LGA">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Address **</label>
+                                                    <input class="form-control input-lg" placeholder="Address" type="text" id="baddress_@count" name="baddress_@count" value="@item.address">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Email **</label>
+                                                    <input class="form-control input-lg" placeholder="Email" type="email" id="bemail_@count" name="bemail_@count" value="@item.email">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Phone number **</label>
+                                                    <input class="form-control input-lg" placeholder="Phone number" type="text" id="bphonenumber_@count" name="bphonenumber_@count" value="@item.phonenumber">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Guardian Phone number</label>
+                                                    <input class="form-control input-lg" placeholder="Guardian Phone number" type="text" id="bgphonenumber_@count" name="bgphonenumber_@count" value="@item.GuardianPhonenumber">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Guardian Email</label>
+                                                    <input class="form-control input-lg" placeholder="Guardian Email" type="text" id="bgemail_@count" name="bgemail_@count" value="@item.GuardianEmail">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="row">
+
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Suggested Provider</label>
+                                                    <input class="form-control input-lg" placeholder="Suggested Provider" type="text" id="bsuggestedprovider_@count" name="bsuggestedprovider_@count" value="@item.SuggestedProvider">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Suggested Plan</label>
+                                                    <select class="form-control input-lg" id="bsuggestedplan_@count" name="bsuggestedplan_@count" aria-invalid="false">
+                                                       @{
+                                                        <option value="@item.suggestedPlan" selected>@item.suggestedPlan</option>
+                                                    }
+                                                        
+                                                         <option value="Bronze-001">Bronze connect Adult</option>
+                                                        <option value="Silver-001">Silver connect Adult</option>
+                                                        <option value="Gold-001">Gold Connect Adult</option>
+                                                        <option value="Platinum-001">Platinum Connect Adult</option>
+                                                        <option value="Bronze-002">Bronze connect Child</option>
+                                                        <option value="Silver-002">Silver connect Child</option>
+                                                        <option value="Gold-002">Gold Connect Child</option>
+                                                        <option value="Platinum-002">Platinum Connect Child</option>
+                                                        <option value="Bronze-003">Bronze connect Elderly</option>
+                                                        <option value="Silver-003">Silver connect Elderly</option>
+                                                        <option value="Gold-003">Gold connect Elderly</option>
+                                                        <option value="Platinum-003">Platinum connect Elderly</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+
+                                                <div class="form-group">
+                                                    <label>Verification Status</label>
+                                                    <select class="form-control input-lg" id="bverificationstatus_@count" name="bverificationstatus_@count">
+                                                        @if (item.VerificationStatus)
+                                                        {
+                                                            <option value="0">Pending</option>
+                                                            <option value="1" selected>Verified</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="0" selected>Pending</option>
+                                                            <option value="1">Verified</option>
+                                                        }
+
+
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label>AddOn</label>
+                                                    <select class="form-control input-lg" id="baddon_@count" name="baddon_@count">
+                                                       @if (item.addon)
+                                                       {
+                                                        <option value="0">False</option>
+                                                        <option value="1" selected>True</option>
+                                                       }
+                                                       else
+                                                       {
+                                                        <option value="0" selected>False</option>
+                                                            <option value="1">True</option>
+                                                       }
+
+
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                                               count++;
+                                                           }
+
+
+
+                            }
+
+                           
+
+                        </div>
+                    </div>
+
+                    <div class="box-footer ">
+
+                        <button class="btn btn-lg btn-success  pull-right" type="submit"> Submit</button>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    window.globalNewIndex2 = 1;
+    var changeIds = function (i, val) {
+        var newIndex = globalNewIndex2 + 1;
+        return val.replace(globalNewIndex2, newIndex);
+    }
+    $(document).ready(function () {
+        window.globalNewIndex2 =@ViewBag.sponsor.benecount;
+        $("#beneCount").val(window.globalNewIndex2);
+        $(".dateshii").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+        $('#policystartdate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+
+
+        $('#policyenddate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+        $("#addbeneficiarybtn").on("click", function () {
+
+            window.globalNewIndex2 = window.globalNewIndex2 + 1;
+            $("#beneCount").val(window.globalNewIndex2);
+
+            alert(window.globalNewIndex2);
+
+            var $newpanel = $('#bene_panel_1').clone();
+            //names
+            $newpanel.find('#bfirstnametxt_1').prop('name', 'bfirstnametxt_' + globalNewIndex2);
+            $newpanel.find('#blastnametxt_1').prop('name', 'blastnametxt_' + globalNewIndex2);
+            $newpanel.find('#bgender_1').prop('name', 'bgender_' + globalNewIndex2);
+            $newpanel.find('#bcat_1').prop('name', 'bcat_' + globalNewIndex2);
+            $newpanel.find('#bdob_1').prop('name', 'bdob_' + globalNewIndex2);
+            $newpanel.find('#brelationship_1').prop('name', 'brelationship_' + globalNewIndex2);
+            $newpanel.find('#bcountry_1').prop('name', 'bcountry_' + globalNewIndex2);
+            $newpanel.find('#bstate_1').prop('name', 'bstate_' + globalNewIndex2);
+            $newpanel.find('#bcity_1').prop('name', 'bcity_' + globalNewIndex2);
+            $newpanel.find('#blga_1').prop('name', 'blga_' + globalNewIndex2);
+            $newpanel.find('#baddress_1').prop('name', 'baddress_' + globalNewIndex2);
+            $newpanel.find('#bemail_1').prop('name', 'bemail_' + globalNewIndex2);
+            $newpanel.find('#bphonenumber_1').prop('name', 'bphonenumber_' + globalNewIndex2);
+            $newpanel.find('#bgemail_1').prop('name', 'bgemail_' + globalNewIndex2);
+            $newpanel.find('#bgphonenumber_1').prop('name', 'bgphonenumber_' + globalNewIndex2);
+            $newpanel.find('#bsuggestedprovider_1').prop('name', 'bsuggestedprovider_' + globalNewIndex2);
+            $newpanel.find('#bsuggestedplan_1').prop('name', 'bsuggestedplan_' + globalNewIndex2);
+            $newpanel.find('#bverificationstatus_1').prop('name', 'bverificationstatus_' + globalNewIndex2);
+            $newpanel.find('#baddon_1').prop('name', 'baddon_' + globalNewIndex2);
+            $newpanel.find('#bbeneidstringtxt_1').prop('name', 'bbeneidstringtxt_' + globalNewIndex2);
+            $newpanel.find('#bIDtxt_1').prop('name', 'bIDtxt_' + globalNewIndex2);
+
+            $newpanel.find('#bbenepolicynumberstringtxt_1').prop('name', 'bbenepolicynumberstringtxt__' + globalNewIndex2);
+            //change id
+            
+            $newpanel.find('#bfirstnametxt_1').prop('id', 'bfirstnametxt_' + globalNewIndex2);
+            $newpanel.find('#blastnametxt_1').prop('id', 'blastnametxt_' + globalNewIndex2);
+            $newpanel.find('#bgender_1').prop('id', 'bgender_' + globalNewIndex2);
+            $newpanel.find('#bcat_1').prop('id', 'bcat_' + globalNewIndex2);
+            $newpanel.find('#bdob_1').prop('id', 'bdob_' + globalNewIndex2);
+            $newpanel.find('#brelationship_1').prop('id', 'brelationship_' + globalNewIndex2);
+            $newpanel.find('#bcountry_1').prop('id', 'bcountry_' + globalNewIndex2);
+            $newpanel.find('#bstate_1').prop('id', 'bstate_' + globalNewIndex2);
+            $newpanel.find('#bcity_1').prop('id', 'bcity_' + globalNewIndex2);
+            $newpanel.find('#blga_1').prop('id', 'blga_' + globalNewIndex2);
+            $newpanel.find('#baddress_1').prop('id', 'baddress_' + globalNewIndex2);
+            $newpanel.find('#bemail_1').prop('id', 'bemail_' + globalNewIndex2);
+            $newpanel.find('#bphonenumber_1').prop('id', 'bphonenumber_' + globalNewIndex2);
+            $newpanel.find('#bgemail_1').prop('id', 'bgemail_' + globalNewIndex2);
+            $newpanel.find('#bgphonenumber_1').prop('id', 'bgphonenumber_' + globalNewIndex2);
+            $newpanel.find('#bsuggestedprovider_1').prop('id', 'bsuggestedprovider_' + globalNewIndex2);
+            $newpanel.find('#bsuggestedplan_1').prop('id', 'bsuggestedplan_' + globalNewIndex2);
+            $newpanel.find('#bverificationstatus_1').prop('id', 'bverificationstatus_' + globalNewIndex2);
+            $newpanel.find('#baddon_1').prop('id', 'baddon_' + globalNewIndex2);
+            $newpanel.find('#bbeneidstringtxt_1').prop('id', 'bbeneidstringtxt_' + globalNewIndex2);
+            $newpanel.find('#bIDtxt_1').prop('id', 'bIDtxt_' + globalNewIndex2);
+            $newpanel.find('#bene_panel_1').prop('id', 'bene_panel_' + globalNewIndex2);
+
+            $newpanel.find('#bIDtxt_' + globalNewIndex2).val('');
+            $newpanel.find('#bbenepolicynumberstringtxt_1').prop('id', 'bbenepolicynumberstringtxt__' + globalNewIndex2);
+            //$newpanel.find('#bbeneidstringtxt_' + globalNewIndex2).addClass("hidden");
+
+            $('#beneficiary_panel').append("<hr>");
+            $('#beneficiary_panel').append($newpanel);
+
+            $(".dateshii").off();
+            $(".dateshii").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+            $('html, body').animate({
+                scrollTop: $('#bverificationstatus_' + globalNewIndex2).offset().top
+            }, 2000);
+        });
+
+    });
+
+
+</script>

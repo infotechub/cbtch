@@ -1,0 +1,110 @@
+﻿@model MrCMS.Web.Apps.Core.Entities.Subscription
+
+@{
+    ViewBag.Title = "Approve Subscription";
+}
+  @using (Html.BeginForm("Approve","ProviderPage",FormMethod.Post,new {@id="Subscriptionform"})){
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Approve Subscription</h4>
+ </div>
+<div class="modal-body">
+    <div class="callout-success callout ">
+        <h4>Approve  @ViewBag.CompanyName SUBSCRIPTION (@Html.DisplayFor(x=>x.SubscriptionCode)) .</h4>
+        <p></p>
+    </div>
+    <table class="table table-condensed table-striped">
+        <tbody>
+            <tr>
+
+                <th>Field</th>
+                <th>Value</th>
+
+            </tr>
+            <tr>
+                <td>Company</td>
+                <td>@ViewBag.CompanyName</td>
+            </tr>
+            <tr>
+                <td>Subsidiary</td>
+                <td>@ViewBag.Subsidiary</td>
+            </tr>
+            <tr>
+                <td>Subscription Code</td>
+                <td>@Html.DisplayFor(x=>x.SubscriptionCode)</td>
+            </tr>
+            <tr>
+                <td>Subscription Plan(s)</td>
+                <td>@ViewBag.Plans</td>
+            </tr>
+            <tr>
+                <td>Start Date</td>
+                <td>@Html.DisplayFor(x=>x.Startdate)</td>
+            </tr>
+
+            <tr>
+                <td>Expiration Date</td>
+                <td>@Html.DisplayFor(x=>x.Expirationdate)</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>@ViewBag.duration</td>
+            </tr>
+            <tr>
+                <td>Note</td>
+                <td>@Html.DisplayFor(x=>x.Note)</td>
+            </tr>
+            <tr>
+                <td>Additional Details</td>
+                <td>
+
+                    <table class="table table-condensed table-striped">
+                        <tr>
+                            <td>Created By</td>
+                            <td>@ViewBag.createdByStr</td>
+                        </tr>
+                        <tr>
+                            <td>Created On</td>
+                            <td>@Html.DisplayFor(x=>x.CreatedOn)</td>
+                        </tr>
+                        <tr>
+                            <td>Authorization Status</td>
+                            <td>@ViewBag.AuthorizationStatusStr</td>
+                        </tr>
+                        <tr>
+                            <td>Authorization Note</td>
+                            <td>@Html.TextAreaFor(x=>x.AuthorizationNote)</td>
+                        </tr>
+
+                    </table>
+
+
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal-footer">
+   
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x=>x.Id)
+   <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="button" id="btnSave" onclick="ApproveSubscription()">Save </button>
+
+</div>
+
+}
+
+<script>
+
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

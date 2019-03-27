@@ -1,0 +1,236 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.BulkUploadStaffPage
+@{
+    ViewBag.Title = "Bulk staff Upload";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>View List of Staff that the system suggested for expunge. you can select the staff you wish to expunge from the list.</p>
+        </div>
+
+        <a href="@Url.Action("AddStaffBulk", "CompanyPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Upload Bulk Staff </i> </a>
+
+
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+       
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Suggested List of Staff to be Expunged.</h3>
+                    @using (Html.BeginForm("DoRemoveExpunge", "CompanyPage", FormMethod.Post))
+                    {
+
+                        @Html.Hidden("hidden_selectedIDs2");
+
+
+                        <input type="submit" class="btn btn-sm btn-info pull-right" value="Remove Selected From List" onclick="submitforExpunge();" />
+
+                    }
+
+                    @using (Html.BeginForm("DoMassExpunge", "CompanyPage", FormMethod.Post))
+                    {
+
+                        @Html.Hidden("hidden_selectedIDs");
+
+
+                        <input type="submit" class="btn btn-sm btn-danger pull-right" value="Expunge Selected" onclick="submitforExpunge()" />
+
+                    }
+                </div><!-- /.box-header -->
+       <div class="box-body">
+
+           <table id="AutomaticExpungelist"  class="mdl-data-table mdl-data-table--selectable" width="100%">
+       
+               <thead>
+                   <tr>
+                       <th><input type="checkbox" id="chk_selectall" name="hk_selectall"></th>
+                       <th>Id</th>
+                       <th>Staff ID </th>
+                       <th>Staff Name </th>
+                       <th>Company</th>
+                       <th>Subsidiary</th>
+                            
+                            
+                       <th>Date Added</th>
+                   </tr>
+               </thead>
+               <tbody>
+            
+                  
+      
+               </tbody>
+               <tfoot>
+                    
+               </tfoot>
+           </table>
+       </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+     
+        bodytable$ = $('#AutomaticExpungelist').dataTable({
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "sAjaxSource": '../Company/GetAutomaticExpungeStaffListJson',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_policynumber", "value": $('#src_policynumber').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 {
+                     render: function (data, type, row) {
+
+                         return '<input type="checkbox" class="chkbox_datatable">';
+
+                     },
+                 },
+              { "mDataProp": "Id", "bVisible": true,  },
+            
+            
+               
+                {
+                    "mDataProp": "staffid", sClass: "row_id"
+                },
+                 { "mDataProp": "name", "bVisible": true},
+                  { "mDataProp": "company", "bVisible": true},
+              //<i class="fa fa-star text-yellow"></i>
+                { "mDataProp": "subsidairy" },
+            { "mDataProp": "dateadded" }
+                 
+                
+          
+
+
+
+
+            ]
+
+      
+
+        });
+        
+       
+        
+        $("#chk_selectall").change(function () {
+          
+            if (this.checked) {
+                //Do stuff
+                //$('.chkbox_datatable')
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked', true);
+
+                });
+            } else {
+                
+
+             // $('.chkbox_datatable').removeAttr('checked');
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked',false);
+                  
+                });
+                    
+             
+            }
+        });
+        
+
+    });
+
+    function submitforExpunge() {
+        //alert('here');
+        var checkIds = [];
+        bodytable$.$('tr').each(function (index, rowhtml) {
+            var checked = $('input[type="checkbox"]:checked', rowhtml).length;
+            if (checked == 1) {
+                checkIds.push($('.row_id', rowhtml).text());
+            }
+        });
+        $('#hidden_selectedIDs').val(checkIds);
+        $('#hidden_selectedIDs2').val(checkIds);
+        //alert($('#hidden_selectedIDs').val());
+
+    }
+
+    </script>
+
+
+
+
+
+
+
+

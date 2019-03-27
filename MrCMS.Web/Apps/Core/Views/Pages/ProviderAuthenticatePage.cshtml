@@ -1,0 +1,66 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Pages
+@model MrCMS.Web.Apps.Core.Pages.ProviderAuthenticatePage
+  @using (Html.BeginForm("PostProviderAuthenticate","EnrolleePage",FormMethod.Post))
+  {
+      <section class="section-account">
+			
+          <div class="spacer"></div>
+          <div class="card contain-sm style-transparent">
+              <div class="card-body" style="background-color: white">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="row">
+                              <div class="col-3">
+                                  <img src="~/Apps/../Apps/Core/Content/Images/logo.png" alt="Smiley face" height="52" width="171"> 
+                                  
+                              </div>
+                              <div class="col-lg-9">
+                                  <h2>Enrollee Authentication Page</h2>
+                              </div>
+                          </div>
+                          <div>
+                              <p>Kindly fill the form below to verify the enrollee.</p>
+                              <br/>
+                              <div>
+                                  <div class="form-group">
+                                      <b>Unique Provider Number (UPN)</b>
+                                  @Html.TextBox("Providercode",null, new { @class = "form-control",@placeholder="Enter Provider Number...",@id="providercode" })
+               
+                                  </div>
+                                  <div class="form-group">
+                                      <b>Enrollee Verification Code or Policy Number</b>
+                                             @Html.TextBox("Verificationcode",null, new { @class = "form-control",@placeholder="Enter Enrollee Verification Code or policy number",@id="Verificationcode" })
+               
+                                  </div>
+                                
+
+                                  <div class="col-xs-12 text-right ">
+                                        
+                                      <button type="submit" value="Authenticate" class="btn btn-primary btn-raised"><span class="glyphicon glyphicon-ok"></span> Authenticate</button>
+                                  </div><!--end .col -->
+                              </div>
+
+                          </div>
+                      </div><!--end .col -->
+                     
+                  </div><!--end .row -->
+                  @if (!String.IsNullOrEmpty((string)Session["ErrormessageAuthenticate"]))
+                  {
+
+                      <br />
+                      <br />
+                      <div class="alert alert-danger">@Convert.ToString(Session["ErrormessageAuthenticate"]) </div>
+
+
+                      
+                          Session["ErrormessageAuthenticate"] = string.Empty;
+                      
+                  }
+              </div><!--end .card-body -->
+          </div><!--end .card -->
+
+
+      </section>
+
+  }

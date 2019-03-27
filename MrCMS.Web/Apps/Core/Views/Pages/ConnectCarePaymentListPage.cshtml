@@ -1,0 +1,159 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ConnectCarePaymentListPage 
+@{
+    ViewBag.Title = "Payment List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>View all payments made.</p>
+        </div>
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">ConnectCare Payment Log</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="managesponsors" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Local ID</th>
+                            <th>Payment ID</th>
+                            <th>Sponsor ID</th>
+                            <th>Sponsor ID</th>
+                            <th>Beneficiary ID</th>
+                            <th>Policy Number</th>
+                            <th>Amount Paid</th>
+                            <th>Plan Purchased</th>
+                            <th>Add On</th>
+                            <th>Payment Date</th>
+                            
+                            <th></th>
+                            
+                        </tr>
+                    </thead>
+                 
+                   
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+
+       
+
+
+
+     
+
+<script type="text/javascript">
+    $(function () {
+       
+        $('#managesponsors').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": false,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "sAjaxSource": '../connectcare/QueryAllPayment',
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": true },
+                { "mDataProp": "paymentid" },
+
+                { "mDataProp": "sponsorIDString" },
+                 { "mDataProp": "sponsorID", "bVisible": false },
+                  { "mDataProp": "beneficiaryID" },
+                { "mDataProp": "policyid" },
+                    { "mDataProp": "amountpaid" },
+                 { "mDataProp": "planpurchased" },
+                   { "mDataProp": "addon" },
+                       { "mDataProp": "paymentDate" },
+
+                 {
+                     "mRender": function (data, type, row) {
+                         return '<a href="/connectcare/expandsponsor?id=' + row.sponsorID + '" class="btn btn-info btn-flat btn-xs">View Sponsor</a>';
+                     }
+                 }
+
+
+
+
+
+            ]
+
+
+        });
+
+
+    });
+</script>
+

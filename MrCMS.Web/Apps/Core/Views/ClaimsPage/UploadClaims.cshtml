@@ -1,0 +1,56 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.ServiceTariff
+@{
+    ViewBag.Title = "Upload Service Tariff";
+}
+ 
+@using (Html.BeginForm("UploadService","TariffPage",FormMethod.Post,new {@id="ServiceTariffform",enctype = "multipart/form-data" }))
+    {
+      
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">File Upload </h4>
+     
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.Label("Select File")
+@Html.TextBox("Bulkfile",null, new {type = "file" })
+        @Html.Hidden("mode",(int)@ViewBag.mode)
+        <input type="hidden" id="Tariffid" name="Tariffid" value="@ViewBag.TariffID" />
+        
+        <br>
+        <span >CSV Files Only,the csv file must contain the following headers (itemname,unit,price,authorizationRequired,remark)</span>
+    
+     </div>
+
+  
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave" >Save </button>
+</div>
+
+}
+
+<script>
+    $(function () {
+        
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+   
+          
+
+        });
+
+
+    });
+
+
+</script>
+
+
+

@@ -1,0 +1,156 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.BeneficiaryAdditionPage
+@{
+    ViewBag.Title = "Pending Beneficiary";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen ">
+            <h4>Tip!</h4>
+            <p>Approve Beneficiary Addition from Enrollee Portal .</p>
+        </div>
+
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Pending Beneficiary</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="beneficiarylist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Id</th>
+                      
+                            <th>Principal </th>
+                            <th>Principal Plan</th>
+                            <th>Pricipal No. Dependant</th>
+                            <th>Dependant Name</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Relationship</th>
+                            <th>Provider</th>
+                            <th>Date Added</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                    </tbody>
+                    
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/dataTables.buttons.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.flash.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/jszip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/pdfmake.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/vfs_fonts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.html5.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.print.min.js")" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#beneficiarylist').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": false,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "sAjaxSource": '../Enrollee/getAllpendingDependant',
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                
+                 {
+                     "mRender": function (data, type, row) {
+                         return '<img src="data:image/png;base64,'+row.ImgRaw + '" style="max-height: 160px; max-width: 160px;" class="img-rounded" >' ;
+                     }
+                 },
+                  { "mDataProp": "Id", "bVisible": true },
+            { "mDataProp": "principalpolicynumber" },
+            { "mDataProp": "principalplan" },
+                { "mDataProp": "noofdep" },
+                   { "mDataProp": "DependantFullname" },
+                      { "mDataProp": "dob" },
+                         { "mDataProp": "Gender" },
+
+                { "mDataProp": "relationship" },
+                    { "mDataProp": "provider" },
+                 { "mDataProp": "submitted" },
+                  
+                
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/enrollee/approvePendingDependant?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs">Approve</a>' + '<a href="/Enrollee/deletePendingDependant?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs">Delete</a>';
+
+                        Enrollee/deletePendingDependant
+                    }
+                }
+
+
+
+
+
+            ]
+
+
+        });
+
+
+    });
+</script>

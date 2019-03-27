@@ -1,0 +1,463 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.TariffContentPage
+@{
+    ViewBag.Title = "Tariff Content";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen ">
+            <h4>Tip!</h4>
+            <p>Manage Tariff content, Add Category ,Add and edit items.The left pane contains drug category and on the right is the drug list .</p>
+        </div>
+
+
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+
+        <input id="TariffID" type="hidden" value="@ViewBag.TariffID" />
+
+        <div class="col-md-12">
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab_1" aria-expanded="false">Drug List</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab_2" aria-expanded="true">Service List</a></li>
+
+                    <li class="pull-left header"> TARIFF CONTENT FOR @Model.TarrifName</li>
+
+                    <a class="btn  pull-right" href='../provider/provider-tariff'><i class="fa fa-arrow-left"></i> Go Back to Tariff List</a>
+
+                </ul>
+                <div class="tab-content">
+                    <div id="tab_1" class="tab-pane  active">
+                        <div class="box">
+                            <div class="box-header">
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+
+                                @*<div class="col-md-3" >
+
+                                      <!-- /. box -->
+                                      <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                          <h3 class="box-title">Drug Category</h3>
+
+                                            <div class="box-tools">
+                                                <a href="@Url.Action("AddCategory", "TariffPage",  new { id = 0})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Category </i> </a>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding"  style="max-height: 500px;overflow-x: auto;">
+                                          <ul class="nav nav-pills nav-stacked" id="categorylist">
+
+                                          </ul>
+                                        </div>
+                                        <!-- /.box-body -->
+                                      </div>
+                                      <!-- /.box -->
+                                    </div>*@
+                                <div class="col-md-12">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Drug Price List</h3>
+
+                                            <div class="box-tools">
+                                                <a href="@Url.Action("AddDrug", "TariffPage",  new { id =@Convert.ToInt32(ViewBag.TariffID)})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Drug </i> </a>
+                                                <a href="@Url.Action("UploadService", "TariffPage", new { id = @Convert.ToInt32(ViewBag.TariffID),mode=0})" class="btn btn-info btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Upload Drug </i> </a>
+                                                @if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id == 7371)
+                                                {
+                                                <a href="@Url.Action("ClearTariff", "TariffPage", new { id = @Convert.ToInt32(ViewBag.TariffID) })" class="btn btn-danger btn-box-tool "><i class="fa fa-trash" style="color: white">Clear DrugList </i> </a>
+                                                }
+                                                else
+                                                {
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <table id="pricelist" class="table table-hover" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="mdl-data-table__cell--non-numeric">Id</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">GroupName</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Name</th>
+
+                                                        <th class="mdl-data-table__cell--non-numeric">Unit</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Price(₦)</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Pre-authorization required</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Remark</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Date Created</th>
+                                                        <th class="mdl-data-table__cell--non-numeric"></th>
+                                                    </tr>
+                                                </thead>
+
+
+                                            </table>
+
+
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </div>
+
+
+                                </div>
+
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div id="tab_2" class="tab-pane">
+                        <div class="box">
+                            <div class="box-header">
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+
+                                @*<div class="col-md-3">
+
+                                      <!-- /. box -->
+                                      <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                          <h3 class="box-title">Service Category</h3>
+
+                                            <div class="box-tools">
+                                                <a href="@Url.Action("AddCategory", "TariffPage",  new { id = 1})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Category </i> </a>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding"  style="max-height: 500px;overflow-x: auto;">
+                                          <ul class="nav nav-pills nav-stacked" id="categorylist2">
+
+                                          </ul>
+                                        </div>
+                                        <!-- /.box-body -->
+                                      </div>
+                                      <!-- /.box -->
+                                    </div>*@
+                                <div class="col-md-12">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Service Price List</h3>
+
+                                            <div class="box-tools">
+                                                <a href="@Url.Action("AddService", "TariffPage",  new { id = @Convert.ToInt32(ViewBag.TariffID)})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Service </i> </a>
+
+                                                <a href="@Url.Action("UploadService", "TariffPage",  new { id = @Convert.ToInt32(ViewBag.TariffID),mode=1})" class="btn btn-info btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Upload Service </i> </a>
+                                                @if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id == 7371)
+                                                {
+                                                    <a href="@Url.Action("ClearTariff", "TariffPage", new { id = @Convert.ToInt32(ViewBag.TariffID), mode = 1 })" class="btn btn-danger btn-box-tool"><i class="fa fa-trash" style="color: white">Clear Service List </i> </a>
+
+                                                }
+                                                else
+                                                {
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <table id="servicepricelist" class="table table-hover" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="mdl-data-table__cell--non-numeric">Id</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">GroupName</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Name</th>
+
+                                                        <th class="mdl-data-table__cell--non-numeric">Unit</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Price(₦)</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Pre-authorization required</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Remark</th>
+                                                        <th class="mdl-data-table__cell--non-numeric">Date Created</th>
+                                                        <th class="mdl-data-table__cell--non-numeric"></th>
+                                                    </tr>
+                                                </thead>
+
+
+                                            </table>
+
+
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </div>
+
+
+                                </div>
+
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+                    </div>
+                    <!-- /.tab-pane -->
+                    <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+            </div>
+            <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+    <script type="text/javascript">
+    $(function () {
+        //load the list
+        $.getJSON("/Tariff/GetCategoryJson/?id=0", function (data) {
+            var items = [];
+            //empty ui
+            $("#categorylist").empty();
+            $.each(data, function (key, val) {
+
+                $("#categorylist").append("<li><a href='#'>" + val.Name + "</a>    </li>");
+
+
+            });
+
+        });
+        $.getJSON("/Tariff/GetCategoryJson/?id=1", function (data) {
+            var items = [];
+            //empty ui
+            $("#categorylist2").empty();
+            $.each(data, function (key, val) {
+
+                $("#categorylist2").append("<li><a href='#'>" + val.Name + "</a>    </li>");
+
+
+            });
+
+        });
+        $('#pricelist').dataTable({
+            "bProcessing": true,
+
+            "bServerSide": true,
+            "sAjaxSource": '../Tariff/GetDrugTariffJson?id=@ViewBag.TariffID',
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_policynumber", "value": $('#src_policynumber').val() }, { "name": "scr_othername", "value": $('#scr_othername').val() }, { "name": "scr_mobilenumber", "value": $('#scr_mobilenumber').val() }, { "name": "scr_provider", "value": $('#scr_provider').val() }, { "name": "scr_company", "value": $('#scr_company').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_expungetype", "value": $('#scr_expungetype').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_PrincipalType", "value": $('#scr_PrincipalType').val() }, { "name": "scr_otherFilter", "value": $('#scr_otherFilter').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    beforeSend: function (xhr) {
+
+
+
+                    },
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            "iDisplayLength": 50,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            'columnDefs': [{
+                'targets': [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': true,
+                'orderable': true,
+
+
+            }],
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                 { "mDataProp": "Groupname", "bVisible": false },
+                 { "mDataProp": "Name" },
+
+
+
+
+                   { "mDataProp": "Unit" },
+                {
+                    "mDataProp": "Price", "mRender": function (data, type, row) {
+                        var response = "";
+
+                        response = '<b>₦ ' + FormatPrice(2, 3, ',', '.', row.Price) + '</b>';
+                        return response;
+                    }
+                },
+
+                {
+                    "mDataProp": "PreauthorizationRequired", "mRender": function (data, type, row) {
+                        var response = "";
+                        if (data == true) {
+                            response = '<span class="label label-danger">Required</span>';
+                        } else {
+                            response = '<span class="label label-success">Not Required</span>';
+                        }
+
+                        return response;
+                    }
+                },
+                    { "mDataProp": "Remark" },
+                { "mDataProp": "CreatedOn" },
+
+                {
+                    "mRender": function (data, type, row) {
+                        if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id == 7371) {
+                            return '<a href="/Tariff/EditDrug?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/Tariff/DeleteDrug?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>';
+                        }
+                    }
+                }
+
+
+
+
+
+            ], "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+
+                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%" class="mdl-data-table__cell--non-numeric">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
+
+
+        });
+        $('#servicepricelist').dataTable({
+            "bProcessing": true,
+
+            "bServerSide": true,
+            "sAjaxSource": '../Tariff/GetServiceTariffJson?id=@ViewBag.TariffID',
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_policynumber", "value": $('#src_policynumber').val() }, { "name": "scr_othername", "value": $('#scr_othername').val() }, { "name": "scr_mobilenumber", "value": $('#scr_mobilenumber').val() }, { "name": "scr_provider", "value": $('#scr_provider').val() }, { "name": "scr_company", "value": $('#scr_company').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_expungetype", "value": $('#scr_expungetype').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_PrincipalType", "value": $('#scr_PrincipalType').val() }, { "name": "scr_otherFilter", "value": $('#scr_otherFilter').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    beforeSend: function (xhr) {
+
+
+
+                    },
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            "iDisplayLength": 50,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            'columnDefs': [{
+                'targets': [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': true,
+                'orderable': true,
+
+
+            }],
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                 { "mDataProp": "Groupname", "bVisible": false },
+                 { "mDataProp": "Name" },
+
+
+
+
+                   { "mDataProp": "Unit" },
+                {
+                    "mDataProp": "Price", "mRender": function (data, type, row) {
+                        var response = "";
+
+                        response = '<b>₦ ' + FormatPrice(2, 3, ',', '.', row.Price) + '</b>';
+                        return response;
+                    }
+                },
+
+                {
+                    "mDataProp": "PreauthorizationRequired", "mRender": function (data, type, row) {
+                        var response = "";
+                        if (data == true) {
+                            response = '<span class="label label-danger">Required</span>';
+                        } else {
+                            response = '<span class="label label-success">Not Required</span>';
+                        }
+
+                        return response;
+                    }
+                },
+                    { "mDataProp": "Remark" },
+                { "mDataProp": "CreatedOn" },
+
+                {
+                    "mRender": function (data, type, row) {
+                        if (@MrCMS.Website.CurrentRequestData.CurrentUser.Id == 7371) {
+                            return '<a href="/Tariff/EditService?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/Tariff/DeleteService?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>';
+                        }
+                    }
+                }
+
+
+
+
+
+            ], "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+
+                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%" class="mdl-data-table__cell--non-numeric">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
+
+
+        });
+
+    });
+
+
+
+
+    </script>

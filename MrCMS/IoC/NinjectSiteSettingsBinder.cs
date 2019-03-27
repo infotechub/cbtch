@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using MrCMS.Helpers;
+using MrCMS.Settings;
+using Ninject;
+using Ninject.Activation;
+using Ninject.Extensions.Conventions.BindingGenerators;
+using Ninject.Syntax;
+
+namespace MrCMS.IoC
+{
+    public class NinjectSiteSettingsBinder : IBindingGenerator
+    {
+        public IEnumerable<IBindingWhenInNamedWithOrOnSyntax<object>> CreateBindings(Type type, IBindingRoot bindingRoot)
+        {
+            List<IBindingWhenInNamedWithOrOnSyntax<object>> list = new List<IBindingWhenInNamedWithOrOnSyntax<object>>();
+            if (type.IsInterface || type.IsAbstract)
+            {
+                return list;
+            }
+
+            bindingRoot.Bind(type).ToMethod(context => GetValue(type, context));
+
+            return list;
+        }
+
+        private static object GetValue(Type type, IContext context)
+        {
+            IConfigurationProvider configProvider =
+                context.Kernel.Get<IConfigurationProvider>();
+            MethodInfo method =
+                typeof (IConfigurationProvider).GetMethodExt("GetSiteSettings");
+
+            return method != null
+                ? method.MakeGenericMethod(type)
+                    .Invoke(configProvider,
+                        new object[] {})
+                : null;
+        }
+    }
+}

@@ -1,0 +1,73 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.SmsConfig
+@{
+    ViewBag.Title = "Configure Sms";
+}
+ 
+
+@using (Html.BeginForm("SmSConfig","EnrolleePage",FormMethod.Post,new {enctype ="multipart/form-data",id="SmsConfig" }))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">SMS Configuration</h4>
+ </div>
+<div class="modal-body">
+    <table class="table table-condensed ">
+        <tbody>
+
+          
+          
+            <tr>
+                @Html.HiddenFor(x=>x.Id)
+                                            
+            </tr>
+            <tr>
+                <td>UserName</td>
+                <td>@Html.TextBoxFor(x=>x.UserName, new {@class = "form-control", @placeholder = "UserName"})</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+
+                <td>@Html.TextBoxFor(x=>x.Password, new {@class = "form-control",@type="password"})
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>Message Mode</td>
+                <td>@Html.DropDownListFor(x=>x.Mode, new SelectList(ViewBag.MessageMode, "Id", "Name"), new {@class = "form-control"})
+                </td>
+            </tr>
+            <tr>
+                <td>Message Template</td>
+                <td>@Html.TextAreaFor(x=>x.BdaySmsTemplate,new {@class = "form-control", @placeholder = "MessageTemplate"})
+                </td>
+            </tr>
+    <tr>
+                <td>Pre-Schedule Text Message</td>
+                <td>@Html.CheckBoxFor( x=>x.PreScheduleText,new {@class = "form-control", @placeholder = "MessageTemplate"})
+                </td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td>@Html.CheckBoxFor( x=>x.Active,new {@class = "form-control", @placeholder = "MessageTemplate"})
+                </td>
+            </tr>
+           
+           
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave">Save </button>
+</div>
+
+}
+
+
+
+
+

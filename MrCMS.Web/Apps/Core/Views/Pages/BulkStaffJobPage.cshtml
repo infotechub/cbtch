@@ -1,0 +1,231 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.BulkStaffJobPage
+ 
+
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>List Of Bulk Staff Jobs.</p>
+        </div>
+       
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">List Of Bulk Staff Jobs.</h3>
+                </div><!-- /.box-header -->
+       <div class="box-body">
+                        
+<br/>
+           <table id="Joblist"  class="mdl-data-table mdl-data-table--selectable">
+       
+               <thead>
+                   <tr>
+                       
+                       <th>Job Id</th>
+                       <th>Company Id</th>
+                       <th>Approved </th>
+                       <th>Uploaded By </th>
+                       <th>Company</th>
+                       <th>Subsidiary</th>
+                       <th>Mode</th>
+                       <th>Status</th>
+                       <th>Total Record in File</th>
+                       <th>Total Record Processed</th>
+                       <th>Total Record Successful</th>
+                       <th>Total Record Failed</th>
+                       <th>Total Record added To StaffList</th>
+                       <th>Total Record added For Expunge</th>
+                       <th>Start Time</th>
+                       <th>End Time</th>
+                       <th>Date Added</th>
+                       <th>AnalysisLink</th>
+                       <th>Actions</th>
+                   </tr>
+               </thead>
+               <tbody>
+            
+                  
+      
+               </tbody>
+               <tfoot>
+                    
+               </tfoot>
+           </table>
+       </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        bodytable$ = $('#Joblist').dataTable({
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": '../Company/GetBulkJobsJson',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_policynumber", "value": $('#src_policynumber').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 
+                   { "mDataProp": "Id", "bVisible": true },
+                   
+                   { "mDataProp": "Companyid", "bVisible": false },
+                   
+         { "mDataProp": "approved", "bVisible": true },
+
+
+
+                {
+                    "mDataProp": "UploadedBy", sClass: "row_id"
+                },
+                 { "mDataProp": "Company", "bVisible": true },
+                  { "mDataProp": "Subsidiary", "bVisible": true },
+                   { "mDataProp": "Mode", "bVisible": true },
+                    { "mDataProp": "Status", "bVisible": true },
+                     { "mDataProp": "TotalRecordinFile", "bVisible": true },
+                      { "mDataProp": "TotalRecordProcessed", "bVisible": true },
+                       { "mDataProp": "TotalRecordSuccessful", "bVisible": true },
+                         { "mDataProp": "TotalRecordFailed", "bVisible": true },
+                           { "mDataProp": "TotalRecordaddedToStaffList", "bVisible": true },
+                             { "mDataProp": "TotalRecordForExpunge", "bVisible": true },
+                               { "mDataProp": "StartTime", "bVisible": true },
+                  { "mDataProp": "EndTime", "bVisible": true },
+
+              //<i class="fa fa-star text-yellow"></i>
+             
+            { "mDataProp": "dateadded" },
+           
+
+            { "mDataProp": "analysislink" },
+             {
+                 "mRender": function (data, type, row) {
+
+                         //<a href="/Company/BulkLoadStaff?id=' + row.Id + '" class="btn btn-warning btn-flat btn-'xs modal-link">Bulk Add</a>' + '<a href="/Company/BulkExpungeStaff?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Bulk Expunge</a>'
+                         return '<a href="/Company/ApproveUpload?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs">Approve</a>'
+                         + ' <a href="/Company/updateRenewal/' + row.Companyid + '" class="btn bg-blue btn-flat btn-xs">Mark Renewal Completed</a>';
+                 
+                 }
+             }
+
+
+
+
+
+            ]
+
+
+
+        });
+
+
+
+        $("#chk_selectall").change(function () {
+
+            if (this.checked) {
+                //Do stuff
+                //$('.chkbox_datatable')
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked', true);
+
+                });
+            } else {
+
+
+             // $('.chkbox_datatable').removeAttr('checked');
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked',false);
+
+                });
+
+
+            }
+        });
+
+
+    });
+
+    function submitforExpunge() {
+        //alert('here');
+        var checkIds = [];
+        bodytable$.$('tr').each(function (index, rowhtml) {
+            var checked = $('input[type="checkbox"]:checked', rowhtml).length;
+            if (checked == 1) {
+                checkIds.push($('.row_id', rowhtml).text());
+            }
+        });
+        $('#hidden_selectedIDs').val(checkIds);
+        //alert($('#hidden_selectedIDs').val());
+
+    }
+
+</script>
+
+
+
+

@@ -1,0 +1,40 @@
+﻿@using System
+@using System.Linq
+@using MrCMS.Helpers
+@using MrCMS.Services
+@using MrCMS.Website
+@using MrCMS.Apps
+<div class="card" style="color: #0aa89e; background-color: white">
+    <div class="card-head">
+        <button class="btn btn-default pull-right chatToggle" type="button" style="background-color: beige"><i class="fa fa-close"></i></button>
+    </div>
+    <div class="card-body" style="padding: 4px; background-color: white">
+
+
+
+        <h4 id="chatfullname"><i class="fa fa-user useroffline" id="Chatuserstatus"></i>Chat with Tony Asije</h4>
+
+        <div class="input-group" style="width: 100%;">
+            <input type="text" style="background-color: beige" class="form-control input-lg" placeholder="Type Message ..." name="message" id="message">
+            <span class="glyphicon glyphicon-comment form-control-feedback"></span>
+        </div>
+
+        <hr />
+        <div class="direct-chat-messages" id="chatpanel" data-id="0">
+            <!-- Message. Default to the left -->
+            <div class="direct-chat-msg">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@{ 
+
+Html.IncludeScript("~/Apps/Core/Content/Scripts/ChatPane.js");
+}
+
+

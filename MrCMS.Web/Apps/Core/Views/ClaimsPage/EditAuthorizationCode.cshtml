@@ -1,0 +1,343 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.AuthorizationCode
+@{
+    ViewBag.Title = "Edit Authorization Code";
+}
+<style>
+    .element{
+        width:100%;
+    }
+</style>
+
+@using (Html.BeginForm("GenerateAuthorizationCode", "ClaimsPage", FormMethod.Post, new { enctype = "multipart/form-data", id = "Dependentform" }))
+{
+
+    <div class="modal-header">
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Edit Authorization Code</h4>
+    </div>
+    <div class="modal-body">
+        <div class="box-body ">
+        <table class="table table-condensed ">
+            <tbody>
+                <tr>
+                    <td>Authorization Code</td>
+                    <td>@Html.TextBox("authorizationcode", (string)@ViewBag.AuthCode, new { @class = "form-control", @placeholder = "Authorization Code", @id = "authorizationcode", @readonly = "" })</td>
+                </tr>
+                <tr>
+                    <td>Provider</td>
+                    <td>
+                        @Html.DropDownList("provider_list", new SelectList(ViewBag.PrvidersList, "Id", "Name",Model.provider), new { @class = "form-control" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Enrollee Policy Number</td>
+                    <td>
+                        <input type="hidden" id="enrolleeId" name="enrolleeId" />
+                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                        @Html.TextBox("policynumber",Model.policyNumber, new { @class = "form-control", @placeholder = "Policy Number", @id = "policynumber", @style = "min-width:100%" })
+
+
+
+
+
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Enrollee Full Name</td>
+                    <td>
+                        @Html.TextBox("enrolleeName", Model.enrolleeName, new { @class = "form-control", @placeholder = "Enrollee Full Name", @id = "enrolleeName" })
+
+
+
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Enrollee Company</td>
+                    <td>
+
+                        @Html.DropDownList("company_list", new SelectList(ViewBag.Companylist, "Id", "Name",Model.EnrolleeCompany), new { @class = "form-control" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Enrollee Plan</td>
+                    <td>
+                        @Html.TextBox("Plan", Model.Plan, new { @class = "form-control", @placeholder = "Enrollee Plan", @id = "Plan" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Enrollee Age</td>
+                    <td>
+                        @Html.TextBox("enrolleeAge", Model.enrolleeAge, new { @class = "form-control", @placeholder = "Enrollee Age", @id = "enrolleeAge" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Diagnosis</td>
+                    <td>
+                        @Html.TextBox("Diagnosis", Model.Diagnosis, new { @class = "form-control", @placeholder = "Diagnosis e.g Malaria", @id = "Diagnosis" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Authorization For</td>
+                    <td>
+                        @Html.TextArea("treatmentAuthorized", Model.treatmentAuthorized, new { @class = "form-control", @placeholder = "What did you authorize ? ", @id = "treatmentAuthorized" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Category</td>
+                    <td>
+                        @Html.TextBox("TypeofAuthorization", Model.TypeofAuthorization, new { @class = "form-control", @placeholder = "Category e.g Secondary Care", @id = "TypeofAuthorization" })
+
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>Requester's Name</td>
+                    <td>
+                        @Html.TextBox("RequesterName", Model.requestername, new { @class = "form-control", @placeholder = "Requester's name", @id = "RequesteeName" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Requester's Phone</td>
+                    <td>
+                        @Html.TextBox("RequesterPhone", Model.requesterphone, new { @class = "form-control", @placeholder = "Requester Phone number", @id = "RequesterPhone" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Is Admission</td>
+                    <td>
+
+                        @Html.CheckBox("isadmission",Model.Isadmission)
+
+
+                        
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Admission Date</td>
+                    <td>
+                        @Html.TextBox("admissiondate",(string) ViewBag.datestr, new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>No Of Days</td>
+                    <td>
+                        @Html.TextBox("numodays",Model.DaysApprovded, new { @class = "form-control", @type = "number" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Discharge Date</td>
+                    <td>
+                        @Html.TextBox("dischargedate", (string) ViewBag.disdatestr, new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Authorized By</td>
+                    <td>
+                        @Html.DropDownList("User_list", new SelectList(ViewBag.usersList, "Id", "Name",Model.Authorizedby), new { @class = "form-control" })
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Note</td>
+                    <td>
+                        <textarea placeholder="Enter Note ..." rows="3" class="form-control" id="Note_txt" name="Note_txt" >@Model.Note</textarea>
+
+                    </td>
+
+                </tr>
+
+
+
+
+            </tbody>
+        </table>
+            
+    </div>
+        <div class="overlay">
+
+        </div>
+    </div>
+    
+    <div class="modal-footer">
+
+        <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="btnSave">Save</button>
+    </div>
+
+}
+
+<script>
+    
+   
+
+    $(function () {
+
+        $('#modal-container').on('shown.bs.modal',
+            function (e) {
+                // do something...
+                $("#admissiondate").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                $("#dischargedate").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+            });
+
+
+
+
+        var options6 = {
+            url: function (phrase) {
+                return "../Enrollee/GetEnrolleePolicyNumberName?phrase=" + phrase;
+            },
+
+
+
+            getValue: "Policynumber",
+
+            template: {
+                type: "description",
+                fields: {
+                    description: "Name"
+                }
+            },
+            list: {
+                match: {
+                    enabled: true
+                },
+                onSelectItemEvent: function () {
+
+
+                    var value = $("#policynumber").getSelectedItemData().Policynumber;
+                    $("#policynumber").val(value).trigger("change");
+                    $("#enrolleeName").val('');
+                    $("#company_list").val('-1');
+                    //$("#enrolleesex").val('');
+                    $("#enrolleeId").val('');
+                    $("#Plan").val('');
+
+                }
+            },
+
+            theme: "plate-dark"
+        };
+
+        //$("body").delegate("#enrolleeName", "focusin", function () {
+        //        checkpolicy($("#policynumber").val());
+        //        console.log('focusin');
+        //});
+        $('#modal-container').on('shown.bs.modal', function () {
+            $("#policynumber").easyAutocomplete(options6);
+        });
+
+        $("#modal-container").delegate("#enrolleeName", "focusin", function () {
+            checkpolicy($("#policynumber").val());
+            console.log('focusin');
+        });
+     
+    });
+   
+    function checkpolicy(value) {
+        if (true) {
+
+            if (value.length > 15) {
+
+                //alert('hello');
+
+                $.ajax({
+                    "type": "GET",
+                    "url": '../Enrollee/GetEnrolleeDetailsClaim/?policyNumber=' + value,
+                    "data": '',
+                    beforeSend: function (xhr) {
+
+                        $("#enrolleeloadingdisplay").removeClass("hidden");
+
+
+                    },
+                    "success": function (msg) {
+
+                        if (msg.respCode == 0) {
+
+                            $("#enrolleeName").val(msg.EnrolleeName);
+                            $("#company_list").val(msg.CompanyId);
+                            //$("#enrolleesex").val(msg.EnrolleeGender);
+                            $("#enrolleeId").val(msg.Id);
+                            $("#Plan").val(msg.EnrolleePlan);
+                            
+                            //$("#CompanyID").val(msg.CompanyId);
+
+
+                        } else {
+                            toastr["error"](msg.errorMsg, "Input Error");
+                            $("#enrolleeName").val('');
+                            $("#company_list").val('-1');
+                            //$("#enrolleesex").val('');
+                            $("#enrolleeId").val('');
+                            $("#Plan").val('');
+                            //$("#CompanyID").val('');
+                        }
+
+                        $("#enrolleeloadingdisplay").addClass("hidden");
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            $("#enrolleeloadingdisplay").addClass("hidden");
+
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            }
+
+        }
+    }
+  
+</script>
+
+
+

@@ -1,0 +1,192 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.AuthRequestPage
+@{
+    ViewBag.Title = "Authorization Request Page";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+if (input.Length <= length)
+{
+        @input
+}
+else
+{
+        @input.Substring(0, length)<text>...</text>
+}
+}
+
+@helper StatusColor(bool input)
+{
+var response = "";
+if (input)
+{
+    response =
+            "success";
+
+}
+else
+{
+    response = "danger";
+
+}
+    @response
+}
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>View all authorization request from the provider portal.</p>
+        </div>
+       
+       
+    </div>
+</div>
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Request List</h3>
+    </div><!-- /.box-header -->
+
+    
+    <div class="box-body">
+        <table id="AuthRequestlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Id</th>
+                    <th class="mdl-data-table__cell--non-numeric">Provider Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Policy Number</th>
+                    <th class="mdl-data-table__cell--non-numeric">Full Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Company</th>
+                    <th class="mdl-data-table__cell--non-numeric">Diagnosis</th>
+                    <th class="mdl-data-table__cell--non-numeric">Reason For Code</th>
+                    <th class="mdl-data-table__cell--non-numeric">Request Time</th>
+                    <th class="mdl-data-table__cell--non-numeric"></th>
+                    <th class="mdl-data-table__cell--non-numeric"></th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+        </table>
+    </div><!-- /.box-body -->
+</div><!-- /.box -->
+
+<script>
+
+    $(function () {
+
+      
+        $.ajaxSetup({
+            cache: false
+        });
+
+
+        $('#AuthRequestlist').dataTable({
+
+            "sAjaxSource": '../claim/QueryAuthRequestJson',
+
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': [0,1,2,3,4,5,8],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push();
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+           
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                 { "mDataProp": "Id", "bVisible": true, sClass: "row_id" },
+                 
+             { "mDataProp": "providerName", "bVisible": true },
+          
+                    { "mDataProp": "policynumber", "bVisible": true },
+
+                     { "mDataProp": "fullname", "bVisible": true },
+                       { "mDataProp": "company", "bVisible": true },
+                         { "mDataProp": "diagnosis", "bVisible": true },
+                 { "mDataProp": "reasonforcode", "bVisible": true },
+                  { "mDataProp": "CreatedOn", "bVisible": true },
+                     { "mDataProp": "isnew", "bVisible": false },
+{
+    "mRender": function (data, type, row) {
+
+        if (row.isnew == true) {
+            return '<button  class="btn bg-navy btn-flat btn-xs"  onclick="loadCodeintf(&quot;' + row.Id + '&quot;,&quot;' + row.providerid + '&quot;,&quot;' + row.policynumber + '&quot;,&quot;' + row.fullname + '&quot;,&quot;' + row.diagnosis + '&quot;);"><i class="fa fa-check" aria-hidden="true"></i> Give Code</button>';
+        }
+        return '';
+                              }
+                          }
+
+
+
+
+
+            ]
+
+
+
+        });
+        //$('#datepicker').datepicker({
+        //    autoclose: true
+        //});
+        //$('#datepicker2').datepicker({
+        //    autoclose: true
+        //});
+
+        
+    });
+
+
+
+    function loadCodeintf(a, b, c, d, e) {
+
+        //a=itemid,b=providerid,c=enrolleepolicynumber,d=enrolleefullname
+        //e=diagnosis
+        $("#auth_policynumber").val(c);
+        $("#auth_enrolleeName").val(d);
+        $("#auth_provider_list").val(b);
+        $("#auth_Diagnosis").val(e);
+        $("#auth_requestid").val(a);
+
+        checkpolicy($("#auth_policynumber").val());
+        $("#auth_provider_list").trigger('chosen:updated');
+
+        $('#authorizationModal').modal('toggle');
+       // alert(a + b +c +d+e);
+
+    }
+</script>

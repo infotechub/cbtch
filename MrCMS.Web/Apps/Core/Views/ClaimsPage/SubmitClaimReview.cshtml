@@ -1,0 +1,98 @@
+﻿@model MrCMS.Web.Apps.Core.Entities.ClaimBatch
+
+@{
+    ViewBag.Title = "Submit Claim Batch";
+}
+
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Submit Claim Batch For Review</h4>
+ </div>
+<div class="modal-body">
+
+    @{
+        if (Model.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Capturing)
+        {
+            <div class="alert alert-danger alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+                You cannot submit this batch for review,because this batch was not submitted for Vetting. Please tell the capturer to submit the batch for vetting then try again.
+            </div>
+        }
+
+        else
+        {
+            <div class="alert alert-warning alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+                Are you sure you want to  submit this batch for review ?
+            </div>
+
+        }
+    }
+   
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+
+                <th>Field</th>
+                <th>Value</th>
+
+            </tr>
+            <tr>
+                <td>Id</td>
+                <td>@Html.DisplayFor(x => x.Id)</td>
+            </tr>
+            <tr>
+                <td>Provider Name</td>
+                <td>@ViewBag.hospital</td>
+            </tr>
+            <tr>
+                <td>Claim Batch</td>
+                <td>@ViewBag.Batchh</td>
+            </tr>
+           
+            <tr>
+                <td>Total Encouter Captured</td>
+                <td>@ViewBag.TotalCaptured</td>
+            </tr>
+            <tr>
+                <td>Total Amount Captured</td>
+                <td>@ViewBag.TotalAmount</td>
+            </tr>
+
+          
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal-footer">
+    @using (Html.BeginForm("SubmitClaimReview", "ClaimsPage", FormMethod.Post))
+    {
+                @Html.AntiForgeryToken()
+@Html.HiddenFor(x => x.Id)
+
+
+                <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+               if(Model.status != MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Capturing)
+                {
+                    <button class="btn btn-success" type="submit" id="btnSave">Confirm </button>
+
+                }
+    }
+
+</div>
+
+
+<script>
+
+    $(function () {
+      
+
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

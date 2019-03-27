@@ -1,0 +1,840 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.EnrolleeDetailsPage
+@{
+    ViewBag.Title = "Enrollee Details";
+}
+@helper DateShort(DateTime? input)
+{
+var resp = Convert.ToDateTime(input).ToString("MM/dd/yyyy");
+
+    @resp;
+}
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen" style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p> View Enrollee details,you can view dependents by clicking on the dependent tab.</p>
+        </div>
+        @using (Html.BeginForm("UpdateEnrollee", "EnrolleePage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="col-md-12">
+                <div>
+
+                    <div class="box-body">
+                        <div class="box-header">
+
+
+                        </div>
+                        <!-- Custom Tabs -->
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="" id="tab1"><a data-toggle="tab" href="#tab_1" aria-expanded="false">Basic Information</a></li>
+                                <li class="" id="tab5"><a data-toggle="tab" href="#tab_5" aria-expanded="false">Additional Information</a></li>
+                                @{if (Model.Enrolleemodel.Parentid <= 0 && ViewBag.DependentsEnabled)
+                                    {
+                                        <li class="" id="tab2"><a data-toggle="tab" href="#tab_2" aria-expanded="false">Dependent Information</a></li>
+                                    }}
+
+                                <li class="" id="tab3"><a data-toggle="tab" href="#tab_3" aria-expanded="false">Benefit Table</a></li>
+                                <li class="" id="tab4"><a data-toggle="tab" href="#tab_4" aria-expanded="false">Medical History</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab_1" class="tab-pane">
+                                    <div class="row">
+
+                                        @{
+
+                                            if (Model.Enrolleemodel.Isexpundged)
+                                            {
+                                                <div class="alert alert-danger alert-dismissable">
+                                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                    <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+                                                    The Enrollee has been expunged,you can click on the "Additional Information" Tab to view more details.
+                                                </div>
+                                            }
+                                        }
+
+                                        <div class="col-xs-6">
+                                            <table class="table table-condensed ">
+                                                <tbody>
+
+                                                    <tr>
+
+                                                        <td colspan="2">
+                                                            <div class="form-group" id="photo_grp">
+
+                                                                <img src="data:image/png;base64,@ViewBag.enrolleeimg" style="max-height: 160px; max-width: 160px;"
+                                                                     class="img-rounded" id="photo_img">
+                                                                <input type="file" id="photoInputFile" name="photoInputFile">
+
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        @ViewBag.Staff_StaffId
+                                                    </tr>
+                                                    <tr hidden="true">
+                                                        @Html.Hidden("staffidd", (int)ViewBag.StaffID)
+                                                        @Html.Hidden("Mode", 0)
+                                                        @Html.Hidden("enrolleeid", Model.Enrolleemodel.Id)
+                                                        <td>Enrollee FullName</td>
+                                                        <td>
+                                                            @Html.TextBox("Stafffullname", (string)ViewBag.Stafffullname, new { @class = "form-control", @placeholder = "", @id = "Stafffullname", @readonly = "" })
+
+
+                                                        </td>
+
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Policy Number</td>
+                                                        <td>   @Html.TextBox("policynumber", Model.Enrolleemodel.Policynumber, new { @class = "form-control", @placeholder = "Policy Number", @id = "policynumber", @readonly = "" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Surname</td>
+
+                                                        <td>
+                                                            @Html.TextBox("surname", Model.Enrolleemodel.Surname, new { @class = "form-control", @placeholder = "Enrollee  surname", @id = "surname", @title = "This is the enrollee's last name." })
+                                                    </td>
+
+
+                                                </tr>
+                                                <tr>
+                                                    <td>Other Names</td>
+                                                    <td>
+                                                        @Html.TextBox("othernames", Model.Enrolleemodel.Othernames, new { @class = "form-control", @placeholder = "Enrollee other names", @id = "othernames", @title = "This is the  enrollee first name and any other name. " })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date of Birth</td>
+                                                    <td> @Html.TextBox("datepicker", DateShort(Model.Enrolleemodel.Dob), new { @class = "form-control", @placeholder = "DOB", @id = "datepicker" })</td>
+                                                </tr>
+
+                                                <tr class="hidden">
+                                                    <td>Age</td>
+                                                    <td>  @Html.TextBox("age", Model.Enrolleemodel.Age, new { @class = "form-control", @placeholder = "Age", @id = "age" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Marital Status</td>
+                                                    <td>
+                                                        @Html.DropDownList("maritalstatusvalue", new SelectList(ViewBag.MaritalStatus, "Id", "Name", Model.Enrolleemodel.Maritalstatus), new { @class = "form-control", @id = "maritalstatusvalue", @onchange = "SelectChange(this)" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sex</td>
+                                                <td>
+                                                    @Html.DropDownList("sex", new SelectList(ViewBag.Sexx, "Id", "Name", Model.Enrolleemodel.Sex), new { @class = "form-control", @id = "sex", @onchange = "SelectChange(this)" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>State</td>
+                                                <td>
+                                                    @Html.DropDownList("state", new SelectList(Model.States, "Id", "Name", Model.Enrolleemodel.Stateid), new { @class = "form-control", @id = "state" })
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>LGA</td>
+                                                <td>
+                                                    @Html.DropDownList("lga", new SelectList(ViewBag.LGAS, "Id", "Name", Model.Enrolleemodel.Lgaid), new { @class = "form-control", @id = "lga" })
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                                <div class="col-xs-6">
+                                    <table class="table table-condensed ">
+                                        <tbody>
+
+
+
+                                            <tr>
+                                                <td>Residential Address</td>
+                                                <td>
+                                                    @Html.TextBox("address", Model.Enrolleemodel.Residentialaddress, new { @class = "form-control", @placeholder = "Residential Address", @id = "address" })
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Occupation</td>
+                                                <td>
+                                                    @Html.TextBox("occupation", Model.Enrolleemodel.Occupation, new { @class = "form-control", @placeholder = "occupation", @id = "occupation" })
+
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>Mobile Number</td>
+                                                <td>
+                                                    @Html.TextBox("mobilenumber", Model.Enrolleemodel.Mobilenumber, new { @class = "form-control", @placeholder = "Mobile Number", @id = "mobilenumber" })
+
+                                                </td>
+
+
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>Email</td>
+                                                <td>
+                                                    @Html.TextBox("email", Model.Enrolleemodel.Emailaddress, new { @class = "form-control", @placeholder = "Email", @id = "Email" })
+
+
+                                                </td>
+
+
+                                            </tr>
+
+                                            <tr>
+                                                <td>Sponsorship Type</td>
+                                                <td>
+                                                    @Html.DropDownList("sponsorshiptypevalue", new SelectList(ViewBag.Sponsorshiptype, "Id", "Name", Model.Enrolleemodel.Sponsorshiptype), new { @class = "form-control", @id = "sponsorshiptypevalue", @onchange = "SelectChange(this)" })
+
+
+
+                                                </td>
+
+
+                                            </tr>
+                                            <tr id="othertyperow">
+                                                <td>Sponsorship Type Name</td>
+                                                <td>
+                                                    @Html.TextBox("sponsorshipothername", Model.Enrolleemodel.Sponsorshiptypeothername, new { @class = "form-control", @placeholder = "Other", @id = "sponsorshipothername" })
+
+
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>Subscription Type</td>
+                                                <td>
+                                                    @Html.TextBox("subscriptiontypevalue", (string)ViewBag.SubscriptionType, new { @class = "form-control", @placeholder = "Subscription Type", @id = "subscriptiontypevalue", @readonly = "" })
+
+
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>Company </td>
+                                                <td>
+                                                    @Html.TextBox("company", (string)ViewBag.Company, new { @class = "form-control", @placeholder = "Subscription Type", @id = "company", @readonly = "" })
+
+
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>Company Subsidiary</td>
+                                                <td>
+                                                    @Html.TextBox("Subsidiary", (string)ViewBag.CompanySubsidiary, new { @class = "form-control", @placeholder = "Company Subsidiary", @id = "companySubsidiary", @readonly = "" })
+
+
+                                                </td>
+
+
+                                            </tr>
+
+                                            <tr>
+                                                <td>Provider of Choice</td>
+                                                <td>
+                                                    @Html.DropDownList("provider", new SelectList(ViewBag.providerlist, "Id", "Name", Model.Enrolleemodel.Primaryprovider), new { @class = "form-control chosen-select", @id = "provider", @onchange = "SelectChange(this)" }))
+
+
+
+                                                </td>
+
+
+                                            </tr>
+
+                                            <tr>
+                                                <td>ID Card Printed</td>
+                                                <td>
+                                                    @Html.CheckBox("idCardPrinted", (bool)ViewBag.idCardPrintedValue, new { @class = "form-control" })
+
+
+
+                                                </td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>Pre-existing Medical Conditions</td>
+                                                <td>
+                                                    @Html.TextArea("premedicalcondition", Model.Enrolleemodel.Preexistingmedicalhistory, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalcondition" })
+
+                                                </td>
+
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @{
+                                    if (!Model.Enrolleemodel.Isexpundged)
+                                    {
+                                        <div class="pull-right">
+
+                                            <button class="btn btn-success pull-right" type="submit" style="margin-left: 4px;margin-right:10px;">Update</button>
+                                            <a href="@Url.Action("Enrollee", "EnrolleePage", new {id = (int)ViewBag.StaffID})" class="btn btn-flat btn-warning pull-right">Reset </a>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div id="tab_2" class="tab-pane">
+                            @{
+
+                                if (!(bool)ViewBag.DependentsEnabled)
+                                {
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                                        You are not allowed to add dependents to this enrollee due to the enrollee plan.Kindly Contact the client service in-charge of this company.
+                                    </div>
+                                }
+                            }
+
+                            @{
+
+                                if ((bool)ViewBag.DependentsEnabled)
+                                {
+                                    <a href="@Url.Action("AddDependent", "EnrolleePage", new {id = Model.Enrolleemodel.Id})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add Dependent</i> </a>
+                                     <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage", new {id = -1}, new {@class = "btn btn-flat btn-success modal-link"})-->
+                                    }
+                                    }
+                                    <div class="box" style="overflow:hidden">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Dependent List</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body" style="overflow:auto">
+                                            <table id="dependantlist" class="mdl-data-table mdl-data-table--selectable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Passport</th>
+
+                                                        <th>Name</th>
+                                                        <th>Policy Number</th>
+                                                        <th>DOB</th>
+                                                        <th>Sex</th>
+                                                        <th>Hospital</th>
+                                                        <th>Mobile Number</th>
+                                                        <th>Pre-existing medical conditions</th>
+                                                        <th>Relationship with Principal Enrollee</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+
+                                            </table>
+                                        </div><!-- /.box-body -->
+                                    </div><!-- /.box -->
+                                    <!-- /.box -->
+
+                                </div>
+                                <div id="tab_3" class="tab-pane" id="tab_3">
+
+                                    <div class="box">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Benefit Table</h3>
+
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <div class="col-sm-12">
+                                                <table id="benefitlist" class="table table-striped r">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id</th>
+                                                            <th>GroupName</th>
+                                                            <th>Name</th>
+
+                                                            <th>Description</th>
+                                                            <th>Benefit Limit</th>
+
+
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                    <tfoot>
+
+                                                    </tfoot>
+                                                </table>
+
+                                            </div>
+
+
+
+                                        </div><!-- /.box-body -->
+                                    </div><!-- /.box -->
+                                </div>
+                                <div id="tab_4" class="tab-pane">
+                                    <div class="box checkbox-default-bright">
+
+                                        <div class="box-header">
+                                            <!-- Date and time range -->
+                                            <div class="form-group pull-left">
+                                                <input type="hidden" id="startdate" value="" />
+                                                <input type="hidden" id="enddate" value="" />
+                                                <div class="input-group">
+                                                    <button type="button" class="btn btn-default pull-right" id="daterange-btn">
+                                                        <span>
+                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                        </span>
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- /.form group -->
+                                        </div>
+
+                                        <div class="box-body" style="background-color: #ecf0f1" >
+                                            <ul class="timeline" id="timelineshitt">
+
+                                                <!-- END timeline item -->
+                                                <li>
+                                                    <i class="fa fa-clock-o bg-gray"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="overlay" id="historyloader">
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                        </div>
+                                        <div class="box-footer">
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div id="tab_5" class="tab-pane">
+
+                                    <table class="table table-condensed ">
+
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Date Created
+                                                </td>
+
+                                                <td>
+                                                    @ViewBag.DateAddedEnrolle
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Added By
+                                                </td>
+
+                                                <td>
+                                                    @ViewBag.AddedByEnrollee
+
+                                                </td>
+                                            </tr>
+                                            @{
+
+                                                if (Model.Enrolleemodel.Isexpundged)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            Expunged By
+                                                        </td>
+
+                                                        <td>
+                                                            @ViewBag.ExpungedByEnrollee
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Date Expunged
+                                                        </td>
+
+                                                        <td>
+                                                            @ViewBag.DateExpungedEnrollee
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Expunged Note
+                                                        </td>
+
+                                                        <td>
+                                                            @Model.Enrolleemodel.ExpungeNote
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Advance Actions</td>
+                                                        <td><div class="btn btn-warning btn-xs" id="restorebtn" data-id="@Model.Enrolleemodel.Id" >Restore Enrollee </div>
+                                                            <div class="btn btn-danger btn-xs" id="deletebtn" data-id="@Model.Enrolleemodel.Id">Delete Enrollee </div>
+                                                        
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+                                 
+                                    
+                                   
+                                </div>
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+                        <!-- nav-tabs-custom -->
+                    </div>
+
+                </div>
+            </div>
+                                                }
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $( "#deletebtn" ).click(function() {
+            var id = $("#deletebtn").attr("data-id");
+      
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this enrollee.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+.then((willDelete) => {
+    if (willDelete) {
+        window.location.replace("../enrollee/deleteenrollee?id=" + id);
+    } else {
+        swal("Enrollee is safe!");
+    }
+});
+        
+        });
+        $( "#restorebtn" ).click(function() {
+            var id = $("#restorebtn").attr("data-id");
+           
+
+
+            swal({
+                title: "Are you sure?",
+                text: "You are about to restore this enrollee.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+.then((willDelete) => {
+    if (willDelete) {
+        window.location.replace("../enrollee/restoreenrollee?id=" + id);
+    } else {
+        swal("Enrollee was not restored.");
+    }
+});
+    
+        
+        });
+    
+
+
+        var startdateV =  "";
+       
+        var enddateV ="";
+
+        
+        LoadHistory(startdateV,enddateV);
+        $('#daterange-btn').on('apply.daterangepicker', function (ev, picker) {
+
+
+
+
+            startdateV = picker.startDate.format('YYYY-MM-DD');
+            enddateV = picker.endDate.format('YYYY-MM-DD');
+
+            LoadHistory(startdateV,enddateV);
+
+
+            //$('#authorizationlist').DataTable().ajax.reload();
+        });
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {"opens": "right",
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+        );
+        $("#provider").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Select Hospital",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+
+        $('#benefitlist').dataTable({
+            "sAjaxSource": '../Company/GetCompanyBenefitforPlanJson?id=' + @ViewBag.companyPlanId ,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength": 30,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false},
+
+            { "mDataProp": "groupname", "bVisible": false },
+
+                { "mDataProp": "name" },
+
+                { "mDataProp": "description" },
+
+                { "mDataProp": "benefitlimit" },
+
+
+
+
+
+
+            ]
+
+    , "drawCallback": function (settings) {
+        var api = this.api();
+        var rows = api.rows({ page: 'current' }).nodes();
+        var last = null;
+
+        api.column(1, { page: 'current' }).data().each(function (group, i) {
+            if (last !== group) {
+                $(rows).eq(i).before(
+                    '<tr style="background-color:#0aa89e;font-weight: bold;color:white;" ><td colspan="100%">' + group + '</td></tr>'
+                );
+
+                last = group;
+            }
+        });
+    }
+
+
+        });
+        $('#dependantlist').dataTable({
+            "sAjaxSource": '../Enrollee/GetDependentsJson?id=' + @Model.Enrolleemodel.Id,
+
+            "bPaginate": false,
+            "bLengthChange": false,
+            "iDisplayLength":20,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "id", "bVisible": false },
+                  { "mDataProp": "img",
+
+
+
+                      "mRender": function (data, type, row) {
+                          var resp = '<img src="data:image/png;base64,'+ row.img + '" style="max-height: 140px; max-width:140px;" class="img-rounded" >';
+                          return resp;
+                      }},
+                { "mDataProp": "name" },
+             { "mDataProp": "policynum" },
+                { "mDataProp": "dob" },
+                 { "mDataProp": "sex" },
+                 { "mDataProp": "hospital" },
+                 { "mDataProp": "mobile" },
+                 { "mDataProp": "preexisting" },
+
+                { "mDataProp": "relationship" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/Enrollee/EditDependent?id=' + row.id + '" class="btn btn-warning btn-flat btn-xs modal-link"> <i class="fa fa-pencil-square-o"> Edit </i></a>  <a href="/Enrollee/ExpungeDependent?id=' + row.id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times"> Expunge </i></a>' ;
+                    }
+                }
+
+
+
+
+
+
+            ]
+
+
+
+        });
+        var tabid = getParameterByName('tabid');
+        var mode = getParameterByName('Mode');
+
+        $("#Mode").val(mode);
+
+        switch(tabid) {
+            case "1":
+                $("#tab1").addClass("active");
+                $("#tab_1").addClass("active");
+                break;
+            case "2":
+
+                $("#tab_2").addClass("active");
+                $("#tab2").addClass("active");
+                break;
+
+            case null:
+                $("#tab1").addClass("active");
+                $("#tab_1").addClass("active");
+                break;
+        }
+        $("#photoInputFile").val('');
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo_img').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        //check if the photoinputfile event change
+        $("#photoInputFile").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 200) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 200kb');
+                $("#photoInputFile").val('');
+                $('#photo_img').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this);
+            }
+            //
+
+            //    $("#errormsg").html('Avatar cannot be greater than 20kb,use a smaller image file.');
+            //    $("#errortab").removeClass("hidden");
+
+            //    $('#photo_img').attr('src', '~/Content/dist/img/no_pic.png');
+            //    return;
+            //}
+            //else remove error
+            //$("#errormsg").html('');
+            //$("#errortab").addClass("hidden");
+
+
+        });
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        //$("#sponsorshiptypevalue").change(function () {
+
+        //    if ($("#sponsorshiptypevalue").val() == "2") {
+        //        $("#sponsorshipothername").val('');
+        //        $("#othertyperow").removeClass('hidden');
+
+        //    } else {
+        //        $("#othertyperow").addClass('hidden');
+        //    }
+        //});
+
+
+    });
+    $('#state').on('change', function () {
+
+        $.getJSON("../Provider/GetLga/" + $(this).val(), function (data) {
+
+            $("#lga").empty();
+
+            $.each(data, function () {
+                $("#lga").append($("<option />").val(this.Id).text(this.Name));
+            });
+
+        });
+    });
+
+
+
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    function LoadHistory(a,b){
+        $('#historyloader').removeClass('hidden');
+        var Timelineshii = $.getJSON( "../enrollee/GetEnrolleeMedicalHistory?EnrolleeId="+  @Model.Enrolleemodel.Id+"&Start="+ a +"&end=" + b , function(data) {
+            
+            $('#timelineshitt').html('');
+            $.each( data, function( key, value ) {
+         
+                var $newdiv1 = $( "<li class='time-label'> <span  style='background-color:#48c9b0;color:white'>" +value.DateEncounter + "</span> </li>" );
+                var $newdiv2 = $( "<li> <!-- timeline icon --> <i class='fa fa-hospital-o bg-maroon'></i> <div class='timeline-item'> <span class='time'><i class='fa fa-clock-o'></i> 12:00</span> <h3 class='timeline-header'><a href='#'  title='" + value.providerAddress + "'>"+value.providerName + "</a></h3> <div class='timeline-body'> The enrollee,<b>"+ value.EnrolleeName + "</b> was diagnosed with <b> "+ value.Diagnosis +"</b></div> <div class='timeline-footer'> <a class='btn btn-danger btn-xs'>"+ value.Diagnosis+"</a> <a class='btn btn-info btn-xs'>" + value.Tags + "</a> <a class='btn btn-success btn-xs'> ₦ "+value.InitialAmount  + "</a> </div> </div> </li>" );
+               
+                
+                $('#timelineshitt').append( $newdiv1 ,[$newdiv2] );
+
+            });
+            //end the timeline
+            var $newdiv3 = $( "<li> <i class='fa fa-clock-o bg-gray'></i> </li>" );
+            $('#timelineshitt').append( $newdiv3 );
+               
+        })
+          .done(function() {
+  
+          })
+          .fail(function() {
+
+              console.log( "There was an error loading medical history." );
+          })
+          .always(function() {
+              $('#historyloader').addClass('hidden');
+          });
+    }
+
+
+</script>
+
+
+<script>    $(".chzn-select").chosen(); </script>

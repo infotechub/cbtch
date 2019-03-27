@@ -1,0 +1,564 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.EnrolleeStaffListPage
+@{
+    ViewBag.Title = "Staff List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Staff list for all company.You can create profile for new staff.</p>
+        </div>
+
+   
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Staff List</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <input type="text" placeholder="Staff Name" class="form-control input-lg" id="src_StaffName">
+                    </div>
+                    </div>                                                                                                                                                                            
+
+                   
+                        <div class="row">
+                          
+                            <div class="col-xs-3">
+                                @Html.DropDownList("scr_company", new SelectList(ViewBag.Companylist, "Id", "Name"), new { @class = "form-control input-lg" })
+                            </div>
+
+                            <div class="col-xs-3">
+                                <select id="src_companysub" class="form-control input-lg">
+                                    <option value="-1" selected="selected">All</option>
+                                   
+
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                               
+                                @Html.DropDownList("scr_users", new SelectList(ViewBag.userlist, "Id", "Name"), new { @class = "form-control input-lg" })
+                            </div>
+
+                            <div class="col-xs-3">
+                                <select id="scr_ProfileStatus" class="form-control input-lg">
+                                    <option value="0" selected="selected">All</option>
+                                    <option value="1">Old  Only</option>
+                                    <option value="2" >New Only</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+
+                        <br />
+                        <div class="row">
+
+
+                            <div class="col-xs-2">
+                                @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                            </div>
+                            <div class="col-xs-5">
+
+                                @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                            </div>
+                            <div class="col-xs-5">
+
+                                @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                            </div>
+
+
+                        </div>
+                        <br />
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button class="btn btn-default" type="button">Reset</button>
+                        <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+                    </div>
+                </div>
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Company Staff List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="stafflist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                       <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Id</th>
+                            <th class="mdl-data-table__cell--non-numeric">GroupName</th>
+                           <th class="mdl-data-table__cell--non-numeric">Staff Name</th>
+                            <th class="mdl-data-table__cell--non-numeric">Plan</th>
+                           <th class="mdl-data-table__cell--non-numeric">HasProfile</th>
+                           <th class="mdl-data-table__cell--non-numeric">Staff ID</th>
+                           <th class="mdl-data-table__cell--non-numeric">Subsidiary</th>
+                           <th class="mdl-data-table__cell--non-numeric">Date Added</th>
+                           <th class="mdl-data-table__cell--non-numeric">Added By</th>
+                  
+                           <th class="mdl-data-table__cell--non-numeric"></th>
+                       
+                       </tr>
+                    </thead>
+                    <tbody>
+            
+                    
+      
+                    </tbody>
+                    <tfoot>
+                    
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+   
+
+
+              $("#scr_company").change(function () {
+                  $("#src_companysub").html('');
+                  $("#src_companysub").append($("<option />").val(-1).text("Loading..."));
+                  var jqxhr = $.getJSON("../Company/GetSubsidiary?id=" + $("#scr_company").val(), function (data) {
+                      $("#src_companysub").html('');
+                      $("#src_companysub").append($("<option />").val(-1).text("All Subsidiary"));
+                      $.each(data, function () {
+                          $("#src_companysub").append($("<option />").val(this.Id).text(this.Subsidaryname));
+                      });
+                  })
+                      .done(function () {
+                          //console.log("second success");
+
+                      })
+                      .fail(function () {
+                         // console.log("error");
+                      })
+                      .always(function () {
+                          //console.log("complete");
+                      });
+              });
+        
+        $('#btnsubbmitLinking').click(function () {
+           
+            var hyidser = $.post("../Company/DoStaffLinking?Ids=" + $('#stafflistddl').val() + ";" + $('#newstaffid').val() + ";" + $('#dependantList').val(), function (resps) {
+                if (resps == '1') {
+                    toastr["success"]("Linking was successful.", "Successful");
+                    var btnshit = 'linkbtn_' + $('#newstaffid').val();
+       
+                    //$(btnshit).addClass('hidden');
+                    $("#stafflinkingmodal .close").click();
+                    //$('#stafflist').DataTable().ajax.reload();
+                    //$(z).attr("id")
+                    var linko = $("#buttonid").val();
+                    var link_btn = document.getElementById(linko);
+                   //hide the button
+                    $(link_btn).hide();
+
+                    //purge out the name of that who was linked from the table
+                    var thestaffiddd = $('#stafflistddl').val();
+                  
+
+                    var x = document.getElementById("stafflistddl");
+                    x.remove(x.selectedIndex);
+                    $('#stafflistddl').trigger("chosen:updated");
+
+                    //clear the key 
+                    window.StaffListDependantLocal.removeItem(thestaffiddd).then(function () {
+                        // Run this code once the key has been removed.
+                        console.log('Key is cleared!');
+                    }).catch(function (err) {
+                        // This code runs if there were any errors
+                        console.log(err);
+                    });
+
+                    $('#dependantList').html('');
+                    $('#dependantList').chosen('destroy');
+                    $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+
+                } else {
+                    toastr["error"]("There was an error linking.Error Code : " + resps, "Linking Error ");
+                }
+               
+            })
+       
+       .fail(function () {
+           toastr["error"]("There was an error linking.", "Linking Error");
+       })
+       .always(function () {
+         
+       });
+
+
+
+
+        });
+
+
+        $('#scr_button').on('click', function (e) {
+            $('#stafflist').DataTable().ajax.reload();
+        })
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+     
+        $('#stafflist').dataTable({
+            
+            "sAjaxSource": '../Company/GetStaffListJson',
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets':[2,3],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "scr_companysub", "value": $('#src_companysub').val() }, { "name": "scr_expungetype", "value": "1" }, { "name": "src_StaffName", "value": $('#src_StaffName').val() }, { "name": "scr_company", "value": $('#scr_company').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_ProfileStatus", "value": $('#scr_ProfileStatus').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+            
+            { "mDataProp": "groupname", "bVisible": false },
+               
+                {
+                    "mDataProp": "name", "mRender": function (data, type, row) {
+                      
+                        
+if(row.hasprofile=="no") {
+    return '<i class="fa fa-star text-red"></i> <span>' + row.name + '</span>';
+} else {
+    return '</i> <span>' + row.name + '</span>';
+}
+                    }
+                },
+              //<i class="fa fa-star text-yellow"></i>
+                { "mDataProp": "Plan" },
+                  { "mDataProp": "hasprofile", "bVisible": false },
+                   { "mDataProp": "staffid" },
+                  { "mDataProp": "subsidiary" },
+                    { "mDataProp": "created" },
+                      { "mDataProp": "creator" },
+                {
+                    "mRender": function (data, type, row) {
+                        if (row.hasprofile == "no") {
+                            return '<a href="/enrollee/add-enrollee?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs" ><i class="fa fa-user-plus"> Create Enrollee Profile </i></a>  <button onClick="openStafflink(this,&quot;' + row.Id + ';' + row.companyid + ';' + row.name + ';' + row.Plan + ';' + row.allowdependant + '&quot;)" class="btn btn-info btn-flat btn-xs" id="linkbtn_ ' +row.Id + '"><i class="fa fa-link"> Link Staff </i></button>';
+
+
+                        } else {
+                            return '<a href="enrollee-details?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye">View Profile</i></a> ';
+
+                        }
+
+                    }
+                }
+          
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%"  class="mdl-data-table__cell--non-numeric">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+
+
+    });
+
+    function openStafflink(z,a,b) {
+        //$(z).hide();
+        $("#buttonid").val($(z).attr("id"));
+      
+        
+        console.log(z);
+        //alert(a);
+        var b = a.split(";");
+        var staffid = b[0];
+        var companyid = b[1];
+        var staffullname = b[2];
+        var staffplan = b[3];
+        var allowdependants = b[4];
+        //update the staff
+
+        $('#oldplan').val('');
+        $('#newstaff').val(staffullname);
+        $('#newplan').val(staffplan);
+
+        $('#newstaffid').val(staffid);
+        
+        //check the companyid=
+
+        $('#dependantList').html('');
+        $('#dependantList').chosen('destroy');
+        $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+
+
+        if ($('#companyid').val() != companyid) {
+
+            //clear the 
+            //clear the database 
+            window.StaffListDependantLocal.clear().then(function () {
+                // Run this code once the key has been removed.
+                console.log('All key is cleared!');
+            }).catch(function (err) {
+                // This code runs if there were any errors
+                console.log(err);
+            });
+
+            $('#companyid').val(companyid);
+            $('#stafflistddl').chosen('destroy');
+            $('#stafflistddl').html('');
+
+          
+            $('#PLANlistddl').html('');
+            $('#linkingmodalLoader').removeClass("hidden");
+            
+
+            if (allowdependants == "false") {
+                $('#Error_Message').removeClass("hidden");
+            } else {
+                $('#Error_Message').addClass("hidden");
+            }
+
+
+
+            var jqxhr = $.getJSON("../Company/GetallStaffinCompanyLiteJson?companyid=" + companyid, function (data) {
+                var options = $("#stafflistddl");
+                var options2 = $('#PLANlistddl');
+                var options3 = $('#dependantList');
+                options.append($("<option />").val(-1).text('Select Staff'));
+                options2.append($("<option />").val(-1).text('None'));
+                $.each(data, function () {
+                    options.append($("<option />").val(this.Id).text(this.Name));
+                    options2.append($("<option />").val(this.Id).text(this.PlanName));
+
+                    //set id in localstorage
+                    window.StaffListDependantLocal.setItem(this.Id, this.DependantEnrollee).then(function () {
+                        return window.StaffListDependantLocal.getItem(this.Id);
+                    }).then(function (value) {
+                        // we got our value
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+                });
+
+         
+
+                $('#stafflistddl').on('change', function () {
+
+                    $('#PLANlistddl').val(this.value);
+                    $('#oldplan').val($('#PLANlistddl option:selected').text());
+
+                    //get list of dependants
+                    window.StaffListDependantLocal.getItem(this.value).then(function (readValue) {
+                        $('#dependantList').html('');
+                        $('#dependantList').chosen('destroy');
+                       
+                        $.each(readValue, function () {
+                         
+                            options3.append($("<option />").val(this.Id).text(this.Name + " - " + this.PolicyNum));
+                        });
+
+                        $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+                    });
+                    
+                });
+
+                $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+               
+            })
+   .done(function () {
+      // console.log("second success");
+   })
+   .fail(function () {
+       toastr["error"]("There was an error loading data.Kindly check your network and try again.", "Network Error");
+   })
+   .always(function () {
+       $('#linkingmodalLoader').addClass("hidden");
+
+   });
+
+        }
+
+        $('#stafflinkingmodal').modal('toggle');
+        
+    }
+   
+
+ 
+    </script>
+
+
+<div id="stafflinkingmodal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Staff Linking</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box">
+
+                    <div class="box-body">
+                        <input id="companyid" type="hidden" />
+                        <input id="buttonid" type="hidden" />
+                        <div class="form-group">
+                            <label>Old Staff</label>
+                            <select class="form-control chosen-select" id="stafflistddl">
+                                <option>Empty</option>
+                               
+                            </select>
+
+                            <select class="form-control hidden" id="PLANlistddl" >
+                               
+                            </select>
+                        </div>
+
+                        <div>
+                           
+                            <div class="form-group">
+                                <label>Old Plan</label>
+                                <input type="text" class="form-control" id="oldplan" readonly="readonly" />
+
+                            </div>
+                            <div class="form-group">
+                                <label>New Staff</label>
+                                <input type="text" class="form-control" id="newstaff" readonly="readonly" />
+                                <input type="hidden" class="form-control" id="newstaffid" readonly="readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label>New Plan</label>
+                                <input type="text" class="form-control" id="newplan" readonly="readonly" />
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Dependant List</label>
+                                <select class="form-control chosen-select" multiple id="dependantList">
+                                    <option>Empty</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <span id="Error_Message"  class="hidden" style="color:red;font-size:medium">The new plan does not allow dependants</span>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <!-- Loading (remove the following to stop the loading)-->
+                    <div class="overlay hidden" id="linkingmodalLoader">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                   
+                    <!-- end loading -->
+                </div>
+
+            </div>
+            <div class="modal-footer">
+              
+                <button type="button" class="btn btn-default" id="btnsubbmitLinking">Save</button>
+              
+            </div>
+        </div>
+
+    </div>
+</div>

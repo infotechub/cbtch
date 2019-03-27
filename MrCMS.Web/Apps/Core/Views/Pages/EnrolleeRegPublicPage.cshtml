@@ -1,0 +1,1474 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@using MrCMS.Web.Apps.Core.Utility
+@model MrCMS.Web.Apps.Core.Pages.EnrolleeRegPublicPage
+@{
+    ViewBag.Title = "Novo Health Africa Online Enrollment Platform";
+}
+
+<style>
+    .my-error-class {
+        color: #FF0000; /* red */
+    }
+
+    .my-valid-class {
+        color: #00CC00; /* green */
+    }
+</style>
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="callout callout-info">
+            <h4>BROWSER TO USE</h4>
+            <p>For best experience Kindly use <b>Chrome or Firefox Browser </b>.  </p>
+        </div>
+
+        <div class="alert alert-info alert-dismissible hidden" id="inforow">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-info"></i> Alert!</h4>
+            You have registered before,you can modify your information by editing the form below and clicking save.
+            You can  also re-print your Temp ID Card by clicking <button class="btn bg-maroon btn-flat margin" onclick="JavaScript:Openidcard('0');">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                Re-print ID Card
+            </button>   thank you
+        </div>
+        @using (Html.BeginForm("SubmitPortalRegistration", "EnrolleePage", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", @id = "EnrolleePage" }))
+        {
+
+
+            <div id="mainform">
+
+
+
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Personal Information (Required)</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <input type="hidden" value="@Model.Companyid" id="company_id" name="company_id" />
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right" id="photo_grp">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive" style="max-height: 200px;max-width: 200px;"
+                                         id="photo_img">
+                                    <input type="file" id="photoInputFile" name="photoInputFile" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+
+                        <div class="form-group">
+                            <label for="inputfirstname" class="col-sm-2 control-label">Staff Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="stafffullnam" name="stafffullnam" placeholder="First Name" type="text"  value="@ViewBag.Staffullname" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputfirstname" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputfirstname" name="inputfirstname" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputLastName" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+
+                                <input class="form-control" id="inputLastName" name="inputLastName" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="datepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="maritalstatusvalue" class="col-sm-2 control-label">Marital Status</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("maritalstatusvalue", new SelectList(ViewBag.MaritalStatus, "Id", "Name"), new { @class = "form-control", @id = "maritalstatusvalue", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sex" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("sex", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "sex", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="state" class="col-sm-2 control-label">State of Origin</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("state", new SelectList(ViewBag.statess, "Id", "Name"), new { @class = "form-control", @id = "state" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputLGA" class="col-sm-2 control-label">LGA</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputLGA" name="inputLGA" placeholder="LGA" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stateResident" class="col-sm-2 control-label">State of Residence</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("stateResident", new SelectList(ViewBag.statess, "Id", "Name"), new { @class = "form-control", @id = "stateResident" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-sm-2 control-label">Address</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("address", null, new { @class = "form-control", @placeholder = "Residential Address", @id = "address" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="occupation" class="col-sm-2 control-label">Occupation</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("occupation", null, new { @class = "form-control", @placeholder = "occupation", @id = "occupation" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumber" class="col-sm-2 control-label">Mobile Line 1</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumber", null, new { @class = "form-control", @placeholder = "Mobile Line 1", @id = "mobilenumber", @maxlength = "11" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumber2" class="col-sm-2 control-label">Mobile Line 2</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumber2", null, new { @class = "form-control", @placeholder = "Mobile Line 2", @id = "mobilenumber2", @maxlength = "11" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="EmailForm" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailForm", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailForm" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company" class="col-sm-2 control-label">Company</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("company", (string)ViewBag.CompanyName, new { @class = "form-control", @placeholder = "Company", @id = "company", @readonly = "" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company" class="col-sm-2 control-label">Plan</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("staffplan", (string)ViewBag.Plan, new { @class = "form-control", @placeholder = "Plan", @id = "staffplan", @readonly = "" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffid" class="col-sm-2 control-label">Staff Identification Number</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("staffid", null, new { @class = "form-control", @placeholder = "Staff ID No", @id = "staffid" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stateoffice" class="col-sm-2 control-label">Office State</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("stateoffice", new SelectList(ViewBag.statess, "Id", "Name"), new { @class = "form-control", @id = "stateoffice", @onchange = "StateBranchChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+
+
+                            <label for="branchid" class="col-sm-2 control-label">Branch Office</label>
+
+
+
+                            <div class="col-sm-10">
+                                @*@Html.DropDownList("branchid", new SelectList(ViewBag.MaritalStatus, "Id", "Name"), new { @class = "form-control", @id = "branchid"})*@
+                                <input type="text" class="form-control" id="branchid" name="branchid" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="provider" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="provider" name="provider">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+
+                                <br />
+
+                                <small>**Kindly note that provider is allocated based on your plan.</small>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label for="premedicalcondition" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalcondition", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalcondition" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overlay hidden" id="loading_Loader">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+
+                <div class="box box-default box box-default box-solid" id="spousebox">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Spouse Information (Optional)</h3>
+
+                        <div class="box-tools pull-right">
+
+
+                            @*<button type="button" class="btn btn-box-tool collapsedbtn" data-widget="collapse" id="spouseTbtn">
+                                    <i class="fa fa-plus"></i> Add Spouse
+
+                                </button>*@
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right" id="photo_grp">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive img-rounded" style="max-height: 200px;max-width: 200px;"
+                                         id="photo_img_spouse">
+                                    <input type="file" id="photoInputFileSpouse" name="photoInputFileSpouse" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSpousefirstname" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputSpousefirstname" name="inputSpousefirstname" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSpouseLastName" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputSpouseLastName" name="inputSpouseLastName" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Spousedatepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("Spousedatepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "Spousedatepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Spousesex" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("Spousesex", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "Spousesex", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumberSpouse" class="col-sm-2 control-label">Mobile</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumberSpouse", null, new { @class = "form-control", @placeholder = "Mobile", @id = "mobilenumberSpouse" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EmailFormspouse" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailFormspouse", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailFormspouse" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ProviderSpouse" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="ProviderSpouse" name="ProviderSpouse">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="premedicalconditionSpouse" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalconditionSpouse", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalconditionSpouse" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <!-- /.box-footer -->
+
+                </div>
+
+
+
+
+                <input type="hidden" id="stafflistid" name="stafflistid" value="@ViewBag.staffIdnum" />
+
+                <input type="hidden" id="previousid" name="previousid" />
+
+                <div class="box box-default box box-default box-solid" id="child1box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Child 1 Information (Optional)</h3>
+                        <div class="box-tools pull-right">
+
+
+                            @*<button type="button" class="btn btn-box-tool collapsedbtn" data-widget="collapse" id="child1Tbtn">
+                                    <i class="fa fa-plus"></i> Add Child 1
+
+                                </button>*@
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive img-rounded" style="max-height: 200px;max-width: 200px;"
+                                         id="photo_img_child1">
+                                    <input type="file" id="photoInputFileChild1" name="photoInputFileChild1" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputfirstnameChild1" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputfirstnameChild1" name="inputfirstnameChild1" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSLastNameChild1" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputSLastNameChild1" name="inputSLastNameChild1" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Child1datepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("Child1datepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "Child1datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Child1Gender" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("Child1Gender", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "Child1Gender", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumberChild1" class="col-sm-2 control-label">Mobile</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumberChild1", null, new { @class = "form-control", @placeholder = "Mobile", @id = "mobilenumberChild1" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EmailFormchild1" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailFormchild1", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailFormchild1" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="child1provider" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="child1provider" name="child1provider">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="premedicalconditionchild1" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalconditionchild1", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalconditionchild1" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="box box-default box box-default box-solid" id="child2box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Child 2 Information (Optional)</h3>
+
+                        <div class="box-tools pull-right">
+
+
+                            @*<button type="button" class="btn btn-box-tool collapsedbtn" data-widget="collapse" id="child2Tbtn">
+                                    <i class="fa fa-plus"></i> Add Child 2
+
+                                </butto*@
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right" id="photo_grp">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive" style="max-height: 200px;max-width: 200px;"
+                                         class="img-rounded" id="photo_img_child2">
+                                    <input type="file" id="photoInputFilechild2" name="photoInputFilechild2" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputfirstnameChild2" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputfirstnameChild2" name="inputfirstnameChild2" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSLastNameChild2" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputLastNameChild2" name="inputLastNameChild2" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Child2datepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("Child2datepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "Child2datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Child2sex" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("Child2sex", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "Child2sex", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumberChild2" class="col-sm-2 control-label">Mobile</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumberChild2", null, new { @class = "form-control", @placeholder = "Mobile", @id = "mobilenumberChild2" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EmailFormchild2" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailFormchild2", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailFormchild2" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="child2provider" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="child2provider" name="child2provider">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="premedicalconditionchild2" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalconditionchild2", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalconditionchild2" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="box box-default box box-default box-solid" id="child3box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Child 3 Information (Optional)</h3>
+                        <div class="box-tools pull-right">
+
+
+                            @*<button type="button" class="btn btn-box-tool collapsedbtn" data-widget="collapse" id="child3Tbtn">
+                                    <i class="fa fa-plus"></i> Add Child 3
+
+                                </button>*@
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive img-rounded" style="max-height: 200px;max-width: 200px;"
+                                         id="photo_img_child3">
+                                    <input type="file" id="photoInputFilechild3" name="photoInputFilechild3" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputfirstnameChild3" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputfirstnameChild3" name="inputfirstnameChild3" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSLastNameChild3" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputLastNameChild3" name="inputLastNameChild3" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Child3datepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("Child3datepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "Child3datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Child3sex" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("Child3sex", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "Child3sex", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumberChild3" class="col-sm-2 control-label">Mobile</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumberChild3", null, new { @class = "form-control", @placeholder = "Mobile", @id = "mobilenumberChild3" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EmailFormchild3" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailFormchild3", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailFormchild3" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="child3provider" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="child3provider" name="child3provider">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="premedicalconditionchild3" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalconditionchild3", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalconditionchild3" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="box box-default box box-default box-solid" id="child4box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Child 4 Information (Optional)</h3>
+                        <div class="box-tools pull-right">
+
+
+                            @*<button type="button" class="btn btn-box-tool collapsedbtn" data-widget="collapse" id="child4Tbtn">
+                                    <i class="fa fa-plus"></i> Add Child 4
+
+                                </button>*@
+
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-10 ">
+                                <div class="img-responsive pull-right">
+                                    <img src="~/Apps/Core/Content/Images/placeholder-photo.png" class="img-responsive" style="max-height: 200px;max-width: 200px;"
+                                         class="img-rounded" id="photo_img_child4">
+                                    <input type="file" id="photoInputFilechild4" name="photoInputFilechild4" accept=".jpg,.png" >
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputfirstnameChild4" class="col-sm-2 control-label">First Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputfirstnameChild4" name="inputfirstnameChild4" placeholder="First Name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSLastNameChild4" class="col-sm-2 control-label">Last Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="inputLastNameChild4" name="inputLastNameChild4" placeholder="Last Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Child3datepicker" class="col-sm-2 control-label">DOB</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("Child4datepicker", null, new { @class = "form-control", @placeholder = "DOB", @id = "Child4datepicker" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Child4sex" class="col-sm-2 control-label">Gender</label>
+
+                            <div class="col-sm-10">
+                                @Html.DropDownList("Child4sex", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "Child4sex", @onchange = "SelectChange(this)" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilenumberChild4" class="col-sm-2 control-label">Mobile</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("mobilenumberChild4", null, new { @class = "form-control", @placeholder = "Mobile", @id = "mobilenumberChild4" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EmailFormchild3" class="col-sm-2 control-label">Email</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextBox("EmailFormchild4", null, new { @class = "form-control", @placeholder = "Email", @id = "EmailFormchild4" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="child3provider" class="col-sm-2 control-label">Hospital of Choice</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control chosen-select" id="child4provider" name="child4provider">
+                                    @{
+                                        foreach (var item in (List<Provider>)ViewBag.HospitalList)
+                                        {
+                                            <option value="@item.Id">@item.Name.ToUpper()  - @item.Address.ToLower()</option>
+                                        }
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="premedicalconditionchild4" class="col-sm-2 control-label">Pre-existing Medical Conditions</label>
+
+                            <div class="col-sm-10">
+                                @Html.TextArea("premedicalconditionchild4", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalconditionchild4" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-default">Cancel</button>
+
+
+                    <button type="submit" class="btn bg-olive margin pull-right">Submit</button>
+                    <br />
+
+                    <p class="label danger"> Kindly Note that you are required to print your temporary id cards.</p>
+                </div>
+            </div>
+                                        }
+    </div>
+
+</div>
+
+<script>
+
+
+
+
+    $(function () {
+
+
+        //form validation
+        $("#EnrolleePage").validate({
+            errorClass: "my-error-class",
+
+            rules: {
+                inputfirstname: {
+                    required: true,
+                    minlength: 3
+                },
+                inputLastName: {
+                    required: true,
+                    minlength: 3
+                },
+                datepicker: {
+                    required: true,
+
+                },
+                maritalstatusvalue: {
+                    required: true,
+
+                },
+                sex: {
+                    required: true,
+
+                },
+                state: {
+                    required: true,
+
+                },
+                inputLGA: {
+                    minlength: 3,
+
+
+                },
+                stateResident: {
+                    required: true,
+
+
+                },
+                address: {
+                    required: true,
+                    minlength: 4,
+
+                },
+                occupation: {
+                    required: true,
+
+                },
+                mobilenumber: {
+                    required: true,
+                    minlength: 11,
+                    maxlength: 11,
+                    number: true
+
+                },
+                mobilenumber2: {
+                    minlength: 11,
+                    number: true
+                },
+                EmailForm: {
+                    required: true,
+                    email: true
+                },
+                stateoffice: {
+                    required: true,
+
+                },
+                premedicalcondition: {
+                    minlength: 3,
+
+                },
+
+                confirm_password: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                //for spouse
+                inputSpouseLastName: {
+                    minlength: 3,
+                    required: "#inputSpousefirstname:filled"
+
+
+                },
+                Spousedatepicker: {
+                    required: "#inputSpousefirstname:filled"
+
+
+                },
+                Spousesex: {
+                    required: "#inputSpousefirstname:filled"
+
+
+                },
+                mobilenumberSpouse: {
+                    minlength: 11,
+                    required: "#inputSpousefirstname:filled"
+
+
+                },
+                EmailFormspouse: {
+                    email: true,
+                    required: "#inputSpousefirstname:filled"
+
+
+                },
+                //photoInputFileSpouse: {
+                //    required: "#inputSpousefirstname:filled" && $("#previousid").val().length < 1
+
+
+                //},
+
+                //for child1
+                inputSLastNameChild1: {
+                    minlength: 3,
+                    required: "#inputfirstnameChild1:filled"
+
+
+                },
+                Child1datepicker: {
+                    required: "#inputfirstnameChild1:filled"
+
+
+                },
+                Child1Gender: {
+                    required: "#inputfirstnameChild1:filled"
+
+
+                },
+                mobilenumberChild1: {
+                    minlength: 11,
+                    required: "#inputfirstnameChild1:filled"
+
+
+                },
+                EmailFormchild1: {
+                    email: true,
+                    required: "#inputfirstnameChild1:filled"
+
+
+                },
+                
+                //for child2
+                inputLastNameChild2: {
+                    minlength: 3,
+                    required: "#inputfirstnameChild2:filled"
+
+
+                },
+                Child2datepicker: {
+                    required: "#inputfirstnameChild2:filled"
+
+
+                },
+                Child2Gender: {
+                    required: "#inputfirstnameChild2:filled"
+
+
+                },
+                mobilenumberChild2: {
+                    minlength: 11,
+                    required: "#inputfirstnameChild2:filled"
+
+
+                },
+                EmailFormchild2: {
+                    email: true,
+                    required: "#inputfirstnameChild2:filled"
+
+
+                },
+                
+               
+                inputLastNameChild3: {
+                    minlength: 3,
+                    required: "#inputfirstnameChild3:filled"
+
+
+                },
+                Child3datepicker: {
+                    required: "#inputfirstnameChild3:filled"
+
+
+                },
+                Child3sex: {
+                    required: "#inputfirstnameChild3:filled"
+
+
+                },
+                mobilenumberChild3: {
+                    minlength: 11,
+                    required: "#inputfirstnameChild3:filled"
+
+
+                },
+                EmailFormchild3: {
+                    email: true,
+                    required: "#inputfirstnameChild3:filled"
+
+
+                },
+                
+                
+                inputLastNameChild4: {
+                    minlength: 3,
+                    required: "#inputfirstnameChild4:filled"
+
+
+                },
+                Child4datepicker: {
+                    required: "#inputfirstnameChild4:filled"
+
+
+                },
+                Child4sex: {
+                    required: "#inputfirstnameChild4:filled"
+
+
+                },
+                mobilenumberChild4: {
+                    minlength: 11,
+                    required: "#inputfirstnameChild4:filled"
+
+
+                },
+                EmailFormchild4: {
+                    email: true,
+                    required: "#inputfirstnameChild4:filled"
+
+
+                },
+              
+                
+        photoInputFile: {
+
+                Passportcheck1:true
+             
+        },
+        photoInputFileSpouse: {
+
+            Passportcheck1:true,
+           
+
+        },
+
+        photoInputFileChild1: {
+
+            Passportcheck1:true,
+           
+
+
+        },
+        photoInputFilechild2: {
+
+            Passportcheck1:true,
+          
+
+
+        },
+        photoInputFilechild3: {
+            Passportcheck1:true,
+
+           
+
+        },
+
+        photoInputFilechild4: {
+
+            Passportcheck1:true,
+            
+
+        },
+            },
+            messages: {
+                firstname: "Please enter your firstname",
+                lastname: "Please enter your lastname",
+                username: {
+                    required: "Please enter a username",
+                    minlength: "Your username must consist of at least 2 characters"
+                },
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                confirm_password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long",
+                    equalTo: "Please enter the same password as above"
+                },
+                email: "Please enter a valid email address",
+                agree: "Please accept our policy",
+                topic: "Please select at least 2 topics"
+            }
+        });
+
+
+
+        $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!", width: '100%' });
+
+        jQuery.validator.addMethod("Passportcheck1", function (value, element) {
+            // allow any non-whitespace characters as the host part
+            
+
+            if ($(element).attr('Id') === 'photoInputFileSpouse' && !$('#inputSpousefirstname').val()) {
+                return true;
+            }
+            if ($(element).attr('Id') === 'photoInputFileChild1' && !$('#inputfirstnameChild1').val()) {
+                return true;
+            }
+
+            if ($(element).attr('Id') === 'photoInputFilechild2' && !$('#inputfirstnameChild2').val()) {
+                return true;
+            }
+
+            if ($(element).attr('Id') === 'photoInputFilechild3' && !$('#inputfirstnameChild3').val()) {
+                return true;
+            }
+
+            if ($(element).attr('Id') === 'photoInputFilechild4' && !$('#inputfirstnameChild4').val()) {
+                return true;
+            }
+            if ($('#previousid').val() !== '') {
+                return true;
+            } else if ($(element).val() !== '') {
+                return true;
+            } else {
+                return false;
+            }
+
+            
+            
+        }, 'Kindly upload a passport.');
+
+
+        $("body").toggleClass('sidebar-collapse');
+        $("#datepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+        $("#Spousedatepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+        $("#Child1datepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+        $("#Child2datepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+        $("#Child3datepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+        $("#Child4datepicker").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+      
+
+        //set the datetime for all DOB's
+        //$('#datepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#Spousedatepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#Child1datepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#Child2datepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#Child3datepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#Child4datepicker').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+
+
+        //provider get using ajax
+        var options = {
+            url: "../Provider/GetProviderNamesJson",
+
+            getValue: "Name",
+
+            template: {
+                type: "description",
+                fields: {
+                    description: "Address"
+                }
+            },
+
+            list: {
+                match: {
+                    enabled: true
+                }
+            },
+
+            theme: "plate-dark"
+        };
+
+        //$("#provider").easyAutocomplete(options);
+        //$("#ProviderSpouse").easyAutocomplete(options);
+        //$("#child1provider").easyAutocomplete(options);
+        //$("#child2provider").easyAutocomplete(options);
+        //$("#child3provider").easyAutocomplete(options);
+        //$("#child4provider").easyAutocomplete(options);
+
+
+
+        $("#photoInputFile").val('');
+        function readURL(input, target) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $(target).attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        //check if the photoinputfile event change
+        $("#photoInputFile").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFile").val('');
+                $('#photo_img').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img'));
+            }
+
+        });
+
+        //for spouse
+        $("#photoInputFileSpouse").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFileSpouse").val('');
+                $('#photo_img_spouse').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img_spouse'));
+            }
+
+        });
+
+        //for child1
+        $("#photoInputFileChild1").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFileChild1").val('');
+                $('#photo_img_child1').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img_child1'));
+            }
+
+        });
+
+        //forchild2
+
+        $("#photoInputFilechild2").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFilechild2").val('');
+                $('#photo_img_child2').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img_child2'));
+            }
+
+        });
+
+        //for child 3
+        $("#photoInputFilechild3").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFilechild3").val('');
+                $('#photo_img_child3').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img_child3'));
+            }
+
+        });
+
+        //forchild4
+        $("#photoInputFilechild4").change(function () {
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 100) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 100kb');
+                $("#photoInputFilechild4").val('');
+                $('#photo_img_child4').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this, $('#photo_img_child4'));
+            }
+
+        });
+    });
+
+
+
+
+
+
+    function Openidcard(id) {
+
+        window.location = "http://197.255.55.54/enrolleetempid?id=" + $('#previousid').val();
+    }
+
+    @{
+        var data2 = (TempEnrolleeResponse) ViewBag.OldGuy;
+    }
+    //load record
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+@if (data2 != null)
+{
+    <script>
+        $(function () {
+
+            $('#previousid').val('@data2.enrollee.Id');
+            //set the data
+            var scr = "data:image/png;base64,@data2.mainimage";
+            var scr2 = "data:image/png;base64,@data2.spouseimg";
+            var scr3 = "data:image/png;base64,@data2.child1img";
+            var scr4 = "data:image/png;base64,@data2.child2img";
+            var scr5 = "data:image/png;base64,@data2.child3img";
+            var scr6 = "data:image/png;base64, @data2.child4img";
+            $('#photo_img').attr("src", scr);
+
+
+            $('#photo_img_spouse').attr("src", scr2);
+            $('#photo_img_child1').attr("src", scr3);
+            $('#photo_img_child2').attr("src", scr4);
+            $('#photo_img_child3').attr("src", scr5);
+            $('#photo_img_child4').attr("src", scr6);
+
+            //details
+            $('#inputfirstname').val('@data2.enrollee.Othernames');
+            $('#inputLastName').val('@data2.enrollee.Surname');
+            $('#datepicker').val('@data2.dob');
+            $("#sex").val('@data2.enrollee.Sex');
+            $("#maritalstatusvalue").val('@data2.enrollee.Maritalstatus');
+            $("#sex").val('@data2.enrollee.Sex');
+            $("#state").val('@data2.enrollee.Stateoforiginid');
+            $("#inputLGA").val('@data2.enrollee.Lga');
+            $("#stateResident").val('@data2.enrollee.Stateofresidence');
+            $("#address").val('@data2.enrollee.Residentialaddress');
+            $("#occupation").val('@data2.enrollee.Occupation');
+
+            $("#mobilenumber").val('@data2.enrollee.Mobilenumber');
+            $("#mobilenumber2").val('@data2.enrollee.Mobilenumber2');
+            $("#EmailForm").val('@data2.enrollee.Emailaddress');
+            $("#staffid").val('@data2.enrollee.staffid');
+            $("#stateoffice").val('@data2.enrollee.officestate');
+            $("#branchid").val('@data2.enrollee.BranchID');
+            $("#provider").val('@data2.enrollee.Primaryprovider');
+            $("#premedicalcondition").val('@data2.enrollee.Preexistingmedicalhistory');
+
+
+
+            //spouse
+            $('#inputSpousefirstname').val('@data2.enrollee.s_Othernames');
+            $('#inputSpouseLastName').val('@data2.enrollee.s_Surname');
+            $('#Spousedatepicker').val('@data2.spousedob');
+            $("#Spousesex").val('@data2.enrollee.S_Sex');
+            $("#mobilenumberSpouse").val('@data2.enrollee.S_mobile');
+            $("#EmailFormspouse").val('@data2.enrollee.S_email');
+            $("#ProviderSpouse").val('@data2.enrollee.S_hospital');
+            $("#premedicalconditionSpouse").val('@data2.enrollee.S_medicalhistory');
+
+            //child1
+            $('#inputfirstnameChild1').val('@data2.enrollee.child1_Othernames');
+            $('#inputSLastNameChild1').val('@data2.enrollee.child1_Surname');
+            $('#Child1datepicker').val('@data2.child1dob');
+            $("#Child1Gender").val('@data2.enrollee.child1_Sex');
+            $("#mobilenumberChild1").val('@data2.enrollee.child1_mobile');
+            $("#EmailFormchild1").val('@data2.enrollee.child1_email');
+            $("#child1provider").val('@data2.enrollee.child1_hospital');
+            $("#premedicalconditionchild1").val('@data2.enrollee.child1_medicalhistory');
+
+
+            //child2
+            $('#inputfirstnameChild2').val('@data2.enrollee.child2_Othernames');
+            $('#inputLastNameChild2').val('@data2.enrollee.child2_Surname');
+            $('#Child2datepicker').val('@data2.child2dob');
+            $("#Child2Gender").val('@data2.enrollee.child2_Sex');
+            $("#mobilenumberChild2").val('@data2.enrollee.child2_mobile');
+            $("#EmailFormchild2").val('@data2.enrollee.child2_email');
+            $("#child2provider").val('@data2.enrollee.child2_hospital');
+            $("#premedicalconditionchild2").val('@data2.enrollee.child2_medicalhistory');
+
+            //child3
+            $('#inputfirstnameChild3').val('@data2.enrollee.child3_Othernames');
+            $('#inputLastNameChild3').val('@data2.enrollee.child3_Surname');
+            $('#Child3datepicker').val('@data2.child3dob');
+            $("#Child3sex").val('@data2.enrollee.child3_Sex');
+            $("#mobilenumberChild3").val('@data2.enrollee.child3_mobile');
+            $("#EmailFormchild3").val('@data2.enrollee.child3_email');
+            $("#child3provider").val('@data2.enrollee.child3_hospital');
+            $("#premedicalconditionchild3").val('@data2.enrollee.child3_medicalhistory');
+
+            //child4
+            $('#inputfirstnameChild4').val('@data2.enrollee.child4_Othernames');
+            $('#inputLastNameChild4').val('@data2.enrollee.child4_Surname');
+            $('#Child4datepicker').val('@data2.child4dob');
+            $("#Child4sex").val('@data2.enrollee.child4_Sex');
+            $("#mobilenumberChild4").val('@data2.enrollee.child4_mobile');
+            $("#EmailFormchild4").val('@data2.enrollee.child4_email');
+            $("#child4provider").val('@data2.enrollee.child4_hospital');
+            $("#premedicalconditionchild4").val('@data2.enrollee.child4_medicalhistory');
+
+            $('.chosen-select').trigger("chosen:updated");
+            $('#inforow').removeClass("hidden");
+        });
+    </script>
+}

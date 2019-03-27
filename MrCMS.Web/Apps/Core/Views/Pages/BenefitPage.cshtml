@@ -1,0 +1,201 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.BenefitPage
+@{
+    ViewBag.Title = "Benefit List";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen "  >
+            <h4>Tip!</h4>
+            <p>Manage Plan Benefits , Add Category ,Add and edit benefit.The left pane contains the category and on the right is the list. .</p>
+        </div>
+
+   
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+       
+
+       
+        <div class="col-md-12">
+          <!-- Custom Tabs -->
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab_1" aria-expanded="false">Benefit List</a></li>
+      
+               
+
+             
+ 
+             
+            </ul>
+            <div class="tab-content">
+              <div id="tab_1" class="tab-pane  active">
+               <div class="box">
+                <div class="box-header">
+                </div><!-- /.box-header -->
+       <div class="box-body" >
+           
+         <div class="col-md-3">
+       
+          <!-- /. box -->
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Benefit Category</h3>
+
+                <div class="box-tools">
+                    <a href="@Url.Action("AddCategory", "CompanyPage",  new { id = 0})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Category </i> </a>
+
+                   
+                </div>
+            </div>
+            <div class="box-body no-padding"  style="max-height: 500px;overflow-x: auto;">
+              <ul class="nav nav-pills nav-stacked" id="categorylist">
+              
+              </ul>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+   <div class="col-md-9">
+               <div class="box box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">Benefit List</h3>
+
+                <div class="box-tools">
+                    <a href="@Url.Action("AddBenefit", "CompanyPage",  new { id = -1})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Benefit </i> </a>
+
+                  
+                </div>
+            </div>
+            <div class="box-body no-padding">
+               <table id="benefitlist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                            <th>Name</th>
+                           
+                            <th>Description</th>
+                            <th>Benefit Limit</th>
+                          
+
+                        
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+      
+                    </tbody>
+                    <tfoot>
+                      
+                    </tfoot>
+                  </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+
+
+           </div>
+         
+       </div><!-- /.box-body -->
+              </div><!-- /.box -->
+              </div>
+              
+           
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+  
+
+<script type="text/javascript">
+    $(function () {
+        //load the list
+        $.getJSON("/Company/GetCategoryJson/", function(data) {
+            var items = [];
+            //empty ui
+            $("#categorylist").empty();
+            $.each(data, function(key, val) {
+
+                $("#categorylist").append("<li><a class='modal-link' href='../Company/DeleteCategory?id=" + val.Id + "'>" + val.Name + "</a>  </li>");
+
+
+            });
+
+        });
+     
+        $('#benefitlist').dataTable({
+            "sAjaxSource": '../Company/GetBenefitJson',
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            "bLengthChange": false,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                 { "mDataProp": "CategoryName", "bVisible": false },
+                 { "mDataProp": "Name" },
+                { "mDataProp": "Description" },
+
+
+                { "mDataProp": "Benefitlimit" },
+                 
+                
+
+                
+                { "mDataProp": "CreatedOn" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/Company/EditBenefit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/Company/DeleteBenefit?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>';
+                    }
+                }
+
+
+
+
+
+            ], "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+
+                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr style="background-color:gold;font-weight: bold;color:black;"><td colspan="100%">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
+
+
+        });
+
+    
+    });
+
+
+
+
+    </script>
+
+
+
+
+

@@ -1,0 +1,51 @@
+﻿@using MrCMS.Helpers
+@{
+    ViewBag.Title = "Add new Benefit";
+}
+ 
+
+@using (Html.BeginForm("DoExpungeUpload", "CompanyPage",FormMethod.Post,new {@id="Staffform"}))
+{
+
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title"> Bulk Staff Expunge </h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.Label("StaffList")
+        <input type="hidden" id="jobid" name="jobid" value="@ViewBag.Idd"/>
+        <textarea id="bulklist"  class="form-control" name="bulklist" > ... </textarea>
+    </div>
+
+      
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave" >Save </button>
+</div>
+
+}
+
+<script>
+    SelectChange(document.getElementById("CompanyId"));
+    $(function () {
+        
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+   
+          
+
+        });
+
+
+    });
+
+
+</script>
+
+
+

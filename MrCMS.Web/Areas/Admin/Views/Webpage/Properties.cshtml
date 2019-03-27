@@ -1,0 +1,22 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Entities.Documents.Web.Webpage
+@Html.HiddenFor(x => x.LiveUrlSegment)
+@Html.HiddenFor(x => x.DocumentType)
+@Html.HiddenFor(x => x.Id)
+
+<div class="form-group">
+    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+</div>
+@Html.ValidationMessageFor(x => x.Name)
+@if (Model.GetMetadata().HasBodyContent)
+{
+    Html.RenderPartial("Content", Model);
+}
+@Html.LabelFor(x=>x.FaIcon,"FA Icon")
+@Html.TextBoxFor(x=>x.FaIcon)
+<br/>
+
+@Html.RenderCustomAdminProperties()
+
+
+

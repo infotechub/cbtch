@@ -1,0 +1,162 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.EnrolleeRegHomePage
+@{
+    ViewBag.Title = "Novo Health Africa Online Enrollment Platform";
+}
+
+<style>
+    .my-error-class {
+        color: #FF0000; /* red */
+    }
+
+    .my-valid-class {
+        color: #00CC00; /* green */
+    }
+</style>
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="callout callout-info">
+            <h4>TIPS!</h4>
+            <p>For best experience Kindly use <b>Chrome or Firefox Browser </b>.  </p>
+            <p>Please search the list using your surname or staff Id No</b>  </p>
+            
+        </div>
+
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><b>New Registration</b></h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            @using (Html.BeginForm("EnrolleeRegHome", "EnrolleePage", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", @id = "EnrolleePage" }))
+            {
+
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Company</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" id="companyTxt" name="companyTxt" placeholder="Company" type="text" value="@ViewBag.CompanyName" readonly="readonly">
+                           <input type="hidden" id="CompanyId" name="CompanyId" value="@ViewBag.CompanyID"/>
+                             </div>
+                        </div>
+                        <div class="form-group" id="namerow">
+                            <label for="StaffFullname" class="col-sm-2 control-label">Staff Name</label>
+
+                            <div class="col-sm-10">
+                                <select id="StaffFullname" name="StaffFullname" class="form-control chosen-select">
+                                    <option value="-1">--Please Search & Select Your Name--</option>
+                                    
+                                    @{
+                                        foreach (var item in (Dictionary<int, string>) ViewBag.StaffList)
+                                        {
+                                            <option value="@item.Key">@item.Value</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                     
+
+
+                    </div>
+                    <div class="overlay hidden" id="loading_staff">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer" id="buttonfirstshii">
+                        <button type="button" class="btn btn-default">Cancel</button>
+
+
+                        <button type="submit" class="btn bg-olive margin pull-right" id="getstaff">Proceed</button>
+                    </div>
+                    <!-- /.box-footer -->
+
+                </div>
+             
+
+            }
+        </div>
+
+      
+        
+
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><b>Existing Enrollee</b> </h3>
+                </div>
+                <div class="box-body">
+
+
+                    <b><p style="font-size:medium;text-align:center">Do you have a policy number already ? Kindly login by clicking the button below.</b></p>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                       
+                        <div class="col-lg-4">
+                            <a href="@Url.Action("EnrolleePortalLogin", "EnrolleePage")" class="btn bg-maroon btn-flat margin">Login with your policy number ! </a>
+                        </div>
+                        <div class="col-lg-4"></div>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+        
+            </div>
+
+           
+
+
+
+
+
+            <script>
+
+                $(':input[type="submit"]').prop('disabled', true);
+
+
+                $(function () {
+
+                    $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!", max_shown_results: 1000 });
+
+
+                    $("#StaffFullname").change(function () {
+                        var end = this.value;
+
+
+                        if (end == -1) {
+                            $(':input[type="submit"]').prop('disabled', true);
+                        } else {
+                            $(':input[type="submit"]').prop('disabled', false);
+                        }
+
+                    });
+
+
+
+
+                    $("body").toggleClass('sidebar-collapse');
+
+
+
+                });
+
+
+                function Openidcard(id) {
+
+                    window.location = "http://197.255.55.54/enrolleetempid?id=" + $('#previousid').val();
+                }
+
+
+
+
+            </script>

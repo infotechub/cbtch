@@ -1,0 +1,243 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.CompanyPlanPage
+@{
+    ViewBag.Title = "Company Plan";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Manage company plan , cutomize plan, add benefits and limit.</p>
+        </div>
+
+              <a href="@Url.Action("AddCompanyPlan", "CompanyPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new company plan </i> </a>
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Company Plan</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Plan Name" class="form-control" id="src_PlanName">
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Plan Description" class="form-control" id="src_PlanDesc">
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownList("scr_company", new SelectList(ViewBag.Companylist, "Id", "Name"), new {@class = "form-control"})
+                    </div>
+                    <div class="col-xs-3">
+                        <span>Added By User : </span>
+                        @Html.DropDownList("scr_users", new SelectList(ViewBag.userlist, "Id", "Name"))
+                    </div>
+                </div>
+                <br />
+               
+                <br />
+                <div class="row">
+
+
+                    <div class="col-xs-2">
+                        @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                    </div>
+
+
+                </div>
+                <br />
+              
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Company Plan List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="companyplanlist" class="table table-bordered table-striped">
+                    <thead>
+                       <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                           <th>Plan Type</th>
+                            <th>Plan Name</th>
+                            <th>Description</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                      <tr id="samplerow">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    
+      
+                    </tbody>
+                    <tfoot>
+                    
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#scr_button').on('click', function (e) {
+            $('#companyplanlist').DataTable().ajax.reload();
+        })
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+
+
+        $('#companyplanlist').dataTable({
+
+            "sAjaxSource": '../Company/QueryCompanyPlanJson',
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'dt-body-center',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_PlanName", "value": $('#src_PlanName').val() }, { "name": "src_PlanDesc", "value": $('#src_PlanDesc').val() },  { "name": "scr_company", "value": $('#scr_company').val() },{ "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_users", "value": $('#scr_users').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": true },
+            
+            { "mDataProp": "groupname", "bVisible": false },
+                  { "mDataProp": "plantype" },
+                { "mDataProp": "name" },
+              
+                { "mDataProp": "description" },
+                
+                { "mDataProp": "datecreated" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/plan-and-benefit/customize-plan?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs">Customize Plan</a> ';
+                    }
+                }
+
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+
+
+    });
+    </script>
+
+

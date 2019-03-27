@@ -1,0 +1,341 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.DelistedProviderPage
+@{
+    ViewBag.Title = "Delisted Provider List";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>See all providers that have been de-listed from the system.</p>
+        </div>
+
+
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage", new {id = -1}, new {@class = "btn btn-flat btn-success modal-link"})-->
+
+        <div class="box box-info" style="overflow: hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Provider</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Provider Name" class="form-control" id="src_providername">
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Provider Address" class="form-control" id="scr_provideraddress">
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownList("scr_State", new SelectList(ViewBag.Statelist, "Id", "Name"), new {@class = "form-control"})
+                    </div>
+                    <div class="col-xs-3">
+                        <span>Added By User : </span>
+                        @Html.DropDownList("scr_users", new SelectList(ViewBag.userlist, "Id", "Name"))
+                    </div>
+                </div>
+
+                <br/>
+                <div class="row">
+
+
+                    <div class="col-xs-2">
+                        @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker", null, new {@class = "form-control", @placeholder = "From Date", @id = "datepicker"})
+
+
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker2", null, new {@class = "form-control", @placeholder = "To Date", @id = "datepicker2"})
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+        
+   <div class="box">
+      
+
+
+                <div class="box-header">
+              <h3 class="box-title">Delisted Provider List</h3> 
+
+       <div  class="box-tools">
+
+           @using (Html.BeginForm("DoRestoreProvider", "ProviderPage", FormMethod.Post))
+           {
+
+               @Html.Hidden("hidden_selectedIDs");
+
+               <input type="submit" class="btn btn-sm btn-success pull-left" value="Restore all Selected" onclick="submitforApproval();" />
+
+           }
+       </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="providerlist"class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                    <tr>
+                        <th>
+
+                            <input type="checkbox" id="chk_selectall" name="hk_selectall">
+                        </th>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>SubCode</th>
+                        <th>Zone</th>
+                        <th>Address</th>
+                        <th>State</th>
+                        <th>Phone Number</th>
+                        <th>Mobile Number</th>
+                        <th>Email</th>
+                        <th>Added By</th>
+                        <th>Services</th>
+                        <th>Plans</th>
+                        <th>Status</th>
+                        <th>Authorization Status</th>
+                        <th>Date Created</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+            
+                      <tr id="samplerow">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    
+      
+                    </tbody>
+                    <tfoot>
+                     
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+  
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+ <script src="@Url.Content("~/Apps/Core/Content/Scripts/dataTables.buttons.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.flash.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/jszip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/pdfmake.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/vfs_fonts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.html5.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.print.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+
+
+        bodytable$=   $('#providerlist').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [0,1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "sAjaxSource": '../Provider/GetJsonDelisted',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_providername", "value": $('#src_providername').val() }, { "name": "scr_provideraddress", "value": $('#scr_provideraddress').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_State", "value": $('#scr_State').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+
+         
+
+            "iDisplayLength": 50,
+            "bPaginate": true,
+            "bLengthChange":true,
+            "bFilter": false,
+            "bSort": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            'columnDefs': [{
+                'targets': [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "aoColumns": [
+                      {
+                          'searchable': false,
+                          'orderable': false,
+                          render: function (data, type, row) {
+
+                              return '<input type="checkbox" class="chkbox_datatable"  >';
+
+                          },
+                      },
+                  { "mDataProp": "Id", "bVisible": true, sClass: "row_id" },
+                { "mDataProp": "Name" },
+                { "mDataProp": "SubCode" },
+                  { "mDataProp": "Zone" },
+                  { "mDataProp": "Address" },
+                  { "mDataProp": "State.Name" },
+                 { "mDataProp": "Phone" },
+                   { "mDataProp": "Phone2" },
+                  { "mDataProp": "Email" },
+                  { "mDataProp": "CreatedBy" },
+                { "mDataProp": "Providerservices", "bVisible": false },
+                 { "mDataProp": "Providerplans", "bVisible": false },
+                {
+                    "mDataProp": "Status", "mRender": function (data, type, row) {
+                        var response = "";
+                        if (data == true) {
+                            response = '<span class="label label-success"> Active</span>';
+                        } else {
+                            response = '<span class="label label-danger"> Inactive</span>';
+                        }
+
+                        return response;
+                    }
+                },
+                //This authorizationstatus has not been implemented properly i only added this here would implement fully if it is needed.
+                      {
+                          "mDataProp": "AuthorizationStatus", "bVisible": false, "mRender": function (data, type, row) {
+                              var response = "";
+                              if (data == true) {
+                                  response = '<span class="label label-success"> Active</span>';
+                              } else {
+                                  response = '<span class="label label-danger"> Inactive</span>';
+                              }
+
+                              return response;
+                          }
+                      },
+                { "mDataProp": "CreatedDate" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '';
+                        //return '<a href="/Provider/Details?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link">Details</a> ' + '<a href="/Provider/Edit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/Provider/Disapprove?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Disapprove</a>' + ' <a href="/Provider/Approve?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link">Approve</a> ' ;
+                    }
+                }
+
+
+
+
+
+            ]
+
+
+        });
+        $("#chk_selectall").change(function () {
+           
+
+            if (this.checked) {
+                //Do stuff
+                //$('.chkbox_datatable')
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked', true);
+                   
+                });
+            } else {
+
+
+                // $('.chkbox_datatable').removeAttr('checked');
+                bodytable$.$('tr').each(function (index, rowhtml) {
+                    $('.chkbox_datatable').prop('checked', false);
+
+                });
+
+
+            }
+        });
+
+ 
+        $('#scr_button').on('click', function (e) {
+            $('#providerlist').DataTable().ajax.reload();
+        });
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+    });
+
+    function submitforApproval() {
+        var checkIds = [];
+        bodytable$.$('tr').each(function (index, rowhtml) {
+            var checked = $('input[type="checkbox"]:checked', rowhtml).length;
+            if (checked == 1) {
+                checkIds.push($('.row_id', rowhtml).text());
+            }
+        });
+        $('#hidden_selectedIDs').val(checkIds);
+        //alert($('#hidden_selectedIDs').val());
+
+    }
+    </script>
+
+
+
+

@@ -1,0 +1,7 @@
+{
+  "DatabaseProviderType": "MrCMS.DbConfiguration.SqlServer2012Provider",
+  "ConnectionString": "\"Data Source=SQL5027.myASP.NET ;Initial Catalog=DB_A0009D_NovoHub",
+  ";Integrated" "Security=False;Persist",
+  "Security" "Info=False;",
+  //User ID= DB_A0009D_NovoHub_admin;Password=P@ssw0rd1234;
+  "User" "ID=SA;Password=D0r0thyJnn@m@n1$$$;MultipleActiveResultSets=True\"}"

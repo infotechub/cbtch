@@ -1,0 +1,296 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.StaffListPage
+@{
+    ViewBag.Title = "Staff List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+}
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Staff list for all company.You can view and edit staff list.</p>
+        </div>
+
+              <a href="@Url.Action("AddStaff", "CompanyPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new staff </i> </a>
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Staff List</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Staff Name" class="form-control" id="src_StaffName">
+                    </div>
+                   
+                    <div class="col-xs-3">
+                        @Html.DropDownList("scr_company", new SelectList(ViewBag.Companylist, "Id", "Name"), new { @class = "form-control", @onchange = "SelectChangeIT(this)" })
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownList("CompanySubsidiaryStaff", new SelectList(ViewBag.sublist, "Id", "Name"), new { @class = "form-control" })
+                    </div>
+                  
+
+                    <div class="col-xs-3">
+                        <span>Show  : </span>
+                        <select id="scr_ProfileStatus">
+                            <option value="0">All</option>
+                            <option value="1">Old  Only</option>
+                            <option value="2">New Only</option>
+
+                        </select>
+                    </div>
+                </div>
+                <br />
+
+                <br />
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span>Staff Status : </span>
+                        <select id="scr_expungetype">
+                            <option value="0">All</option>
+                            <option value="1">Not Expunged</option>
+                            <option value="2">Expunged</option>
+
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <span>Added By User : </span>
+                        @Html.DropDownList("scr_users", new SelectList(ViewBag.userlist, "Id", "Name"))
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBox("scr_useDate", false) <b>Use Date</b>
+                    </div>
+                    <div class="col-xs-2">
+
+                        @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                    </div>
+                    <div class="col-xs-2">
+
+                        @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                    </div>
+
+
+                </div>
+                <br />
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Company Staff List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="stafflist" class="table table-bordered table-striped">
+                    <thead>
+                       <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                           <th>Staff Name</th>
+                            <th>Plan</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                    
+      
+                    </tbody>
+                    <tfoot>
+                    
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#scr_button').on('click', function (e) {
+            $('#stafflist').DataTable().ajax.reload();
+        })
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+     
+        $('#stafflist').dataTable({
+            
+            "sAjaxSource": '../Company/GetStaffListJson',
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'dt-body-center',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "scr_expungetype", "value": $('#scr_expungetype').val() }, { "name": "scr_companysub", "value": $('#CompanySubsidiaryStaff').val() }, { "name": "src_StaffName", "value": $('#src_StaffName').val() }, { "name": "scr_company", "value": $('#scr_company').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_ProfileStatus", "value": $('#scr_ProfileStatus').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+            
+            { "mDataProp": "groupname", "bVisible": false },
+               
+                {
+                    "mDataProp": "name", "mRender": function (data, type, row) {
+                      
+                        
+if(row.hasprofile=="no") {
+    return '<i class="fa fa-star text-red"></i> <span>' + row.name + '</span>';
+} else {
+    return '</i> <span>' + row.name + '</span>';
+}
+                    }
+                },
+              //<i class="fa fa-star text-yellow"></i>
+                { "mDataProp": "Plan" },
+                  { "mDataProp": "hasprofile", "bVisible": false },
+                 
+                {
+                    "mRender": function (data, type, row) {
+                       
+
+
+                        if (row.hasbeenExpunged) {
+                            return '<a href="/Company/RestoreStaff?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link"><i class="fa fa-retweet">Restore</i></a> ';
+
+                        } else {
+                            if (row.hasprofile == "no") {
+                                return '<a href="/Company/EditStaff?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-pencil-square-o"></i></a>  <a href="/Company/DeleteStaff?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times"></i></a> ';
+
+
+                            } else {
+                                return '<a href="/Company/EditStaff?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-pencil-square-o"></i></a>  <a href="/Company/ExpungeStaff?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times">Expunge Staff</i></a> ';
+
+
+                            }
+                        }
+
+                      
+                    }
+                }
+          
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+
+
+    });
+
+    function SelectChangeIT(e) {
+       
+        $.getJSON("../Company/GetSubsidiary/" + $(e).val(), function (data) {
+          
+            $("#CompanySubsidiaryStaff").empty();
+            $("#CompanySubsidiaryStaff").append($("<option  />").val("-1").text("All Subsidiary"));
+            //alert('removed');
+            $.each(data, function () {
+                $("#CompanySubsidiaryStaff").append($("<option  />").val(this.Id).text(this.Subsidaryname));
+            });
+
+
+
+        });
+    }
+    </script>
+
+

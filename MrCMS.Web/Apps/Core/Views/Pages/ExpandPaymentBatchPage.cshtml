@@ -1,0 +1,382 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ExpandPaymentBatchPage
+@using System.Globalization
+@{
+    ViewBag.Title = "Expand Payment Batch";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+    var modelsmale = (MrCMS.Web.Apps.Core.Utility.PaymentBatchResponse)ViewBag.Modelsmall;
+
+}
+
+@helper Truncate(string input, int length)
+{
+if (input.Length <= length)
+{
+        @input
+}
+else
+{
+        @input.Substring(0, length)<text>...</text>
+}
+}
+
+@helper StatusColor(bool input)
+{
+var response = "";
+if (input)
+{
+    response =
+            "success";
+
+}
+else
+{
+    response = "danger";
+
+}
+    @response
+}
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Expanded view of payment batch.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon seegreen"><i class="fa fa-clock-o"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Batch Title</span>
+                        <span class="info-box-number" id="batchtitle">@modelsmale.Title</span>
+
+                    </div>
+
+
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-maroon-active"><i class="fa fa-hospital-o"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">No of Items</span>
+                        <span class="info-box-number" id="noofitems">@modelsmale.Claimcount</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Amount</span>
+
+                        <span class="info-box-number" id="totalamountinbatch"> @modelsmale.TotalAmount</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Amount Paid</span>
+                        <span class="info-box-number" id="amountpaid">@modelsmale.TotalPaid</span>
+                        <span class="info-box-text"><small>Difference</small> </span>
+                        <span class="info-box-number"><small style="color:red" id="difference">@Convert.ToDecimal(Convert.ToDecimal(modelsmale.TotalAmount) - Convert.ToDecimal(modelsmale.TotalPaid)).ToString("N") </small></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+        </div>
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Payment Item List</h3>
+
+                <div class="box-tool">
+
+
+                    <ul class="nav nav-tabs">
+                       
+                        <li class="dropdown pull-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Menu <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="../claim/ExportPaymentAnalysis?id=@Model.paymentbatch.Id">Export Batch Analysis</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="../claim/ExportPaymentBatchCSV?paymentid=@Model.paymentbatch.Id">Export Batch for Payment</a></li>
+                                <li role="presentation"><a  data-toggle="modal" data-target="#importpaymentbatch">Import Payment Details</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="../claim/ExportMemoPaymentBatch?id=@Model.paymentbatch.Id">Export Memo</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Advance </a></li>
+                            </ul>
+                        </li>
+                      
+                    </ul>
+                   
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="overflow-y: auto; min-height: 500px">
+
+
+                <table class="mdl-data-table mdl-data-table--selectable" id="listtable">
+
+                    <thead>
+                        <tr>
+                            @*<th>
+
+                                    <input type="checkbox" id="chk_selectall" name="hk_selectall">
+
+
+
+
+                                </th>*@
+                            <th class="mdl-data-table__cell--non-numeric">Id</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claims Period</th>
+                            <th class="mdl-data-table__cell--non-numeric">Provider</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claim Batch</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claims Count</th>
+                            <th class="mdl-data-table__cell--non-numeric">Initial Amount</th>
+                            <th class="mdl-data-table__cell--non-numeric">Processed Amount</th>
+                            <th class="mdl-data-table__cell--non-numeric">Difference</th>
+                            <th class="mdl-data-table__cell--non-numeric">Status</th>
+                            <th class="mdl-data-table__cell--non-numeric">Amount Paid</th>
+                            <th class="mdl-data-table__cell--non-numeric">Payment Method</th>
+                            <th class="mdl-data-table__cell--non-numeric">Payment Reference</th>
+                            <th class="mdl-data-table__cell--non-numeric">Source Bank Name</th>
+                            <th class="mdl-data-table__cell--non-numeric">Source Account Number</th>
+                            <th class="mdl-data-table__cell--non-numeric">Destination Bank Name</th>
+                            <th class="mdl-data-table__cell--non-numeric">Destination Account Number</th>
+                            <th class="mdl-data-table__cell--non-numeric">Payment Date</th>
+
+
+                            <th class="mdl-data-table__cell--non-numeric">Paid By</th>
+
+
+                            <th class="mdl-data-table__cell--non-numeric">Remark</th>
+                            <th class="mdl-data-table__cell--non-numeric"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+
+
+                            foreach (var item in Model.paymentbatch.ClaimBatchList)
+                            {
+                                <tr>
+                                    <td class="mdl-data-table__cell--non-numeric">@item.Id</td>
+
+
+                                    @{
+                                        var batchid = Model.paymentbatch.Id;
+                                        var income = item.IncomingClaims.FirstOrDefault();
+                                        var claimperiod = "";
+                                        var claimbatchstring = Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimBatch), item.Batch);
+
+
+                                        if (income != null && !string.IsNullOrEmpty(income.month_string) && income.month_string.Split(',').Count() > 0)
+                                        {
+
+                                            foreach (var itemmm in income.month_string.Split(','))
+                                            {
+                                                claimperiod = claimperiod + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Convert.ToInt32(itemmm)) + ",";
+                                            }
+                                            claimperiod = claimperiod + income.year.ToString();
+
+
+                                        }
+                                    }
+
+                                    <td class="mdl-data-table__cell--non-numeric">@claimperiod</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@item.ProviderName</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@claimbatchstring</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@item.Claims.Count()</td>
+
+                                    @{
+
+                                        var summ2 = item.Claims.Sum(x => x.DrugList.Sum(y => y.VettedAmount)) + item.Claims.Sum(x => x.ServiceList.Sum(y => y.VettedAmount));
+                                        var summ1 = item.Claims.Sum(x => x.DrugList.Sum(y => y.InitialAmount)) + item.Claims.Sum(x => x.ServiceList.Sum(y => y.InitialAmount));
+                                        var diffence = summ2 - summ1;
+
+                                        var claimstatus = Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus), item.status);
+                                        var paymentmethod =  string.IsNullOrEmpty( item.paymentmethodstring) ? "--" : item.paymentmethodstring; //Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.PaymentMethod), item.paymentmethod);
+                                        var paymentref = string.IsNullOrEmpty(item.paymentref) ? "--" : item.paymentref;
+                                        var sourcebankname = string.IsNullOrEmpty(item.sourceBankName) ? "--" : item.sourceBankName;
+                                        var sourcebankacc = string.IsNullOrEmpty(item.sourceBankAccountNo) ? "--" : item.sourceBankAccountNo;
+                                        var destbankname = string.IsNullOrEmpty(item.DestBankName) ? "--" : item.DestBankName;
+                                        var destbankacc = string.IsNullOrEmpty(item.DestBankAccountNo) ? "--" : item.DestBankAccountNo;
+
+
+                                        var paymentdate = Convert.ToDateTime(item.paymentdate);
+                                        var paymentdatestring = "--";
+                                        var paidbystr = "--";
+                                        paidbystr = !string.IsNullOrEmpty(item.paidby) ? item.paidby.ToUpper() : "--";
+
+
+                                        if (paymentdate.Year > 1990)
+                                        {
+                                            paymentdatestring = paymentdate.ToString(MrCMS.Website.CurrentRequestData.CultureInfo.DateTimeFormat.FullDateTimePattern);
+                                        }
+                                        var markpaidby = "--";
+
+                                        if (item.markpaidby > 0)
+                                        {
+
+                                        }
+                                    }
+
+                                    <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(summ1).ToString("N")</td>
+
+                                    <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(summ2).ToString("N")</td>
+
+                                    <td class="mdl-data-table__cell--non-numeric" style="color: red">@Convert.ToDecimal(diffence).ToString("N") </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@claimstatus</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(item.AmountPaid).ToString("N")</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@paymentmethod.ToUpper()</td>
+                                    <td class="mdl-data-table__cell--non-numeric">@paymentref  </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@sourcebankname  </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@sourcebankacc </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@destbankname </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@destbankacc </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@paymentdatestring </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@paidbystr </td>
+                                    <td class="mdl-data-table__cell--non-numeric">@item.remark </td>
+
+                                    <td class="mdl-data-table__cell--non-numeric">
+
+                                        @*<button class="btn btn-xs btn-info viewdetailsbtn" title="View Details" data-id="@item.Id" data-batchid="@batchid"><i class="fa fa-eye" data-id="@item.Id" data-batchid="@batchid"></i></button>
+                                        <button class="btn btn-xs btn-success markpaidbtn" title="Mark as paid" data-id="@item.Id" data-batchid="@batchid"><i class="fa fa-check-square" data-id="@item.Id" data-batchid="@batchid"></i></button>*@
+                                    
+                                        @{
+                                            if (item.status != MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Paid)
+                                            {
+                                                //can only delete if it has not been paid
+                                                <button class="btn btn-xs btn-danger removebtn" title="Remove item from batch" data-id="@item.Id" data-batchid="@batchid"><i class="fa fa-times" data-id="@item.Id" data-batchid="@batchid"></i></button>
+
+                                            }
+
+                                        }
+                                      
+                                    </td>
+                                    @*<td class="mdl-data-table__cell--non-numeric">@item.ClaimsSerialNo</td>
+
+                                        <td class="mdl-data-table__cell--non-numeric">@item.enrolleeFullname</td>
+
+                                        <td class="mdl-data-table__cell--non-numeric">
+                                            <span class="badge bg-blue">@item.enrolleePolicyNumber</span>
+
+
+
+                                        </td>
+                                        <td class="mdl-data-table__cell--non-numeric">@item.EnrolleePlan</td>
+                                        <td class="mdl-data-table__cell--non-numeric">@item.enrolleeCompanyName</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDateTime(item.ServiceDate).ToString(MrCMS.Website.CurrentRequestData.CultureInfo.DateTimeFormat.FullDateTimePattern)</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@item.Diagnosis</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@item.Durationoftreatment</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimsTAGS), item.Tag)</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount)).ToString("N")</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)).ToString("N")</td>
+
+
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount))).ToString("N")</td>
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(Convert.ToDecimal(item.DrugList.Sum(x => x.VettedAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.VettedAmount))).ToString("N")</td>
+                                        <td class="mdl-data-table__cell--non-numeric" style="color: red">@Convert.ToDecimal((Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount))) - (Convert.ToDecimal(item.DrugList.Sum(x => x.VettedAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.VettedAmount)))).ToString("N") </td>
+                                        <td class="mdl-data-table__cell--non-numeric">@Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus), item.status)</td>
+                                        <td class="mdl-data-table__cell--non-numeric">@Convert.ToDateTime(item.CreatedOn).ToString(MrCMS.Website.CurrentRequestData.CultureInfo.DateTimeFormat.FullDateTimePattern)</td>*@
+
+
+
+
+                                </tr>
+                                        }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#listtable").delegate(".removebtn", "click", function (e) {
+
+            swal({
+                title: "Are you sure?",
+                text: "You are about to remove this item from the payment batch.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+   .then((willDelete) => {
+       if (willDelete) {
+           window.location.replace("../claim/removeItemPaymentBatch?batchid=" + $(e.currentTarget).data("batchid") + "&itemid=" + $(e.currentTarget).data("id"));
+       } else {
+           swal("You changed your mind!");
+       }
+   });
+
+            
+        });
+    });
+</script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="importpaymentbatch" tabindex="-1" role="dialog" aria-labelledby="importpaymentbatch" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+@using (Html.BeginForm("ImportPaymentMadeCSV", "ClaimsPage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Payment Batch</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+             <span>Upload payment batch to server for processing.</span>
+            <div class="form-group">
+                <input type="hidden" id="paymentid" name="paymentid" value="@Model.paymentbatch.Id"/>
+                <label>CSV File</label>
+                <input type="file" id="filecsv" name="filecsv" />
+            </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Push</button>
+            </div>
+        </div>
+
+}
+    </div>
+</div>

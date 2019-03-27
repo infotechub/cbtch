@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using MrCMS.Entities.Documents.Web.FormProperties;
+using System.Linq;
+using MrCMS.Settings;
+
+namespace MrCMS.Shortcodes.Forms
+{
+    public class CheckBoxListRenderer : IFormElementRenderer<CheckboxList>
+    {
+        public const string CbHiddenValue = "cb-hidden-value";
+
+        public TagBuilder AppendElement(CheckboxList formProperty, string existingValue, FormRenderingType formRenderingType)
+        {
+            List<string> values = existingValue == null
+                                ? new List<string>()
+                                : existingValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                                               .Select(s => s.Trim())
+                                               .ToList();
+            values.Remove(CbHiddenValue);
+
+            TagBuilder tagBuilder = new TagBuilder("div");
+            foreach (FormListOption checkbox in formProperty.Options)
+            {
+                TagBuilder cbLabelBuilder = new TagBuilder("label");
+                cbLabelBuilder.Attributes["for"] = TagBuilder.CreateSanitizedId(formProperty.Name + "-" + checkbox.Value);
+                TagBuilder checkboxBuilder = GetCheckbox(formProperty, existingValue, checkbox, values);
+
+                cbLabelBuilder.InnerHtml += checkboxBuilder.ToString();
+                cbLabelBuilder.InnerHtml += checkbox.Value;
+
+                if (formRenderingType == FormRenderingType.Bootstrap3)
+                {
+                    TagBuilder checkboxContainer = new TagBuilder("div");
+                    checkboxContainer.AddCssClass("checkbox");
+                    checkboxContainer.InnerHtml += cbLabelBuilder.ToString();
+                    tagBuilder.InnerHtml += checkboxContainer;
+                }
+                else
+                {
+                    tagBuilder.InnerHtml += cbLabelBuilder;
+                }
+            }
+
+            TagBuilder cbHiddenBuilder = new TagBuilder("input");
+            cbHiddenBuilder.Attributes["type"] = "hidden";
+            cbHiddenBuilder.Attributes["name"] = formProperty.Name;
+            cbHiddenBuilder.Attributes["value"] = CbHiddenValue;
+            tagBuilder.InnerHtml += cbHiddenBuilder.ToString();
+
+            return tagBuilder;
+        }
+
+        private static TagBuilder GetCheckbox(CheckboxList formProperty, string existingValue, FormListOption checkbox, List<string> values)
+        {
+            TagBuilder checkboxBuilder = new TagBuilder("input");
+            checkboxBuilder.Attributes["type"] = "checkbox";
+            checkboxBuilder.Attributes["value"] = checkbox.Value;
+            checkboxBuilder.AddCssClass(formProperty.CssClass);
+
+            if (existingValue != null)
+            {
+                if (values.Contains(checkbox.Value))
+                    checkboxBuilder.Attributes["checked"] = "checked";
+            }
+            else if (checkbox.Selected)
+                checkboxBuilder.Attributes["checked"] = "checked";
+
+            if (formProperty.Required)
+            {
+                string requiredMessage = string.Format("The field {0} is required",
+                    string.IsNullOrWhiteSpace(formProperty.LabelText)
+                        ? formProperty.Name
+                        : formProperty.LabelText);
+                checkboxBuilder.Attributes["data-val"] = "true";
+                checkboxBuilder.Attributes["data-val-mandatory"] = requiredMessage;
+                checkboxBuilder.Attributes["data-val-required"] = requiredMessage;
+            }
+
+            checkboxBuilder.Attributes["name"] = formProperty.Name;
+            checkboxBuilder.Attributes["id"] = TagBuilder.CreateSanitizedId(formProperty.Name + "-" + checkbox.Value);
+            return checkboxBuilder;
+        }
+
+        public TagBuilder AppendElement(FormProperty formProperty, string existingValue, FormRenderingType formRenderingType)
+        {
+            return AppendElement(formProperty as CheckboxList, existingValue, formRenderingType);
+        }
+
+        public bool IsSelfClosing { get { return false; } }
+    }
+}

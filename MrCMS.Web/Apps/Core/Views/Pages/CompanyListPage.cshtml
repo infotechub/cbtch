@@ -1,0 +1,200 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.CompanyListPage 
+@{
+    ViewBag.Title = "Company List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Manage companies. view,create,edit and delete company.</p>
+        </div>
+
+              <a href="@Url.Action("Add", "CompanyPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new company </i> </a>
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+       
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Company List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="servicelist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                             <th>Id</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>State</th>
+                            <th>Address</th>
+<th>Website</th>
+                            <th>Email</th>
+<th>Subsidiary Count</th>
+                            <th>Subscription Status</th>
+                            <th>Date Created</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                      <tr id="samplerow">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    
+      
+                    </tbody>
+                    <tfoot>
+                    
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/dataTables.buttons.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.flash.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/jszip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/pdfmake.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/vfs_fonts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.html5.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.print.min.js")" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#servicelist').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": false,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "sAjaxSource": '../Company/GetJson',
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "Name" },
+                { "mDataProp": "Code" },
+                { "mDataProp": "State" },
+                    { "mDataProp": "Address" },
+                 { "mDataProp": "Website" },
+                   { "mDataProp": "Email" },
+                       { "mDataProp": "subsidiary" },
+                {
+                    "mDataProp": "Subscription Status", "mRender": function (data, type, row) {
+                        var response = "";
+                        if (row.SubscriptionStatus == 1) {
+                            response = '<span class="label label-success"> Active</span>';
+                        } else {
+                            response = '<span class="label label-danger"> Inactive</span>';
+                        }
+
+                        return response;
+                    }
+                },
+
+
+
+                { "mDataProp": "CreatedOn" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/Company/Edit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '<a href="/Company/ManageSubsidiary?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs">Manage Subsidiary</a>' +'  <a href="/Company/Delete?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>' ;
+                    }
+                }
+
+
+
+
+
+            ]
+
+
+        });
+
+
+    });
+</script>
+
+

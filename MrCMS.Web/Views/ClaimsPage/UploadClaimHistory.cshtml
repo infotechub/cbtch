@@ -1,0 +1,339 @@
+﻿@model IEnumerable<MrCMS.Web.Apps.Core.Entities.Claim>
+
+@{
+    ViewBag.Title = "UploadClaimHistory";
+}
+
+<h2>UploadClaimHistory</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Guid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdatedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SiteName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProviderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClientsideID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enrolleeid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeFullname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeGender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeCompanyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeCompanyId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleePolicyNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnrolleePlan)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClaimsSerialNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EVSCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorsName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorsId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AreaOfSpecialty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Signature)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorSigned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorSignecDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.specialistName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AreaOfSpecialtyforspecialist)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.specialistphonenumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.specialistSigned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.specialistSignecDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ServiceDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdmissionDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DischargeDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Durationoftreatment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Diagnosis)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TreatmentGiven)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TreatmentCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.referalCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.enrolleeSigned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnrolleeSignDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AllprescibedDrugs)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LaboratoryInvestigation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Admission)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Feeding)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.capturedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.capturedName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.vettedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RevettedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VettedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReVettedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.diagnosticsIDString)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubmitByProvider)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ipaddressofprovider)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Guid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsDeleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SiteName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProviderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClientsideID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Enrolleeid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeFullname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeGender)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeCompanyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeCompanyId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleePolicyNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnrolleePlan)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClaimsSerialNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EVSCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DoctorsName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DoctorsId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AreaOfSpecialty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Signature)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DoctorSigned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DoctorSignecDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.specialistName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AreaOfSpecialtyforspecialist)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.specialistphonenumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.specialistSigned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.specialistSignecDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ServiceDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdmissionDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DischargeDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Durationoftreatment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Diagnosis)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TreatmentGiven)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TreatmentCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.referalCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.enrolleeSigned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnrolleeSignDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AllprescibedDrugs)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LaboratoryInvestigation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Admission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Feeding)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.capturedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.capturedName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vettedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RevettedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VettedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReVettedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.diagnosticsIDString)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubmitByProvider)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ipaddressofprovider)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

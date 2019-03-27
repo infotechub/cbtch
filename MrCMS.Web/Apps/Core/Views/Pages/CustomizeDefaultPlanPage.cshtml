@@ -1,0 +1,248 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.CustomizeDefaultPlanPage
+@{
+    ViewBag.Title = "Customize Default Plan";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Customize plan , add default benefit that would be inherited by this type of plan.  </p>
+        </div>
+
+        <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Customize  Plan [ @Model.PlanName ]</h3>
+                    <span class="pull-right"> <a class="btn" href='../plan-and-benefit/plan'><i class="fa fa-arrow-left"></i> Go Back to  Plan List</a> </span>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-sm-12">
+                        <table class="table table-condensed table-striped  mailbox-messages">
+                            <tbody>
+                                <tr>
+
+                                    <th>Field</th>
+                                    <th>Value</th>
+
+                                </tr>
+                                <tr>
+                                    <td>Plan Name</td>
+                                    <td>@Html.DisplayFor(x=>x.PlanName )</td>
+                                </tr>
+                              
+                                
+                                <tr>
+                                    <td>Description</td>
+                                    <td>@Html.DisplayFor(x=>x.Description)</td>
+                                </tr>
+
+                            
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+         <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">All Benefits</h3>
+   
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-sm-12">
+                        <table id="allbenefitlist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                            <th>Name</th>
+                           
+                            <th>Description</th>
+                            <th>Benefit Limit</th>
+                          
+
+                        
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+      
+                    </tbody>
+                    <tfoot>
+                      
+                    </tfoot>
+                  </table>
+
+                    </div>
+
+
+
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+        <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Customize Benefit [ @Model.PlanName ]</h3>
+   
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="col-sm-12">
+                        <table id="benefitlist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                            <th>Name</th>
+                           
+                            <th>Description</th>
+                            <th>Benefit Limit</th>
+                          
+
+                        
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+      
+                    </tbody>
+                    <tfoot>
+                      
+                    </tfoot>
+                  </table>
+
+                    </div>
+
+
+
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#allbenefitlist').dataTable({
+            "sAjaxSource": '../Company/GetFreeBenefitforPlanJson?id=' + @Model.PlanId,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength":20,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+            
+            { "mDataProp": "groupname", "bVisible": false },
+                 
+                { "mDataProp": "name" },
+              
+                { "mDataProp": "description" },
+                
+                { "mDataProp": "benefitlimit" },
+                {
+                    "mRender": function (data, type, row) {
+                        var resp = '<button class="btn btn-success btn-flat btn-xs" type="button" id="btnSave" onclick="AdddefaultbenefitToPlan('+ @Model.PlanId + ',' + row.Id + ')">Add</button>';
+                        return resp;
+                     
+                    }
+                }
+
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:gold;font-weight: bold;color:black;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+        $('#benefitlist').dataTable({
+            "sAjaxSource": '../Company/GetBenefitforPlanJson?id=' + @Model.PlanId,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+            
+            { "mDataProp": "groupname", "bVisible": false },
+                 
+                { "mDataProp": "name" },
+              
+                { "mDataProp": "description" },
+                
+                { "mDataProp": "benefitlimit" },
+                {
+                    "mRender": function (data, type, row) {
+                        var resp = '<button class="btn btn-danger btn-flat btn-xs" type="button" id="btnSave" onclick="removebenefitfromPlan('+  row.Id + ')">Remove</button>';
+                        return '<a href="/Company/EditPlanBenefitLimit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Change Limit</a> ' + resp;
+                    }
+                }
+
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+
+
+    });
+    </script>
+
+
+

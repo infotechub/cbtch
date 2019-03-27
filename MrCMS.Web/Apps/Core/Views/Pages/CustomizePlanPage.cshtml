@@ -1,0 +1,365 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.CustomizePlanPage
+@{
+    ViewBag.Title = "Customize Plan";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Customize plan , Add ,remove benefits.</p>
+        </div>
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Customize Company Plan [ @Model.CustomizePlanName ]</h3>
+                <span class="pull-right"> <a class="btn" href='../company/company-plans'><i class="fa fa-arrow-left"></i> Go Back to Company Plan List</a>  <a href="/Company/EditCompanyPlan?id=@Model.Companyplanid" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>   <a href="/Company/DeleteCompanyPlan?id=@Model.Companyplanid" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a> </span>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table class="table table-condensed table-striped  mailbox-messages">
+                        <tbody>
+                            <tr>
+
+                                <th>Field</th>
+                                <th>Value</th>
+
+                            </tr>
+                            <tr>
+                                <td>Company Name</td>
+                                <td>@Html.DisplayFor(x => x.CompanyName)</td>
+                            </tr>
+                            <tr>
+                                <td>Plan Type</td>
+                                <td>@Html.DisplayFor(x => x.PlanType)</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>@Html.DisplayFor(x => x.Name)</td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td>@Html.DisplayFor(x => x.Description)</td>
+                            </tr>
+
+                            <tr>
+                                <td>Annual Premium</td>
+                                <td>@Html.DisplayFor(x => x.AnnualPremium)</td>
+                            </tr>
+                            <tr>
+                                <td>Discount Per Enrollee</td>
+                                <td>@Html.DisplayFor(x => x.Discountperenrollee)</td>
+                            </tr>
+                            <tr>
+                                <td>Discount On Total</td>
+                                <td>@Html.DisplayFor(x => x.Discountlump)</td>
+                            </tr>
+                            <tr>
+                                <td>Allow Dependant Enrollee</td>
+                                <td>@{var tony = Model.AllowChildEnrollee ? "Yes" : "No";}@tony</td>
+                            </tr>
+                            <tr>
+                                <td>Created By</td>
+                                <td>@Html.DisplayFor(x => x.Createdby)</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">All Benefits</h3>
+
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table id="allbenefitlist" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>GroupName</th>
+                                <th>Name</th>
+
+                                <th>Description</th>
+                                <th>Benefit Limit</th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+        <div class="box">
+            <div class="box-header">
+
+                <button class="btn btn-sm btn-info pull-right" data-toggle="modal" data-target="#importbenefit">Import Benefits</button>
+
+
+                <h3 class="box-title">Customize Benefit [ @Model.CustomizePlanName ]</h3>
+
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table id="benefitlist" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>GroupName</th>
+                                <th>Name</th>
+
+                                <th>Description</th>
+                                <th>Benefit Limit</th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div><!-- /.box-body -->
+
+        </div>
+
+        <!-- /.box -->
+        <div class="box">
+            <div class="box-header">
+
+                <button class="btn btn-sm btn-info pull-right" data-toggle="modal" data-target="#addprovider">Add Providers</button>
+
+
+                <h3 class="box-title">Facilities Allowed [ @Model.CustomizePlanName ]</h3>
+
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table id="benefitlist" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+
+                                <th>Names</th>
+
+                                <th>Description</th>
+
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>NOVO HEALTH HOSPITAL, LAGOS </td>
+                                <td>Access Care</td>
+                                <td><button class="btn btn-danger btn-flat btn-xs" type="button">Remove</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div><!-- /.box-body -->
+
+        </div><!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#importbenefit').on('shown.bs.modal', function () {
+
+
+            $.getJSON( "../company/importPlanBenefits?planid=@Model.Companyplanid", function( data ) {
+                $('#cloneplanid').html('loading...');
+                $.each( data, function( key, val ) {
+
+                    $('#cloneplanid').append($('<option>',
+  {
+      value: val.Id,
+      text : val.Name
+  }));
+                });
+
+
+            });
+        });
+
+        $('#allbenefitlist').dataTable({
+            "sAjaxSource": '../Company/GetCompanyFreeBenefitforPlanJson?id=' + @Model.Companyplanid,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength":20,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+
+            { "mDataProp": "groupname", "bVisible": false },
+
+                { "mDataProp": "name" },
+
+                { "mDataProp": "description" },
+
+                { "mDataProp": "benefitlimit" },
+                {
+                    "mRender": function (data, type, row) {
+                        var resp = '<button class="btn btn-success btn-flat btn-xs" type="button" id="btnSave" onclick="AddbenefitToPlan('+ @Model.Companyplanid + ',' + row.Id + ')">Add</button>';
+                        return resp;
+
+                    }
+                }
+
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:gold;font-weight: bold;color:black;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+        $('#benefitlist').dataTable({
+            "sAjaxSource": '../Company/GetCompanyBenefitforPlanJson?id=' + @Model.Companyplanid,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+
+            { "mDataProp": "groupname", "bVisible": false },
+
+                { "mDataProp": "name" },
+
+                { "mDataProp": "description" },
+
+                { "mDataProp": "benefitlimit" },
+                {
+                    "mRender": function (data, type, row) {
+                        var resp = '<button class="btn btn-danger btn-flat btn-xs" type="button" id="btnSave" onclick="removebenefitToPlan('+  row.Id + ')">Remove</button>';
+                        return '<a href="/Company/EditBenefitLimit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Change Limit</a> ' + resp;
+                    }
+                }
+
+
+
+
+
+            ]
+
+        , "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null;
+
+            api.column(1, { page: 'current' }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr style="background-color:#0aa89e;font-weight: bold;color:white;"><td colspan="100%">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+
+        });
+
+
+    });
+</script>
+
+
+<form action="../company/importPlanBenefits" method="post" id="importbenefitform">
+    <div class="modal" tabindex="-1" role="dialog" id="importbenefit">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Benefits</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="planid" name="planid" value="@Model.Companyplanid" />
+                    <div class="form-group">
+                        <label>Select Plan to import from</label>
+                        <select class="input-lg form-control" id="cloneplanid" name="cloneplanid"></select>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <span style="color:red">Kindly note that importing will wipe out previous benefits.</span>
+                    <button type="submit" class="btn btn-primary">Import Benefits</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

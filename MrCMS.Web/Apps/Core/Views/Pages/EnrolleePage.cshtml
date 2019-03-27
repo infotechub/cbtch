@@ -1,0 +1,344 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.EnrolleePage
+@{
+    ViewBag.Title = "Create Enrollee";
+}
+ <div class="row">
+
+     <div class="col-md-12 ">
+         <div class="callout callout seegreen" style="margin-left: -5px">
+             <h4>Tip!</h4>
+             <p>Create new enrollee profile. fill the form below and click on save ,you must fill at least the basic information to create enrollee profile ..</p>
+         </div>
+ @using (Html.BeginForm("Add","EnrolleePage",FormMethod.Post,new {enctype ="multipart/form-data" }))
+ {
+     @Html.AntiForgeryToken()
+
+     <div class="col-md-12">
+         <div>
+
+             <div class="box-body">
+                 <div class="box-header">
+                        
+
+                 </div>
+                 <!-- Custom Tabs -->
+                 <div class="nav-tabs-custom">
+                     <ul class="nav nav-tabs">
+                         <li class="active"><a data-toggle="tab" href="#tab_1" aria-expanded="false">Basic Information</a></li>
+                  
+
+                     </ul>
+                     <div class="tab-content">
+                         <div id="tab_1" class="tab-pane active">
+                             <div class="row">
+                                 <div class="col-xs-6">
+                                     <table class="table table-condensed ">
+                                         <tbody>
+          
+                                             <tr>
+              
+                                                 <td colspan="2">
+                                                     <div class="form-group" id="photo_grp">
+                                                         <img src="~/Apps/Core/Content/Images/placeholder-photo.png" style="height: 140px; width: 140px;"
+                                                              class="img-rounded" id="photo_img">
+                                                         <input type="file" id="photoInputFile" name="photoInputFile">
+
+                                                     </div>
+  
+                                                 </td>
+                                             </tr>
+  
+                                             <tr>
+                                                 @Html.Hidden("staffidd",(int)ViewBag.StaffID)
+                                                 <td>Enrollee FullName</td>
+                                                 <td>    @Html.TextBox("Stafffullname", (string) ViewBag.Stafffullname, new {@class = "form-control", @placeholder = "", @id = "Stafffullname", @readonly = ""})
+                
+                
+                                                 </td>
+                                                 w
+
+                                             </tr>  
+                                             <tr>
+                                                 <td>Policy Number</td>
+                                                 <td>   @Html.TextBox("policynumber", null, new {@class = "form-control", @placeholder = "Policy Number", @id = "policynumber"})</td>
+                                             </tr>
+                                             <tr>
+                                                 <td>Surname</td>
+            
+                                                 <td>@Html.TextBox("surname", null, new {@class = "form-control", @placeholder = "Enrollee  surname", @id = "surname", @title = "This is the enrollee's last name."})
+                                                 </td> 
+                      
+                      
+                                             </tr>
+                                             <tr>
+                                                 <td>Other Names</td>
+                                                 <td> @Html.TextBox("othernames", null, new {@class = "form-control", @placeholder = "Enrollee other names", @id = "othernames", @title = "This is the  enrollee first name and any other name. "})
+                                                 </td>
+                                             </tr>
+                                             <tr>
+                                                 <td>Date of Birth</td>
+                                                 <td> @Html.TextBox("datepicker", null, new {@class = "form-control", @placeholder = "DOB", @id = "datepicker"})</td>
+                                             </tr>
+
+                                             <tr class="hidden">
+                                                 <td>Age</td>
+                                                 <td>  @Html.TextBox("age", null, new {@class = "form-control", @placeholder = "Age", @id = "age"})</td>
+                                             </tr>
+                                             <tr>
+                                                 <td>Marital Status</td>
+                                                 <td>@Html.DropDownList("maritalstatusvalue", new SelectList(ViewBag.MaritalStatus, "Id", "Name"), new {@class = "form-control", @id = "maritalstatusvalue", @onchange = "SelectChange(this)"})
+                                                 </td>
+                                             </tr>
+                                             <tr>
+                                                 <td>Sex</td>
+                                                 <td> @Html.DropDownList("sex", new SelectList(ViewBag.Sex, "Id", "Name"), new {@class = "form-control", @id = "sex", @onchange = "SelectChange(this)"})
+                                                 </td>
+                                             </tr>
+                                             <tr>
+                                                 <td>State</td>
+                                                 <td>  @Html.DropDownList("state", new SelectList(Model.States, "Id", "Name"), new {@class = "form-control", @id = "state"})
+              
+                                                 </td>
+                                             </tr>
+                                             <tr>
+                                                 <td>LGA</td>
+                                                 <td>  @Html.DropDownList("lga", new SelectList(ViewBag.Sex, "Id", "Name"), new {@class = "form-control", @id = "lga"})
+                                                 </td>
+                                             </tr>
+
+         
+                                         </tbody>
+                                     </table>
+                                 </div>
+                                 <div class="col-xs-6">
+                                     <table class="table table-condensed ">
+                                         <tbody>
+          
+
+  
+                                             <tr>
+                                                 <td>Residential Address</td>
+                                                 <td>  @Html.TextBox("address", null, new {@class = "form-control", @placeholder = "Residential Address", @id = "address"})
+                                                 </td>
+                                             </tr>
+
+                                             <tr>
+                                                 <td>Occupation</td>
+                                                 <td>  @Html.TextBox("occupation", null, new {@class = "form-control", @placeholder = "occupation", @id = "occupation"})
+                
+                                                 </td>
+
+                                             </tr>
+
+
+                                             <tr>
+                                                 <td>Mobile Number</td>
+                                                 <td>    @Html.TextBox("mobilenumber", null, new {@class = "form-control", @placeholder = "Mobile Number", @id = "mobilenumber"})
+                
+                                                 </td>
+
+
+                                             </tr> 
+
+
+                                             <tr>
+                                                 <td>Email</td>
+                                                 <td>    @Html.TextBox("email", null, new {@class = "form-control", @placeholder = "Email", @id = "Email"})
+                
+                
+                                                 </td>
+
+
+                                             </tr>   
+
+                                             <tr>
+                                                 <td>Sponsorship Type</td>
+                                                 <td>  @Html.DropDownList("sponsorshiptypevalue", new SelectList(ViewBag.Sponsorshiptype, "Id", "Name"), new {@class = "form-control", @id = "sponsorshiptypevalue", @onchange = "SelectChange(this)"})
+              
+                
+                
+                                                 </td>
+
+
+                                             </tr >   
+                                             <tr  id="othertyperow">
+                                                 <td>Sponsorship Type Name</td>
+                                                 <td>    @Html.TextBox("sponsorshipothername", null, new {@class = "form-control", @placeholder = "Other", @id = "sponsorshipothername"})
+                
+                
+                                                 </td>
+
+
+                                             </tr>  
+                                             <tr>
+                                                 <td>Subscription Type</td>
+                                                 <td>    @Html.TextBox("subscriptiontypevalue", (string) ViewBag.SubscriptionType, new {@class = "form-control", @placeholder = "Subscription Type", @id = "subscriptiontypevalue", @readonly = ""})
+                
+                
+                                                 </td>
+
+
+                                             </tr>  
+                                             <tr>
+                                                 <td>Company </td>
+                                                 <td>    @Html.TextBox("company", (string) ViewBag.Company, new {@class = "form-control", @placeholder = "Company", @id = "company", @readonly = ""})
+                
+                
+                                                 </td>
+
+
+                                             </tr>  
+  <tr>
+                                                 <td>Company Subsidiary</td>
+                                                 <td>    @Html.TextBox("Subsidiary", (string) ViewBag.CompanySubsidiary, new {@class = "form-control", @placeholder = "Company Subsidiary", @id = "companySubsidiary", @readonly = ""})
+                
+                
+                                                 </td>
+
+
+                                             </tr> 
+
+                                             <tr>
+                                                 <td>Provider of Choice</td>
+                                                 <td> 
+                                                     @Html.DropDownList("provider", new SelectList(ViewBag.providerlist, "Id", "Name", new { @class = "form-control chosen-select", @id = "provider", @onchange = "SelectChange(this)" }))
+              
+                
+                
+                                                 </td>
+
+
+                                             </tr> 
+
+                                             <tr>
+                                                 <td>Pre-existing Medical Conditions</td>
+                                                 <td>  @Html.TextArea("premedicalcondition", null, new {@class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalcondition"})
+                
+                                                 </td>
+
+
+                                             </tr> 
+    
+                                         </tbody>
+                                     </table>
+                                 </div>
+
+                             </div>
+
+                         </div>
+
+                     </div>
+                     <!-- /.tab-content -->
+                 </div>
+                 <!-- nav-tabs-custom --> 
+             </div>
+             <div class="box-footer">
+                 <button class="btn btn-primary pull-right" type="submit" style="margin-left: 4px;" id="submitbtn">Submit</button>
+                 <a href="@Url.Action("Enrollee", "EnrolleePage", new {id = (int)ViewBag.StaffID})" class="btn btn-flat btn-warning pull-right">Reset </a>
+               
+
+             </div>
+         </div>
+     </div>
+ }
+     </div>
+ </div>
+
+<script>
+    $(function () {
+
+        $("#provider").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Select Hospital",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+
+
+        $("#photoInputFile").val('');
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#photo_img').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        //check if the photoinputfile event change
+        $("#photoInputFile").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 200) {
+                //file too large
+              
+                alert('Passport is too large, size cannot be greater than 200kb');
+                $("#photoInputFile").val('');
+                $('#photo_img').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this);
+            }
+            //   
+
+            //    $("#errormsg").html('Avatar cannot be greater than 20kb,use a smaller image file.');
+            //    $("#errortab").removeClass("hidden");
+
+            //    $('#photo_img').attr('src', '~/Content/dist/img/no_pic.png');
+            //    return;
+            //}
+            //else remove error
+            //$("#errormsg").html('');
+            //$("#errortab").addClass("hidden");
+
+            
+        });
+        
+    
+        $("#submitbtn").on('click', function (event) {
+           
+            if ($("#state").val() <= 0) {
+                event.preventDefault();
+                alert('Kindly select  State for the enrollee.');
+            }
+        });
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $("#sponsorshiptype").change(function () {
+          
+            if ($("#sponsorshiptype").val() == "2") {
+                $("#sponsorshipothername").val('');
+                $("#othertyperow").removeClass('hidden');
+              
+            } else {
+                $("#othertyperow").addClass('hidden');
+            }
+        });
+
+       
+    });
+    $('#state').on('change', function () {
+
+        $.getJSON("../Provider/GetLga/" + $(this).val(), function (data) {
+
+            $("#lga").empty();
+
+            $.each(data, function () {
+                $("#lga").append($("<option />").val(this.Id).text(this.Name));
+            });
+
+        });
+    });
+</script>
+
+
+<script>    $(".chzn-select").chosen(); </script>

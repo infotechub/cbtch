@@ -1,0 +1,34 @@
+﻿@using System
+@using System.Linq
+@using MrCMS.Services
+@using MrCMS.Website
+@using MrCMS.Apps
+
+@*@foreach(var item in Model.GetUsers)
+{
+   
+
+    <li>
+        <a href="#testtab" id="@item.Guid.ToString()" data-id="@item.Guid.ToString()" class="menu chatToggle contactBar">
+           <small class="label  pull-right bg-orange-active">45</small>
+            <i class="menu-icon fa fa-user bg-green"></i>
+            <div class="menu-info">
+                <h4 class="control-sidebar-subheading" id="@item.Guid.ToString()-name" data-id="@item.Name.ToString().ToUpper()"><b>@item.Name.ToString().ToUpper()</b></h4>
+
+                <p>Email : <span id="Email">@item.Email</span></p>
+                <p>CUG Phone : <span id="phoneNumber">@item.CugMobilephone</span></p>
+                <p>Personal Phone : <span id="personalNumber">@item.Mobilephone</span></p>
+
+                <p id="@item.Guid.ToString()-status" data-id="0" hidden>0</p>
+                <div id="@item.Guid.ToString()-store" hidden></div>
+            </div>
+        </a>
+    </li>
+
+
+
+    
+
+
+ 
+}*@

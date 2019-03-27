@@ -1,0 +1,74 @@
+﻿
+@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.CompanyPlan
+@{
+    ViewBag.Title = "Add Benefit ";
+}
+ 
+
+@using (Html.BeginForm("AddBenefitToPlan","CompanyPage",FormMethod.Post,new {@id="addbenefittoplanform"}))
+    {
+      
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Add Benefits</h4>
+ </div>
+<div class="modal-body">
+     <table id="benefitlistforplan" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>GroupName</th>
+                            <th>Name</th>
+                           
+                            <th>Description</th>
+                            <th>Benefit Limit</th>
+                          
+
+                        
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+      
+                    </tbody>
+                    <tfoot>
+                      
+                    </tfoot>
+                  </table>
+
+</div>
+        <div class="modal-footer">
+            
+            <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+            <button class="btn btn-primary" type="button" id="btnSave" onclick="addBenefitCategory()">Save </button>
+        </div>
+
+}
+
+<script>
+
+ 
+
+    $(function () {
+        
+//Do validation for yourself.
+        $('#btnSave').click(function (e) {
+           
+            $('#modal-container').modal('hide');
+          
+        });
+        
+    
+
+    });
+       
+   
+
+  
+</script>
+
+
+

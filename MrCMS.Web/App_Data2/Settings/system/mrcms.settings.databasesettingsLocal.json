@@ -1,0 +1,3 @@
+{
+  "DatabaseProviderType": "MrCMS.DbConfiguration.SqlServer2012Provider","ConnectionString": "Data Source=197.149.64.102;Initial Catalog=DB_A0009D_NovoHub;Integrated Security=False;Persist Security Info=False;User ID=SA;Password=D0r0thyJnn@m@n1$$$;MultipleActiveResultSets=True"
+}

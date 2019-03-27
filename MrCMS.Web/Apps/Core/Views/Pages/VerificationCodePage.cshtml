@@ -1,0 +1,394 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.VerificationCodePage
+@{
+    ViewBag.Title = "Enrollee Verification";
+}
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>View list of Enrollee verification code.</p>
+        </div>
+
+
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+
+
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Enrollee Verification Page</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="EVS Code" class="form-control input-lg" id="src_verificationcode">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Policy Number" class="form-control input-lg" id="src_policynumber">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Mobile Number" class="form-control input-lg" id="scr_mobilenumber">
+                    </div>
+                    
+                </div>
+
+                <br />
+                <div class="row">
+
+                    <div class="col-xs-6">
+
+                        @Html.DropDownList("scr_provider", new SelectList(ViewBag.providerlist, "Id", "Name"), new { @class = "form-control chosen-select" ,@multiple="multiple"})
+                    </div>
+                    <div class="col-xs-6">
+                        @Html.DropDownList("scr_visittype", new SelectList(ViewBag.evstypeofvisit, "Id", "Name"), new { @class = "form-control input-lg" })
+                    </div>
+
+                </div>
+          
+
+                <br />
+                <div class="row">
+
+
+                    <div class="col-xs-2">
+                        @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                    </div>
+
+
+                </div>
+                <br />
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+
+
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Enrollee Verification List</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="verificationlist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Enrollee Id</th>
+                            <th>enrollee IS Dependant</th>
+                            <th>StaffProfileId</th>
+
+                            <th>Enrollee Policy Number</th>
+                            <th>Enrolee Name</th>
+                            <th>Request Date</th>
+                            <th>Verification Code</th>
+                           
+                            <th>Status</th>
+                            <th>Provider Used</th>
+                            <th>Purpose</th>
+                            <th>Date Authenticated</th>
+                            <th>Visit Type</th>
+                            <th>Channel</th>
+                            <th></th>
+                            <th>show</th>
+                            <th>ShowEdit</th>
+                            <th> ShowCallToUser</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        <!-- /.box -->
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+
+        $('#datepicker2').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+
+        });
+
+
+
+
+        $("#scr_provider").chosen({
+            no_results_text: "Provider not found.",
+            width: '100%',
+            max_shown_results: 100,
+            max_selected_options: 1,
+        });
+
+
+        $('#scr_button').on('click', function (e) {
+            $('#verificationlist').DataTable().ajax.reload();
+        })
+        $('#verificationlist').dataTable({
+
+            "sAjaxSource": '../enrollee/QueryVerificationCode',
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': [2, 3],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "src_policynumber", "value": $('#src_policynumber').val() }, { "name": "src_verificationcode", "value": $('#src_verificationcode').val() }, { "name": "scr_provider", "value": $('#scr_provider').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_visittype", "value": $('#scr_visittype').val() }, { "name": "scr_mobilenumber", "value": $('#scr_mobilenumber').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                   { "mDataProp": "Id", "bVisible": false },
+                   { "mDataProp": "Enrolleeid", "bVisible": false },
+                  { "mDataProp": "EnrolleeisChild", "bVisible": false },
+                    { "mDataProp": "StaffProfileId", "bVisible": false },
+                  {
+                      "mDataProp": "EnrolleePolicy", "mRender": function (data, type, row) {
+                          if (row.EnrolleeisChild) {
+                              var resp = '<a href="enrollee-details?Mode=2&id=' + row.StaffProfileId + '&enrolleeID=' + row.Enrolleeid + '" ><span class="badge bg-black">' + row.EnrolleePolicy + '</span></a>';
+                              return resp;
+                          } else {
+                              var resp2 = '<a href="enrollee-details?Mode=1&id=' + row.StaffProfileId + '&enrolleeID=' + row.Enrolleeid + '" ><span class="badge bg-blue">' + row.EnrolleePolicy + '</span></a>';
+                              return resp2;
+
+                          }
+                          //var resp2 = '<a href="enrollee-details?Mode=1&id=' + row.Enrolleeid + '&EnrolleeID=' + row.Id + '" ><span class="badge bg-blue">' + row.EnrolleePolicy + '</span></a>';
+                          //return resp2;
+
+                      }
+                  },
+                  { "mDataProp": "Enrolleename" },
+                  { "mDataProp": "Dateencountered" },
+                      {
+                          "mDataProp": "Verificationcode", "mRender": function (data, type, row) {
+
+                              return '<span class="badge bg-black">' + row.Verificationcode + '</span>';
+                          }
+                      },
+                     {
+                         "mDataProp": "Verficationstatus"
+                     },
+                       { "mDataProp": "Providerused" },
+    { "mDataProp": "Purpose" },
+                   { "mDataProp": "Dateauthenticated" },
+                   { "mDataProp": "visittype" },
+    { "mDataProp": "Channel" },
+                  { "mDataProp": "Showcall", "bVisible": false },
+                    { "mDataProp": "ShowEdit", "bVisible": false },
+                    { "mDataProp": "ShowCallToUser", "bVisible": false },
+                  {
+                      "mRender": function (data, type, row) {
+
+                          var callbtn = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link callbutton"><i class="fa fa-phone"></i> Call</a>';
+                          var callbtn2 = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link "><i class="fa fa-phone"></i> Call</a>';
+                          var detailsbtn = '<a href="/Enrollee/VerificationDetails?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link"><i class="fa fa-eye"></i>  Details</a>';
+                          var editbtn = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-edit"></i>  Edit</a>';
+                          var response = detailsbtn;
+
+                          if (row.Showcall) {
+                              response = callbtn + " " + detailsbtn;
+                          }
+
+                          if (row.ShowCallToUser) {
+                              response = callbtn2 + " " + detailsbtn;
+                          }
+
+                          if (row.ShowEdit) {
+
+                              response = editbtn + " " + detailsbtn;
+                          }
+                          return response;
+
+
+                      }
+                  }
+
+
+
+
+
+            ], "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                if (aData.Verficationstatus == "Pending") {
+
+                    $('td', nRow).css('background-color', 'Orange');
+                    $('td', nRow).css('color', 'white');
+                }
+                else if (aData.Verficationstatus == "Authenticated") {
+                    $('td', nRow).css('background-color', 'Green');
+                    $('td', nRow).css('color', 'white');
+                } else {
+                    $('td', nRow).css('background-color', 'red');
+                    $('td', nRow).css('color', 'white');
+                }
+
+            },
+
+
+        });
+
+  //      $('#verificationlist').dataTable({
+  //          "sAjaxSource": '../Enrollee/GetVerificationsJson',
+  //          "bPaginate": true,
+  //          "bLengthChange": true,
+  //          "iDisplayLength": 50,
+  //          "order": [[0, "desc"]],
+  //          "bFilter": true,
+  //          "bSort": true,
+  //          "bInfo": true,
+  //          "bAutoWidth": false,
+  //          "aoColumns": [
+
+  //               { "mDataProp": "Id", "bVisible": false },
+  //               { "mDataProp": "Enrolleeid", "bVisible": false },
+  //              { "mDataProp": "EnrolleeisChild", "bVisible": false },
+  //                { "mDataProp": "StaffProfileId", "bVisible": false },
+  //              {
+  //                  "mDataProp": "EnrolleePolicy", "mRender": function (data, type, row) {
+  //                      if (row.EnrolleeisChild) {
+  //                          var resp = '<a href="enrollee-details?Mode=2&id=' + row.StaffProfileId + '&enrolleeID=' + row.Enrolleeid + '" ><span class="badge bg-black">' + row.EnrolleePolicy + '</span></a>';
+  //                          return resp;
+  //                      } else {
+  //                          var resp2 = '<a href="enrollee-details?Mode=1&id=' + row.StaffProfileId + '&enrolleeID=' + row.Enrolleeid + '" ><span class="badge bg-blue">' + row.EnrolleePolicy + '</span></a>';
+  //                          return resp2;
+
+  //                      }
+  //                      //var resp2 = '<a href="enrollee-details?Mode=1&id=' + row.Enrolleeid + '&EnrolleeID=' + row.Id + '" ><span class="badge bg-blue">' + row.EnrolleePolicy + '</span></a>';
+  //                      //return resp2;
+
+  //                  }
+  //              },
+  //              { "mDataProp": "Enrolleename" },
+  //              { "mDataProp": "Dateencountered" },
+  //                  {
+  //                      "mDataProp": "Verificationcode", "mRender": function (data, type, row) {
+
+  //                          return '<span class="badge bg-black">' + row.Verificationcode + '</span>';
+  //                      }
+  //                  },
+  //                 {
+  //                     "mDataProp": "Verficationstatus"
+  //                 },
+  //                   { "mDataProp": "Providerused" },
+  //{ "mDataProp": "Purpose" },
+  //               { "mDataProp": "Dateauthenticated" },
+  //               { "mDataProp": "Dateexpired" },
+  //{ "mDataProp": "Channel" },
+  //              { "mDataProp": "Showcall", "bVisible": false },
+  //                { "mDataProp": "ShowEdit", "bVisible": false },
+  //                { "mDataProp": "ShowCallToUser", "bVisible": false },
+  //              {
+  //                  "mRender": function (data, type, row) {
+
+  //                      var callbtn = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link callbutton"><i class="fa fa-phone"></i> Call</a>';
+  //                      var callbtn2 = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link "><i class="fa fa-phone"></i> Call</a>';
+  //                      var detailsbtn = '<a href="/Enrollee/VerificationDetails?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link"><i class="fa fa-eye"></i>  Details</a>';
+  //                      var editbtn = '<a href="/Enrollee/AttendToVerification?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-edit"></i>  Edit</a>';
+  //                      var response = detailsbtn;
+
+  //                      if (row.Showcall) {
+  //                          response =callbtn + " " + detailsbtn ;
+  //                      }
+
+  //                      if (row.ShowCallToUser) {
+  //                          response = callbtn2 + " " + detailsbtn;
+  //                      }
+
+  //                      if (row.ShowEdit) {
+
+  //                          response = editbtn + " " + detailsbtn;
+  //                      }
+  //                      return  response ;
+
+
+  //                  }
+  //              }
+
+
+
+
+
+  //          ], "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+  //              if (aData.Verficationstatus == "Pending") {
+
+  //                  $('td', nRow).css('background-color', 'Orange');
+  //                  $('td', nRow).css('color', 'white');
+  //              }
+  //              else if (aData.Verficationstatus == "Authenticated") {
+  //                  $('td', nRow).css('background-color', 'Green');
+  //                  $('td', nRow).css('color', 'white');
+  //              } else {
+  //                  $('td', nRow).css('background-color', 'red');
+  //                  $('td', nRow).css('color', 'white');
+  //              }
+
+  //          },
+
+
+
+  //      });
+
+
+    });
+</script>

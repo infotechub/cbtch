@@ -1,0 +1,1176 @@
+﻿<!doctype html>
+<!--
+  Material Design Lite
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
+<link rel="stylesheet" type="text/css" href="dialog-polyfill.css" />
+<style>
+    .demo-card-square.mdl-card {
+        width: 320px;
+        height: 320px;
+    }
+
+    .demo-card-square > .mdl-card__title {
+        color: #fff;
+        background: url('../assets/demos/dog.png') bottom right 15% no-repeat #A5CD36;
+    }
+
+    .demo-list-icon {
+        width: 300px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .mdl-tabs__tab {
+            visibility: hidden;
+            clear: both;
+            float: left;
+            margin: 10px auto 5px 20px;
+            width: 28%;
+            display: none;
+        }
+    }
+</style>
+<style>
+    .mdl-dialog {
+        border: none;
+        box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
+        width: 280px;
+    }
+
+    .mdl-dialog__title {
+        padding: 24px 24px 0;
+        margin: 0;
+        font-size: 2.5rem;
+    }
+
+    .mdl-dialog__actions {
+        padding: 8px 8px 8px 24px;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-direction: row-reverse;
+        -ms-flex-direction: row-reverse;
+        flex-direction: row-reverse;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+        .mdl-dialog__actions > * {
+            margin-right: 8px;
+            height: 36px;
+        }
+
+            .mdl-dialog__actions > *:first-child {
+                margin-right: 0;
+            }
+
+    .mdl-dialog__actions--full-width {
+        padding: 0 0 8px 0;
+    }
+
+        .mdl-dialog__actions--full-width > * {
+            height: 48px;
+            -webkit-flex: 0 0 100%;
+            -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+            padding-right: 16px;
+            margin-right: 0;
+            text-align: right;
+        }
+
+    .mdl-dialog__content {
+        padding: 20px 24px 24px 24px;
+        color: rgba(0,0,0, 0.54);
+    }
+</style>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>ConnectCare -The health care Insurance that connects Nigerians in the diaspora with their families and friends in the home land.</title>
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <link rel="shortcut icon" href="images/favicon.png">
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-green.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/CreativeIT/getmdl-select/master/getmdl-select.min.css">
+    <script defer src="https://cdn.rawgit.com/CreativeIT/getmdl-select/master/getmdl-select.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #view-source {
+            position: fixed;
+            display: block;
+            right: 0;
+            bottom: 0;
+            margin-right: 40px;
+            margin-bottom: 40px;
+            z-index: 900;
+        }
+    </style>
+</head>
+<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <main class="mdl-layout__content">
+            <div class="mdl-layout__tab-panel is-active" id="overview">
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white-100 mdl-color-text--white">
+
+                        <img src="images/connectLarge.jpg" alt="Smiley face" height="50%" width="100%">
+                    </header>
+                    <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                        <div class="mdl-card__supporting-text">
+                            <h4>ConnectCare</h4>
+                            The health Insurance plan that connects Nigerians in the diaspora with family and friends in the home land.
+                        </div>
+                    </div>
+                </section>
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+                            <h4>Introduction</h4>
+                            <p>
+                                Traditionally, most of us in diaspora are responsible for the multiple support needs of our loved ones back home and healthcare takes centre stage. The frequent experience of paying hospital bills without a means to ascertain the quality of health care, track or monitor expenses and get accurate recovery reports can be unnerving. The cycle is often repetitive without reliable feedback channels and often times, the outcomes can be fatal.
+                            </p><p>
+                                ConnectCare ® is a diaspora engagement initiative offering options of health insurance plans. It brings to you four(4) flexible health plans and reliable health care management solution on a trackable platform for monitoring the health status of your loved ones in Nigeria thereby relieving the burden of health care concern and frees up valuable time for you to attend to other task.
+                            </p><p>Wherever your loved ones are, ConnectCare ®  is designed to deliver desired clinical outcomes by providing access to quality health care services. Finally, you have a health plan that carries you along, manages the health care of your loved ones and gets you involved.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+
+
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-tabs mdl-js-tabs">
+                            <div class="mdl-tabs__tab-bar" id="shiittrolll">
+                                <a href="#tab1-panel" class="mdl-tabs__tab is-active">Benefits</a>
+                                <a href="#tab4-panel" class="mdl-tabs__tab">Basic Covered Services</a>
+                                <a href="#tab2-panel" class="mdl-tabs__tab">Plans</a>
+                                <a href="#tab3-panel" class="mdl-tabs__tab">FAQ</a>
+                                <a href="#tab5-panel" class="mdl-tabs__tab">Contact Us</a>
+                            </div>
+
+                            <div class="mdl-tabs__panel is-active" id="tab1-panel">
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--teal-100">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">thumb_up</i> Benefits of ConnectCare
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+
+                                        <div class="demo-list-action mdl-list">
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">show_chart</i>
+                                                    <span>Budgeted and trackable quality healthcare solution</span>
+                                                </span>
+                                                <a class="mdl-list__item-secondary-action" href="#"></a>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">playlist_add_check</i>
+                                                    <span>Healthcare advisory support and expertise</span>
+                                                </span>
+                                                <a class="mdl-list__item-secondary-action" href="#"></a>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">business</i>
+                                                    <span>Premium access to over 700 healthcare providers</span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">local_hospital</i>
+                                                    <span>Access to a network of pharmacies which eliminates the issue of sub-standard drugs </span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">laptop_mac</i>
+                                                    <span>Technologically driven solutions for efficiency, global reach and ease of participation </span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">add_alarm</i>
+                                                    <span>Stabilization in emergency scenarios</span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">headset_mic</i>
+                                                    <span>24/7 access to our contact center</span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mdl-card__title mdl-card--expand mdl" style="background-color:#A5CD36">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">playlist_add</i> Added Social Values
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+
+                                        <div class="demo-list-action mdl-list">
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">check</i>
+                                                    <span>
+                                                        Increase Sensitization and awareness of health insurance to communities
+                                                    </span>
+                                                </span>
+                                                <a class="mdl-list__item-secondary-action" href="#"></a>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">check</i>
+                                                    <span>Healthcare Infrastructural development</span>
+                                                </span>
+                                                <a class="mdl-list__item-secondary-action" href="#"></a>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">check</i>
+                                                    <span>Enhanced Social development & other social gains in the community</span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">check</i>
+                                                    <span>
+                                                        Increased community productivity and life expectancy
+                                                    </span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+
+                                            <div class="mdl-list__item">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons mdl-list__item-avatar">check</i>
+                                                    <span>
+                                                        Transparent platform to channel diaspora involvement in social responsibility through health missions, health skill development and other charitable activities
+                                                    </span>
+                                                </span>
+                                                <span class="mdl-list__item-secondary-content">
+                                                    <a class="mdl-list__item-secondary-action" href="#"></a>
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mdl-tabs__panel" id="tab2-panel">
+
+
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--teal-100">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">view_column</i>Plans
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                        <p>
+                                            There are four(4) health insurance plans under ConnectCare ®
+                                        </p>
+                                        <p>
+                                            There is a basic coverage package on all plans, a summary of other additions to the individual plans are as shown below:
+                                        </p>
+                                    </div>
+                                    <div class="mdl-grid">
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                                <div class="mdl-card__title mdl-card--expand">
+                                                    <h2 class="mdl-card__title-text">Bronze Connect</h2>
+                                                </div>
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                In-patient & Out-patient care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Standard-Ward Accommodation
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Minor Surgery
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Optical Care
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dental Care
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Prescriptions
+
+
+
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                                <div class="mdl-card__title mdl-card--expand">
+                                                    <h2 class="mdl-card__title-text">Silver Connect</h2>
+                                                </div>
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                In-patient & Out-patient care
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Semi-Private Ward Accommodation
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Ante-natal & maternity care
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Minor-Intermediate-major Surgery
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Paediatric Care
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Optical Care
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Ophthalmologic Surgical Procedures
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dental Care
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Prescriptions
+
+
+
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mdl-grid">
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                                <div class="mdl-card__title mdl-card--expand">
+                                                    <h2 class="mdl-card__title-text">Gold Connect</h2>
+                                                </div>
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                In-patient and out-patient
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Private ward accommodation
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Ante-natal & maternity care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Incubator care
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Paediatric care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Minor –Intermediate & Major Surgery
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Post Traumatic Rehabilitation
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dialysis
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Optical care
+
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Ophthalmological Surgical Procedures
+
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dental Care
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Prescriptions
+
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Burial Insurance
+
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                                                <div class="mdl-card__title mdl-card--expand">
+                                                    <h2 class="mdl-card__title-text">Platinum Connect</h2>
+                                                </div>
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                In-patient & Out-patient care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Private-ward Accommodation
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Antenatal & maternity care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Incubator Care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Paediatric Care
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Minor-Intermediate-Major Surgery
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Post Traumatic Rehabilitation
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dialysis
+
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Optical Care
+
+
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Ophthalmological Surgical Procedures
+
+
+
+
+                                                            </span>
+                                                        </li>
+
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Dental Care
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Prescriptions
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Extra Radiological Cover (MRI)
+
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Wellness & disease Management Program
+
+
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                International Benefits
+
+
+
+
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="mdl-list__item">
+                                                            <span class="mdl-list__item-primary-content">
+                                                                <i class="material-icons mdl-list__item-icon">check_box</i>
+                                                                Burial Insurance
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border" style="text-align:center;">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                        Get Quote
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="mdl-tabs__panel" id="tab4-panel">
+
+
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--teal-100">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">done_all</i> Basic Covered Services
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                        <p>
+                                            ConnectCare ® plans are flexible and accomodates the local burden of disease in each geographic location. However, wider coverage/services will attract extra premium as underwritten by Novo Health Africa (HMO).
+                                        </p>
+                                    </div>
+                                    <div class="mdl-grid">
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <table class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp" style="width:100%">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Outpatient & Consultation by GP</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Admission</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Minor & Intermediate by surgery</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Accommodation</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Nursing Care</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Specialist Consultation</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Second Opinion Case</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Immunization</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Preventive Care</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Basic dental care</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Optical Care & lenses</td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <table class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp" style="width:100%">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Family Planning</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Physiotherapy</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● X-ray, Laboratory services & Investigations</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Cancer Care</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Management of Chronic diseases</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Blood transfusions</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Annual Medical Check up</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Basic mental Health Services</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Prescriptions</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Accident & Emergency</td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--red-200">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">cancel</i> What you are not Covered for
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                        <p>
+                                            Below is a summary of services ConnectCare ® do not cover, however these services can be provided under a third party arrangement. Kindly <a href="#" style="color:green;">Contact Us</a> for more information.
+
+                                        </p>
+                                    </div>
+                                    <div class="mdl-grid">
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <table class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp" style="width:100%">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">
+                                                            ● Open Heart Surgery
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Neurosurgery</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Management of  Cerebrovascular accident (stroke)</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Beyond the initial treatment</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Provision of hearing aids and associated appliances</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Drug abuse and addiction</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Injuries resulting from natural disasters, conflict, social unrest and extreme sports</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Terminal illness</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Treatment of leprosy</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Chronic renal failure</td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mdl-card mdl-cell mdl-cell--6-col">
+                                            <table class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp" style="width:100%">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">
+                                                            ● Congenital abnormalities involving extensive surgical repairs
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Chronic congenital defects</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Infertility management</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Dentures, crowns, bridges & implants</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="mdl-data-table__cell--non-numeric">● Maxillofacial surgeries</td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="mdl-tabs__panel" id="tab5-panel">
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--teal-100">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">forum</i>Contact Us
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                        <ul class="demo-list-three mdl-list">
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">email</i>
+                                                    <span>Email</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        connectcare@novohealthafrica.org
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">phone</i>
+                                                    <span>Phone</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        +13472049351
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">phone</i>
+                                                    <span>Phone</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        +2348098595845
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">phone</i>
+                                                    <span>Phone</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        +2348174604186
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">phone</i>
+                                                    <span>Phone</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        +221773337069
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">phone</i>
+                                                    <span>Phone</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        +23480220409838
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="mdl-tabs__panel" id="tab3-panel">
+                                <div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-cell--10-col-tablet mdl-cell--12-col-desktop">
+                                    <div class="mdl-card__title mdl-card--expand mdl-color--teal-100">
+                                        <h2 class="mdl-card__title-text">
+                                            <i class="material-icons">question_answer</i>FAQ
+                                        </h2>
+                                    </div>
+                                    <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                                        <ul class="demo-list-three mdl-list">
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>What is ConnectCare?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        It is a health insurance product that connects Nigerians in diaspora with family and friends in Nigeria.
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>Why should I choose ConnectCare?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        Because it is a platform to provide health care for relatives back home in Nigeria at a budgeted cost according to health needs
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>How does ConnectCare gets its objective achieved?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        Through its people first approach, on-time healthcare access and innovative technologies
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>How do I register for ConnectCare?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        Kindly   <a href="#" style="color:green;">Click Here</a> to register
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>After I register under ConnectCare, what next?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        You will get a confirmation e-mail and information on how to complete your registration.
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>Is there a limit to the number of  beneficiaries I can sign up for the product?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        There is no limit, you  can add as many beneficiaries as you chose
+                                                    </span>
+                                                </span>
+                                            </li>
+                                            <li class="mdl-list__item mdl-list__item--three-line">
+                                                <span class="mdl-list__item-primary-content">
+                                                    <i class="material-icons">question_answer</i>
+                                                    <span>How do I pay for ConnectCare?</span>
+                                                    <span class="mdl-list__item-text-body">
+                                                        Payment can be made through our secure online platform.
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="mdl-card__actions mdl-card--border" style="text-align:center">
+                                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">Got more questions ?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn2">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+                    <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn2">
+                        <li class="mdl-menu__item">Lorem</li>
+                        <li class="mdl-menu__item" disabled>Ipsum</li>
+                        <li class="mdl-menu__item">Dolor</li>
+                    </ul>
+                </section>
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+
+                        </div>
+
+                        <div class="mdl-layout-spacer"></div>
+                        <div class="mdl-layout-spacer"></div>
+
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script>
+
+
+
+
+  $( document ).ready(function() {
+    console.log( "ready!" );
+
+
+	$( "#submitbtn" ).on( "click", function() {
+
+
+
+ var jqxhr = $.post( "http://localhost:8812/ConnectCare/SaveBeneficiary?email=" + $( "#email" ).val() , function() {
+  alert( "Thank You" );
+  location.reload();
+})
+  .done(function() {
+    //alert( "second success" );
+  })
+  .fail(function() {
+    //alert( "error" );
+  })
+  .always(function() {
+    //alert( "finished" );
+  });
+
+
+
+});
+});
+    </script>
+</body>
+</html>

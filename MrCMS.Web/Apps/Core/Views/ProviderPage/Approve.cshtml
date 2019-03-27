@@ -1,0 +1,109 @@
+﻿@model MrCMS.Web.Apps.Core.Models.Provider.ProviderVm
+
+@{
+    ViewBag.Title = "Approve Provider";
+}
+  @using (Html.BeginForm("Approve","ProviderPage",FormMethod.Post))
+            {
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Approve Subscription</h4>
+ </div>
+<div class="modal-body">
+
+    <div class="callout-success callout ">
+        <h4>YOU ARE ABOUT TO APPROVE @Html.DisplayFor(x=>x.Name) PROVIDER.</h4>
+
+    </div>
+
+    <table class="table table-condensed table-striped">
+        <tbody>
+            <tr>
+
+                <th>Field</th>
+                <th>Value</th>
+
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>@Html.DisplayFor(x=>x.Name)</td>
+            </tr>
+            <tr>
+                <td>Code</td>
+                <td>@Html.DisplayFor(x=>x.Code)</td>
+            </tr>
+            <tr>
+                <td>Subcode</td>
+                <td>@Html.DisplayFor(x=>x.SubCode)</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>@Html.DisplayFor(x=>x.Email)</td>
+            </tr>
+
+            <tr>
+                <td>Phone</td>
+                <td>@Html.DisplayFor(x=>x.Phone)</td>
+            </tr>
+            <tr>
+                <td>Mobile</td>
+                <td>@Html.DisplayFor(x=>x.Phone2)</td>
+            </tr>
+            <tr>
+                <td>Website</td>
+                <td>@Html.DisplayFor(x=>x.Website)</td>
+            </tr>
+            <tr>
+                <td>Zone</td>
+                <td>@Html.DisplayFor(x=>x.Zone)</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td>@Html.DisplayFor(x=>x.State.Name)</td>
+            </tr>
+            <tr>
+                <td>LGA</td>
+                <td>@Html.DisplayFor(x=>x.Lganame)</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>@Html.DisplayFor(x=>x.Address)</td>
+            </tr>
+            <tr>
+                <td>Services</td>
+                <td>@Html.DisplayFor(x=>x.Providerservices)</td>
+            </tr>
+            <tr>
+                <td>Plans</td>
+                <td>@Html.DisplayFor(x=>x.Providerplans)</td>
+            </tr>
+            <tr>
+                <td>Comment</td>
+                <td>@Html.TextAreaFor(x=>x.AuthorizationNote,new { @class = "form-control",@placeholder="comment" })</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal-footer">
+  
+                @Html.AntiForgeryToken()
+@Html.HiddenFor(x=>x.Id)
+@Html.HiddenFor(x=>x.Name)
+                <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-success" type="submit" id="btnSave">Confirm </button>
+  
+</div>
+
+  }
+
+<script>
+
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

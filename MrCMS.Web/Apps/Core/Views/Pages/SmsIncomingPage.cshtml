@@ -1,0 +1,151 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.SmsIncomingPage
+@{
+    ViewBag.Title = "Enrollee Incoming SMS";
+}
+<div class="row">
+
+    <div class="col-md-12 ">
+
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>View Sms messages coming in from our 30812 shortcode.</p>
+        </div>
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Messages</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="text" placeholder="Mobile Number" class="form-control" id="src_MobileNumber">
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" placeholder="Message" class="form-control" id="scr_Message">
+                    </div>
+                    >
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+
+                        @Html.TextBox("datepicker1", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker1" })
+
+
+                    </div>
+                    <div class="col-xs-6">
+
+                        @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Incoming SMS</h3>
+
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="incomingsmslist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>From </th>
+                            <th>Message</th>
+                            <th>Created Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+
+                    </tfoot>
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+        <!-- /.box -->
+    </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+
+
+                $('#incomingsmslist').dataTable({
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": '../Enrollee/GetShortMessageJson',
+                    "fnServerData": function (sSource, aoData, fnCallback) {
+                       
+                        aoData.push({ "name": "src_MobileNumber", "value": $('#src_MobileNumber').val() }, { "name": "scr_Message", "value": $('#scr_Message').val() }, { "name": "datepicker", "value": $('#datepicker1').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() });
+                        $.ajax({
+                            "type": "GET",
+                            "url": sSource,
+                            "data": aoData,
+                            "success": function (msg) {
+
+                                fnCallback(msg);
+
+
+                            },
+                            error: function (xhr, textStatus, error) {
+                                if (typeof console == "object") {
+                                    console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                                }
+                            }
+                        });
+                    },
+                    "order": [[1, 'asc']],
+                    "bPaginate": true,
+                    "bLengthChange": true,
+                    "iDisplayLength": 50,
+                    "bFilter": true,
+                    "bSort": true,
+                    "bInfo": true,
+                    "bAutoWidth": false,
+                    "aoColumns": [
+                         { "mDataProp": "Id", "bVisible": true},
+
+                  
+
+                        {
+                            "mDataProp": "Mobile"
+                        },
+                      //<i class="fa fa-star text-yellow"></i>
+                        { "mDataProp": "Msg" },
+                      
+                       { "mDataProp": "CreatedOn" }
+                      
+                    ]
+
+               
+
+
+                });
+
+
+            });
+
+
+     
+
+            $('#scr_button').on('click', function (e) {
+                $('#incomingsmslist').DataTable().ajax.reload();
+            });
+
+            $('#datepicker1').datepicker({
+                autoclose: true
+            });
+            $('#datepicker2').datepicker({
+                autoclose: true
+            });
+        </script>
+
+

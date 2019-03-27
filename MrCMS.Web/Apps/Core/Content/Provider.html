@@ -1,0 +1,94 @@
+﻿<html>
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.material.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+    <table id="providerlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>State</th>
+                <th>Address</th>
+             
+            </tr>
+        </thead>
+        <tbody></tbody>
+      
+    </table>
+
+    <script>
+	$(document).ready(function() {
+    //$('#providerlist').DataTable();
+
+
+	 $('#providerlist').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": false,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+            }],
+           
+            "sAjaxSource": 'https://novohubonline.com/provider/getjson',
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "Name" },
+                { "mDataProp": "Code" },
+                { "mDataProp": "State.Name" },
+               { "mDataProp": "Address" }
+
+
+            ]
+
+
+        });
+} );
+    </script>
+
+</body>
+
+</html>

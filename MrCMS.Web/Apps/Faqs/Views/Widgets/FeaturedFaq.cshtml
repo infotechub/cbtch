@@ -1,0 +1,8 @@
+﻿@model MrCMS.Web.Apps.Faqs.Widgets.FeaturedFaq 
+<h4>Featured FAQ</h4>
+<div class="list-group">
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">@Model.Faq.Question</h4>
+        <p class="list-group-item-text">@Html.Raw(Model.Faq.Answer)</p>
+    </div>
+</div>

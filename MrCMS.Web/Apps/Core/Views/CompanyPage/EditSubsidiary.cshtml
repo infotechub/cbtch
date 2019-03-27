@@ -1,0 +1,57 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.CompanySubsidiary
+@{
+    ViewBag.Title = "Edit Subsidiary";
+}
+ 
+
+@using (Html.BeginForm("EditSubsidiary","CompanyPage",FormMethod.Post))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Edit subsidiary</h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.HiddenFor(x=>x.ParentcompanyId)
+    @Html.HiddenFor(x=>x.Id)
+        @Html.Label("Name")
+        @Html.TextBoxFor( x=>x.Subsidaryname,Model.Subsidaryname, new { @class = "form-control",@placeholder="Name" })
+        @Html.ValidationMessageFor(x=>x.Subsidaryname)
+        
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Profile")
+@Html.TextAreaFor(x=>x.Subsidaryprofile, new { @class = "form-control",@placeholder="Profile"})
+@Html.ValidationMessageFor(x=>x.Subsidaryprofile)
+        
+    </div>
+   
+   
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave">Save </button>
+</div>
+
+}
+
+<script>
+
+    $(function () {
+
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+
+            $('#modal-container').modal('hide');
+        });
+
+
+    });
+</script>
+
+
+

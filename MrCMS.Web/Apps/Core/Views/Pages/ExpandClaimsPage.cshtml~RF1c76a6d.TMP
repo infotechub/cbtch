@@ -1,0 +1,257 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ExpandClaimsPage
+@{
+                /**/
+
+                ViewBag.Title = "Incoming Claims";
+                Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+                    /**/
+
+                    if (input.Length <= length)
+                    {
+                        @input
+                    }
+                    else
+                    {
+                        @input.Substring(0, length)<text>...</text>
+                    }
+}
+
+@helper StatusColor(bool input)
+{
+                    /**/
+
+                    var response = "";
+                    if (input)
+                    {
+                        response =
+                                "success";
+
+                    }
+                    else
+                    {
+                        response = "danger";
+
+                    }
+                    @response
+}
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Expanded view of Claims Batch.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon seegreen"><i class="fa fa-clock-o"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Claim Batch</span>
+                        <span class="info-box-number">@ViewBag.Batchh</span>
+
+                        <span class="info-box-number"><small>@ViewBag.MonthYear</small></span>
+
+
+                    </div>
+
+
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-maroon-active"><i class="fa fa-hospital-o"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Provider Name</span>
+                        <span class="info-box-number">@ViewBag.hospital</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon seegreen2"><i class="fa fa-file-o"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Encouter Captured</span>
+                        <span class="info-box-number">@ViewBag.TotalCaptured</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Amount Captured</span>
+                        <span class="info-box-number">@ViewBag.TotalAmount</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Expanded Claims Batch</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding" style="overflow-y: auto; min-height: 500px">
+
+        @{
+            if (Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Reviewing || Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.AwaitingApproval || Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Reviewing || Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.AwaitingPayment || Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Paid)
+            {
+                <a href="@Url.Action("ExportPaymentAdvice", "ClaimsPage",  new { id = @Model.Batch.Id})" class="btn btn btn-sm  btn-info pull-right" style="margin-left:5px;"><i class="fa fa-file-excel-o" style="color: white"> Export Payment Advice</i> </a>
+            }
+
+        }
+
+        <table class="mdl-data-table mdl-data-table--selectable">
+
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Id</th>
+                    <th class="mdl-data-table__cell--non-numeric">Claims Form No</th>
+                    <th class="mdl-data-table__cell--non-numeric">Enrollee Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Policy Number</th>
+                    <th class="mdl-data-table__cell--non-numeric">Health Plan</th>
+                    <th class="mdl-data-table__cell--non-numeric">Company</th>
+                    <th class="mdl-data-table__cell--non-numeric">Encounter Date</th>
+                    <th class="mdl-data-table__cell--non-numeric">Diagnosis</th>
+                    <th class="mdl-data-table__cell--non-numeric">Duration of Treatment</th>
+                    <th class="mdl-data-table__cell--non-numeric">Treatment Tag</th>
+                    <th class="mdl-data-table__cell--non-numeric">Service Charge</th>
+                    <th class="mdl-data-table__cell--non-numeric">Drug Charge</th>
+                    <th class="mdl-data-table__cell--non-numeric">Total Charge</th>
+                    <th class="mdl-data-table__cell--non-numeric">Processed Charge</th>
+                    <th class="mdl-data-table__cell--non-numeric">Charge Difference</th>
+                    <th class="mdl-data-table__cell--non-numeric">Status</th>
+                    <th class="mdl-data-table__cell--non-numeric">Date Added</th>
+                    <th class="mdl-data-table__cell--non-numeric">Added By</th>
+                    <th class="mdl-data-table__cell--non-numeric"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+
+
+                    foreach (var item in Model.Batch.Claims)
+                    {
+                        <tr>
+                            <td class="mdl-data-table__cell--non-numeric">@item.Id</td>
+
+                            <td class="mdl-data-table__cell--non-numeric">@item.ClaimsSerialNo</td>
+
+                            <td class="mdl-data-table__cell--non-numeric">@item.enrolleeFullname</td>
+
+                            <td class="mdl-data-table__cell--non-numeric">
+                                <span class="badge bg-blue">@item.enrolleePolicyNumber</span>
+
+
+
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">@item.EnrolleePlan</td>
+                            <td class="mdl-data-table__cell--non-numeric">@item.enrolleeCompanyName</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDateTime(item.ServiceDate).ToString(MrCMS.Website.CurrentRequestData.CultureInfo.DateTimeFormat.FullDateTimePattern)</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@item.Diagnosis</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@item.Durationoftreatment</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimsTAGS), item.Tag)</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount)).ToString("N")</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)).ToString("N")</td>
+
+
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount))).ToString("N")</td>
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDecimal(Convert.ToDecimal(item.DrugList.Sum(x => x.VettedAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.VettedAmount))).ToString("N")</td>
+                            <td class="mdl-data-table__cell--non-numeric" style="color: red">@Convert.ToDecimal((Convert.ToDecimal(item.DrugList.Sum(x => x.InitialAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.InitialAmount))) - (Convert.ToDecimal(item.DrugList.Sum(x => x.VettedAmount)) + Convert.ToDecimal(item.ServiceList.Sum(x => x.VettedAmount)))).ToString("N") </td>
+                            <td class="mdl-data-table__cell--non-numeric">@Enum.GetName(typeof(MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus), item.status)</td>
+                            <td class="mdl-data-table__cell--non-numeric">@Convert.ToDateTime(item.CreatedOn).ToString(MrCMS.Website.CurrentRequestData.CultureInfo.DateTimeFormat.FullDateTimePattern)</td>
+
+                            <td class="mdl-data-table__cell--non-numeric">@item.capturedName</td>
+                            @{
+
+                                if ((bool)@ViewBag.showbuttons)
+                                {
+                            <td>
+                                @ViewBag.MyUserId
+
+                                @{
+
+                                    if (item.status == MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus.Vetted && item.vettedBy == @ViewBag.MyUserId)
+                                    {
+                                        <a href="../Claims/vetSingleclaim?id=@item.Id" class="btn bg-orange btn-flat btn-success"><i class="fa fa-pencil-square-o" aria-hidden="true">Re-Vet Bill</i> </a>
+                                        <a href="../Claims/EditClaimForm?id=@item.Id" class="btn bg-purple btn-flat btn-success"><i class="fa fa-pencil" aria-hidden="true"> Edit</i> </a>
+                                        <a href="@Url.Action("DeleteClaim", "ClaimsPage", new {id = item.Id})" class="btn bg-maroon btn-flat btn-success modal-link"><i class="fa fa-trash" aria-hidden="true"> Delete</i> </a>
+                                    }
+
+                                    else if (item.status == MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus.Captured)
+                                    {
+                                        <a href="../Claims/vetSingleclaim?id=@item.Id" class="btn bg-olive btn-flat btn-success"><i class="fa fa-pencil-square-o" aria-hidden="true">Vet Bill</i> </a>
+                                        <a href="../Claims/EditClaimForm?id=@item.Id" class="btn bg-purple btn-flat btn-success"><i class="fa fa-pencil" aria-hidden="true"> Edit</i> </a>
+                                        <a href="@Url.Action("DeleteClaim", "ClaimsPage", new {id = item.Id})" class="btn bg-maroon btn-flat btn-success modal-link"><i class="fa fa-trash" aria-hidden="true"> Delete</i> </a>
+                                    }
+                                }
+
+                                @* @{
+            //item.status == MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus.Captured
+            if (item.status == MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus.Captured || item.status == MrCMS.Web.Apps.Core.Utility.ClaimsBillStatus.Vetted)
+            {
+                <a href="../Claims/EditClaimForm?id=@item.Id" class="btn bg-purple btn-flat btn-success"><i class="fa fa-pencil" aria-hidden="true"> Edit</i> </a>
+            }
+        }
+
+
+        <a href="@Url.Action("DeleteClaim", "ClaimsPage", new {id = item.Id})" class="btn bg-maroon btn-flat btn-success modal-link"><i class="fa fa-trash" aria-hidden="true"> Delete</i> </a>*@
+
+                            </td>
+                                }
+                            }
+
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>
+
+
+@*{
+
+     if (Model.Batch.status == MrCMS.Web.Apps.Core.Utility.ClaimBatchStatus.Vetting)
+     {
+         <td class="mdl-data-table__cell--non-numeric">
+             @item.vettedBy is currently Vetting this bill @item.VettedDate
+         </td>
+
+    } *@

@@ -1,0 +1,1235 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities
+@using MrCMS.Web
+@using MrCMS.Website
+@using MrCMS.Web.Apps.Core.Utility
+@model MrCMS.Web.Apps.Core.Pages.EnrolleePortalUserHomePage
+@{
+    ViewBag.Title = "Novo Health Africa Online Portal Platform";
+}
+@helper DateShort(DateTime? input)
+{
+var resp = Convert.ToDateTime(input).ToString("MM/dd/yyyy");
+
+    @resp;
+}
+<style>
+    .my-error-class {
+        color: #FF0000; /* red */
+    }
+
+    .my-valid-class {
+        color: #00CC00; /* green */
+    }
+</style>
+<div class="row">
+
+    <div class="col-md-12">
+
+
+
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Menu</h3>
+            </div>
+            <div class="box-body">
+                <div style="background-color:white">
+
+                    <a class="btn btn-app tabbtn bg-olive" data-toggle="tab" href="#tab_1" data-title="Profile Information">
+                        <i class="fa fa-user" data-title="Profile Information"></i> My Profile
+                    </a>
+                    <a class="btn btn-app tabbtn bg-maroon" data-toggle="tab" href="#tab_2" data-title="Dependant Information">
+                        <span class="badge bg-purple">@ViewBag.Dependantscounts</span>
+                        <i class="fa fa-users" data-title="Dependant Information"></i> Dependants
+                    </a>
+
+
+                    @{
+                        if ((bool)ViewBag.canaddependant)
+                        {
+                            <a class="btn btn-app tabbtn bg-aqua" data-toggle="tab" href="#tab_4" data-title="Add Dependant">
+                                <i class="fa fa-user-plus" data-title="Add Dependant"></i> Add Dependant
+                            </a>
+                        }
+
+                    }
+
+
+
+
+                    <a class="btn btn-app tabbtn hidden  " data-title="Generate E-VS Code">
+                        <i class="fa fa-mobile-phone" data-title="Generate E-VS Code"></i> Generate E-VS Code
+                    </a>
+                    <a class="btn btn-app tabbtn bg-purple" data-title="Benefits" data-toggle="tab" href="#benefit_tab">
+                        <i class="fa fa-thumbs-up" data-title="Benefits"></i> Benefits
+                    </a>
+                    <a class="btn btn-app tabbtn bg-teal-gradient" data-title="Medical History" data-toggle="tab" href="#medicalhistory_tab">
+                        <i class="fa fa-history" data-title="Medical History"></i> Medical History
+                    </a>
+                    <a class="btn btn-app tabbtn bg-blue " data-title="Hospital FeedBack" data-toggle="tab" href="#tab_6">
+                        <i class="fa fa-comments-o" data-title="Hospital FeedBack"></i> Hospital FeedBack
+                    </a>
+                    <a class="btn btn-app tabbtn bg-navy" data-toggle="tab" href="#tab_5" data-title="Print Temporary ID Card">
+                        <i class="fa fa-print" data-title="Print Temporary ID Card"></i> Print Temp ID
+                    </a>
+                    <a class="btn btn-app bg-red-gradient" href="@CurrentRequestData.CurrentPage.AbsoluteUrl?logout=logout" target="_self">
+
+                        <i class="fa fa-power-off" data-title="Logout"></i> Logout
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title"><span id="tab_title">Profile Information</span></h3>
+            </div>
+            <div class="box-body">
+
+                <div class="col-md-12">
+                    <div>
+
+                        <div class="box-body">
+                            <div class="box-header">
+
+
+                            </div>
+                            <!-- Custom Tabs -->
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs"></ul>
+                                <div class="tab-content">
+
+
+
+                                    <div id="medicalhistory_tab" class="tab-pane">
+
+                                        <div class="row" >
+
+                                            <div class="col-lg-5">
+                                                <input type="hidden" id="startdate" value="" />
+                                                <input type="hidden" id="enddate" value="" />
+
+                                                <div class="input-group">
+
+                                                    <select class="form-control input-lg" id="medhist_policynumber">
+                                                        @{ 
+
+                                                            foreach(var itemm in ViewBag.medhistpolicynum)
+                                                            {
+                                                                <option value="@itemm.Id">@itemm.Name</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                    @*@Html.DropDownList("medhist_policynumber", new SelectList(ViewBag.medhistpolicynum, "Id", "Name", Model.Enrolleemodel.Id), new { @class = "form-control chosen-select", @id = "medhist_policynumber", @multiple = "" })*@
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="input-group-lg">
+                                                    <button type="button" class="btn btn-default pull-right" id="daterange-btn">
+                                                        <span>
+                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                        </span>
+                                                        <i class="fa fa-caret-down"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- Date and time range -->
+                                            
+                                            <!-- /.form group -->
+                                        </div>
+                                        <div class="box checkbox-default-bright">
+
+                                            <div class="box-header">
+                                            
+                                            </div>
+
+                                            <div class="box-body" style="background-color:  #d6eaf8">
+                                                <ul class="timeline" id="timelineshitt">
+
+                                                    <!-- END timeline item -->
+                                                    <li>
+                                                        <i class="fa fa-clock-o bg-gray"></i>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="overlay" id="historyloader">
+                                                <i class="fa fa-refresh fa-spin"></i>
+                                            </div>
+                                            <div class="box-footer">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="benefit_tab" class="tab-pane">
+
+                                        <table id="benefitlist" class="table table-striped r">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>GroupName</th>
+                                                    <th>Name</th>
+
+                                                    <th>Description</th>
+                                                    <th>Benefit Limit</th>
+
+
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+
+                                            </tfoot>
+                                        </table>
+
+
+                                    </div>
+                                    <div id="tab_1" class="tab-pane active">
+                                        <form action="/eportal/UpdateEnrolleeFromPortal" method="post" enctype="multipart/form-data" id="ënrolleeform" name="enrolleeform">
+
+
+                                            <div class="row">
+
+                                                @{
+
+                                                    if (Model.Enrolleemodel.Isexpundged)
+                                                    {
+                                                        <div class="alert alert-danger alert-dismissable">
+                                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                            <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+                                                            The Enrollee has been expunged,you can click on the "Additional Information" Tab to view more details.
+                                                        </div>
+                                                    }
+                                                }
+
+                                                <div class="col-lg-6">
+                                                    <table class="table table-responsive ">
+                                                        <tbody>
+
+                                                            <tr>
+
+                                                                <td colspan="2">
+                                                                    <div class="form-group" id="photo_grp">
+
+                                                                        <img src="data:image/png;base64,@ViewBag.enrolleeimg" style="max-height: 160px; max-width: 160px;"
+                                                                             class="img-rounded" id="photo_imgP">
+
+                                                                        @{if (ViewBag.CanUpdatePassport)
+                                                                            {
+                                                                                <input type="file" id="photoInputFileP" name="photoInputFileP" accept="image/*">
+                                                                            }}
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr hidden="true">
+                                                                @Html.Hidden("staffidd", (int)ViewBag.StaffID)
+                                                                @Html.Hidden("Mode", 0)
+                                                                @Html.Hidden("enrolleeid", Model.Enrolleemodel.Id)
+                                                                <td>Enrollee FullName</td>
+                                                                <td>
+                                                                    @Html.TextBox("Stafffullname", (string)ViewBag.Stafffullname, new { @class = "form-control", @placeholder = "", @id = "Stafffullname", @readonly = "" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Policy Number</td>
+                                                                <td>   @Html.TextBox("policynumber", Model.Enrolleemodel.Policynumber, new { @class = "form-control", @placeholder = "Policy Number", @id = "policynumber", @readonly = "" })</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Surname</td>
+
+                                                                <td>
+                                                                    @Html.TextBox("surname", Model.Enrolleemodel.Surname, new { @class = "form-control", @placeholder = "Enrollee  surname", @id = "surname", @title = "This is the enrollee's last name.", @readonly = "" })
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Other Names</td>
+                                                                <td>
+                                                                    @Html.TextBox("othernames", Model.Enrolleemodel.Othernames, new { @class = "form-control", @placeholder = "Enrollee other names", @id = "othernames", @title = "This is the  enrollee first name and any other name. ", @readonly = "" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Date of Birth</td>
+                                                                <td> @Html.TextBox("datepicker", DateShort(Model.Enrolleemodel.Dob), new { @class = "form-control", @placeholder = "DOB", @id = "datepicker", @readonly = "" })</td>
+                                                            </tr>
+
+                                                            <tr class="hidden">
+                                                                <td>Age</td>
+                                                                <td>  @Html.TextBox("age", Model.Enrolleemodel.Age, new { @class = "form-control", @placeholder = "Age", @id = "age" })</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Marital Status</td>
+                                                                <td>
+                                                                    @Html.DropDownList("maritalstatusvalue", new SelectList(ViewBag.MaritalStatus, "Id", "Name", Model.Enrolleemodel.Maritalstatus), new { @class = "form-control", @id = "maritalstatusvalue", @readonly = "", @onchange = "SelectChange(this)" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sex</td>
+                                                                <td>
+                                                                    @Html.DropDownList("sexff", new SelectList(ViewBag.Sexx, "Id", "Name", Model.Enrolleemodel.Sex), new { @class = "form-control", @id = "sexff", @readonly = "", @onchange = "SelectChange(this)" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>State</td>
+                                                                <td>
+                                                                    @Html.DropDownList("state", new SelectList(ViewBag.Statesss, "Id", "Name", Model.Enrolleemodel.Stateid), new { @class = "form-control", @id = "state" })
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>LGA</td>
+                                                                <td>
+                                                                    @Html.DropDownList("lga", new SelectList(ViewBag.LGAS, "Id", "Name", Model.Enrolleemodel.Lgaid), new { @class = "form-control", @id = "lga" })
+                                                                </td>
+                                                            </tr>
+
+
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <table class="table table-responsive">
+                                                        <tbody>
+
+
+
+                                                            <tr>
+                                                                <td>Residential Address</td>
+                                                                <td>
+                                                                    @Html.TextBox("address", Model.Enrolleemodel.Residentialaddress, new { @class = "form-control", @placeholder = "Residential Address", @id = "address" })
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Occupation</td>
+                                                                <td>
+                                                                    @Html.TextBox("occupation", Model.Enrolleemodel.Occupation, new { @class = "form-control", @placeholder = "occupation", @id = "occupation" })
+
+                                                                </td>
+
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td>Mobile Number</td>
+                                                                <td>
+                                                                    @Html.TextBox("mobilenumber", Model.Enrolleemodel.Mobilenumber, new { @class = "form-control", @placeholder = "Mobile Number", @id = "mobilenumber" })
+
+                                                                </td>
+
+
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td>Email</td>
+                                                                <td>
+                                                                    @Html.TextBox("email", Model.Enrolleemodel.Emailaddress, new { @class = "form-control", @placeholder = "Email", @id = "Email" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Sponsorship Type</td>
+                                                                <td>
+                                                                    @Html.DropDownList("sponsorshiptypevalue", new SelectList(ViewBag.Sponsorshiptype, "Id", "Name", Model.Enrolleemodel.Sponsorshiptype), new { @class = "form-control", @id = "sponsorshiptypevalue", @onchange = "SelectChange(this)" })
+
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr id="othertyperow">
+                                                                <td>Sponsorship Type Name</td>
+                                                                <td>
+                                                                    @Html.TextBox("sponsorshipothername", Model.Enrolleemodel.Sponsorshiptypeothername, new { @class = "form-control", @placeholder = "Other", @id = "sponsorshipothername" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Plan</td>
+                                                                <td>
+                                                                    @Html.TextBox("subscriptiontypevalue", (string)ViewBag.SubscriptionType, new { @class = "form-control", @placeholder = "Subscription Type", @id = "subscriptiontypevalue", @readonly = "" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Company </td>
+                                                                <td>
+                                                                    @Html.TextBox("company", (string)ViewBag.Company, new { @class = "form-control", @placeholder = "Subscription Type", @id = "company", @readonly = "" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Company Staff ID </td>
+                                                                <td>
+                                                                    @Html.TextBox("companystaffid", (string)ViewBag.Staff_StaffId, new { @class = "form-control", @id = "companystaffid" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Company Subsidiary</td>
+                                                                <td>
+                                                                    @Html.TextBox("Subsidiary", (string)ViewBag.CompanySubsidiary, new { @class = "form-control", @placeholder = "Company Subsidiary", @id = "companySubsidiary", @readonly = "" })
+
+
+                                                                </td>
+
+
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Provider of Choice</td>
+                                                                <td>
+
+
+                                                                    @Html.DropDownList("provider", new SelectList(ViewBag.providerlist, "Id", "Name", Model.Enrolleemodel.Primaryprovider), new { @class = "form-control chosen-select", @id = "provider", @onchange = "SelectChange(this)", @multiple = "" })
+
+
+
+
+                                                                </td>
+
+
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td>Pre-existing Medical Conditions</td>
+                                                                <td>
+                                                                    @Html.TextArea("premedicalcondition", Model.Enrolleemodel.Preexistingmedicalhistory, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalcondition" })
+
+                                                                </td>
+
+
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                @{
+                                                    if (!Model.Enrolleemodel.Isexpundged)
+                                                    {
+                                                        <div class="pull-right">
+
+                                                            <button class="btn btn-success pull-right" type="submit" style="margin-left: 4px;margin-right:10px;">Update</button>
+
+                                                        </div>
+                                                    }
+                                                }
+
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div id="tab_2" class="tab-pane">
+
+                                        <div class="col-xs-12">
+
+                                            <table class="table table-hover table-responsive">
+                                                <tbody>
+
+
+                                                    @{
+
+                                                        foreach (var item in ViewBag.Dependants)
+                                                        {
+                                                            var style = ((bool)item.ispending == true) ? "background-color:beige;" : "";
+
+                                                            <tr style="@style">
+                                                                <td><img src="data:image/png;base64, @item.img" style="max-height: 140px; max-width:140px;" class="img-rounded" id="d_img_@item.Id"></td>
+                                                                <td><a href="#" onclick="OpenEditDep(&quot;@item.Id&quot;,&quot;@item.Name&quot;,&quot;@item.policynum&quot;,&quot;@item.relationship&quot;,&quot;@item.providerID &quot;,'d_img_@item.Id')">@item.Name</a></td>
+                                                                <td>@item.policynum</td>
+                                                                <td>@item.relationship</td>
+                                                                <td>@item.hospital</td>
+                                                            </tr>
+
+
+
+                                                        }
+                                                    }
+
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+
+
+
+
+                                    </div>
+
+
+                                    <div id="tab_4" class="tab-pane">
+
+                                        <div class="box">
+                                            <div class="box-header">
+
+
+                                            </div><!-- /.box-header -->
+                                            @using (Html.BeginForm("AddPendingDependant", "EnrolleePage", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", @id = "EnrolleePage" }))
+                                            {
+
+                                                <div class="box-body">
+
+                                                    <input type="hidden" id="enrolleeGUID" name="enrolleeGUID" value="@Model.Enrolleemodel.Guid.ToString()" />
+
+
+                                                    <table class="table table-condensed ">
+                                                        <tbody>
+
+                                                            <tr>
+
+                                                                <td colspan="2">
+                                                                    <div class="form-group" id="photo_grpD">
+                                                                        <img src="~/Apps/Core/Content/Images/placeholder-photo.png" style="max-height: 140px; max-width: 140px;"
+                                                                             class="img-rounded" id="photo_imgD">
+                                                                        <input type="file" id="photoInputFileD" name="photoInputFileD" accept="image/*">
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Relationship with principal enrollee</td>
+                                                                <td>
+                                                                    @Html.DropDownList("relationship", new SelectList(ViewBag.relationshiplist, "Id", "Name"), new { @class = "form-control", @id = "provider" })
+
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                @Html.Hidden("PrincipalID", Model.Id)
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Surname</td>
+
+                                                                <td>
+                                                                    @Html.TextBox("surnameD", null, new { @class = "form-control", @placeholder = "surname", @id = "surname", @title = "This is the enrollee's last name." })
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Other Names</td>
+                                                                <td>
+                                                                    @Html.TextBox("othernamesD", null, new { @class = "form-control", @placeholder = "other names", @id = "othernames", @title = "This is the  enrollee first name and any other name. " })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Date of Birth</td>
+                                                                <td>@Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "DOB", @id = "datepicker2" })</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sex</td>
+                                                                <td>
+                                                                    @Html.DropDownList("sexD", new SelectList(ViewBag.Sex, "Id", "Name"), new { @class = "form-control", @id = "sex", @onchange = "SelectChange(this)" })
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Mobile Number</td>
+                                                                <td>
+                                                                    @Html.TextBox("mobilenumberD", null, new { @class = "form-control", @placeholder = "Mobile Number", @id = "mobilenumber" })
+
+                                                                </td>
+
+
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Provider of Choice</td>
+                                                                <td>
+                                                                    @Html.DropDownList("providerD", new SelectList(ViewBag.providerlist, "Id", "Name"), new { @class = "form-control chosen-select", @id = "providerD", @onchange = "SelectChange(this)", @multiple = "" })
+
+
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Pre-existing Medical Conditions</td>
+                                                                <td>
+                                                                    @Html.TextArea("premedicalconditionD", null, new { @class = "form-control", @placeholder = "Pre-existing Medical Conditions", @id = "premedicalcondition" })
+
+                                                                </td>
+
+
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Additional Note</td>
+                                                                <td>
+                                                                    @Html.TextArea("additionalnote", null, new { @class = "form-control", @placeholder = "Anything you would like us to know...", @id = "additionalnote" })
+
+                                                                </td>
+
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+                                                </div><!-- /.box-body -->
+
+                                                <div class="box-footer">
+                                                    <button type="submit" class="btn btn-success btn-fab-mini">Submit</button>
+                                                </div>
+                                            }
+                                        </div><!-- /.box -->
+                                    </div>
+
+
+                                    <div class="tab-pane" id="tab_5">
+                                        <div>
+                                            @if (true)
+                                            {
+
+                                                var item = ViewBag.principaltempId;
+                                                <div class="box box-default" id="panell_@item.Id">
+                                                    <div class="box-header with-border">
+                                                        <img class="img-responsive round pull-left" src="http://www.novohealthafrica.org/content/upload/1/root/novologo_w100_h100.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                                                        <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+
+                                                        <button class="print-link no-print pull-right btn-box-tool" onclick="$('#panell_@item.Id').print()">
+                                                            Print
+                                                        </button>
+                                                    </div>
+                                                    <div class="box-body">
+
+                                                        <div class="box-body" style="font-size:19px;">
+                                                            <table class="table">
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td>
+
+
+
+                                                                            <img style="max-height:150px;max-width:150px;" class="img-responsive pad" src="data:image/png;base64,@item.img" />
+
+                                                                    <tr>
+                                                                        <td><b>Full Name</b></td>
+                                                                        <td>@item.Name</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><b>Company</b></td>
+                                                                        <td>@ViewBag.Company</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><b>Staff ID</b></td>
+                                                                        <td>@ViewBag.Staff_StaffId</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><b>Policy Number</b></td>
+                                                                        <td>@item.policynum</td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><b>Hospital</b></td>
+                                                                        <td>@item.hospital</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                        <!-- /.box-body -->
+
+                                                        <div class="box-footer text-center">
+                                                            <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.Subscriptionexp  </b></span><br>
+                                                            <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.box -->
+
+
+
+
+
+                                                </div>
+                                            }
+
+
+
+                                            @foreach (var item in ViewBag.Dependants)
+                                            {
+
+                                                if ((bool)item.ispending == false)
+                                                {
+                                                    <div class="box box-default" id="panell_@item.Id">
+                                                        <div class="box-header with-border">
+                                                            <img class="img-responsive round pull-left" src="http://www.novohubonline.com/content/upload/1/root/novologo_w100_h100.png" alt="Photo" style="max-height:50px;max-width:80px;">
+                                                            <h1 class="box-title text-center" style="font-size:30px;margin-top:10px;margin-left:20px"><b>Novo Health Africa</b></h1>
+
+                                                            <button class="print-link no-print pull-right btn-box-tool" onclick="jQuery('#panell_@item.Id').print()">
+                                                                Print
+                                                            </button>
+                                                        </div>
+                                                        <div class="box-body">
+
+                                                            <div class="box-body" style="font-size:19px;">
+                                                                <table class="table">
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td>
+
+
+                                                                                <img style="max-height:150px;max-width:150px;" class="img-responsive pad" src="data:image/png;base64,@item.img" />
+                                                                        <tr>
+                                                                            <td><b>Full Name</b></td>
+                                                                            <td>@item.Name</td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td><b>Company</b></td>
+                                                                            <td>@ViewBag.Company</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Staff ID</b></td>
+                                                                            <td>@ViewBag.Staff_StaffId</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Policy Number</b></td>
+                                                                            <td>@item.policynum</td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td><b>Hospital</b></td>
+                                                                            <td>@item.hospital</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                            <!-- /.box-body -->
+
+                                                            <div class="box-footer text-center">
+                                                                <span class="text-center" style="color:red"><b>NB: This ID Card is only valid till @ViewBag.Subscriptionexp </b></span><br>
+                                                                <span class="text-center" style="color:black"><b>Tel : 01 2906240, 01 2900047| service@novohealthafrica.org </b></span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.box -->
+
+
+
+
+
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="tab-pane" id="tab_6">
+                                        @using (Html.BeginForm("SubmitFeedBack", "ProviderPage", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", @id = "ProviderFeedbackPage" }))
+                                        {
+                                            <div class="box-body" style="font-size:19px;">
+                                                <table class="table">
+                                                    <tbody>
+
+
+                                                        <tr>
+                                                            <td><b>Provider</b></td>
+                                                            <td>@Html.DropDownList("provider_feedback", new SelectList(ViewBag.providerlist, "Id", "Name"), new { @class = "form-control chosen-select", @id = "provider_feedback", @multiple = "" })</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Date Accessed</b></td>
+                                                            <td>@Html.TextBox("datepicker3", null, new { @class = "form-control", @placeholder = "Date Accessed", @id = "datepicker3" })</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Rate the Provider</b></td>
+                                                            <td>
+                                                                <select id="rating" name="rating">
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>FeedBack</b></td>
+                                                            <td>
+                                                                @Html.TextArea("feedbacktxt", null, new { @class = "form-control", @placeholder = "Please share your experience...", @id = "feedbacktxt" })
+                                                                <input type="hidden" id="enrolleeidfeedback" name="enrolleeidfeedback" value="@Model.Enrolleemodel.Id" />
+                                                            </td>
+                                                        </tr>
+
+
+
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                                <div class="box-footer">
+                                                    <button type="submit" class="btn btn-success btn-fab-mini ">Submit</button>
+                                                </div>
+                                                        <!-- /.box-body -->
+                                        }
+                                    </div>
+
+
+                                </div>
+
+                                <!-- /.tab-content -->
+                            </div>
+                            <!-- nav-tabs-custom -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+<form action="/eportal/UpdateDependantPortal" method="post" enctype="multipart/form-data" id="ënrolleeform" name="enrolleeform">
+
+
+    <div id="editDependant" class="modal fade">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                    <h4 class="modal-title">Edit Dependant</h4>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <table class="table table-condensed ">
+                        <tbody>
+
+                            <tr>
+
+                                <td colspan="2">
+                                    <div class="form-group" id="photo_grpED">
+                                        <img src="" style="max-height: 140px; max-width: 140px;"
+                                             class="img-rounded" id="photo_imgED">
+                                        <input type="file" id="photoInputFileED" name="photoInputFileED">
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Relationship with principal enrollee</td>
+                                <td>
+
+                                    <input type="text" id="relationshipdee" class="form-control" name="relationshipdee" readonly="readonly" />
+                                </td>
+
+
+                            </tr>
+
+                            <tr>
+                                <td>Policy Number</td>
+
+                                <td><input type="hidden" id="dependantIDee" name="dependantIDee" /> @Html.TextBox("policynumberDee", null, new { @class = "form-control", @placeholder = "", @id = "policynumberDee", @readonly = "" })</td>
+                            </tr>
+                            <tr>
+                                <td>Full Name</td>
+
+                                <td>
+                                    @Html.TextBox("fullnamedeeDee", null, new { @class = "form-control", @placeholder = "", @id = "fullnamedeeDee", @title = "This is the enrollee's last name.", @readonly = "" })
+                                </td>
+
+
+                            </tr>
+
+                            <tr>
+                                <td>Provider of Choice</td>
+                                <td>
+                                    @Html.DropDownList("providerDeee", new SelectList(ViewBag.providerlist, "Id", "Name"), new { @class = "form-control chosen-select", @id = "providerDeee", @multiple = "" })
+
+
+
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-fab-mini ">Update</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</form>
+<script>
+
+    function LoadHistory(a,b){
+
+        //medhist_policynumber
+        $('#historyloader').removeClass('hidden');
+        var Timelineshii = $.getJSON( "../enrollee/GetEnrolleeMedicalHistory?EnrolleeId="+   $('#medhist_policynumber').val() +"&Start="+ a +"&end=" + b , function(data) {
+            
+            $('#timelineshitt').html('');
+            $.each( data, function( key, value ) {
+         
+                var $newdiv1 = $( "<li class='time-label'> <span  style='background-color:#48c9b0;color:white'>" +value.DateEncounter + "</span> </li>" );
+                var $newdiv2 = $( "<li> <!-- timeline icon --> <i class='fa fa-hospital-o bg-maroon'></i> <div class='timeline-item'> <span class='time'><i class='fa fa-clock-o'></i> 12:00</span> <h3 class='timeline-header'><a href='#'  title='" + value.providerAddress + "'>"+value.providerName + "</a></h3> <div class='timeline-body'> The enrollee,<b>"+ value.EnrolleeName + "</b> was diagnosed with <b> "+ value.Diagnosis +"</b></div> <div class='timeline-footer'> <a class='btn btn-danger btn-xs'>"+ value.Diagnosis+"</a></div> </div> </li>" );
+               
+                
+                $('#timelineshitt').append( $newdiv1 ,[$newdiv2] );
+
+            });
+            //end the timeline
+            var $newdiv3 = $( "<li> <i class='fa fa-clock-o bg-gray'></i> </li>" );
+            $('#timelineshitt').append( $newdiv3 );
+               
+        })
+          .done(function() {
+  
+          })
+          .fail(function() {
+
+              console.log( "There was an error loading medical history." );
+          })
+          .always(function() {
+              $('#historyloader').addClass('hidden');
+          });
+    }
+    function OpenEditDep(a,b,c,d,e,f){
+
+        $('#dependantIDee').val(a);
+        $('#fullnamedeeDee').val(b);
+        $('#policynumberDee').val(c);
+        $('#relationshipdee').val(d);
+        $('#providerDeee').val(e);
+        //$('#providerDeee').trigger("chosen:updated");
+
+        $("#providerDeee").trigger('chosen:updated');
+
+        $("#photoInputFileED").val('');
+
+        var imgg= document.getElementById(f);
+
+        $('#photo_imgED').attr("src", $(imgg).attr("src"));
+
+        $('#editDependant').modal('show');
+    }
+
+
+    $(function () {
+
+
+        var startdateV =  "";
+       
+        var enddateV ="";
+
+        
+        LoadHistory(startdateV,enddateV);
+        $('#daterange-btn').on('apply.daterangepicker', function (ev, picker) {
+
+
+
+
+            startdateV = picker.startDate.format('YYYY-MM-DD');
+            enddateV = picker.endDate.format('YYYY-MM-DD');
+
+            LoadHistory(startdateV,enddateV);
+
+
+            //$('#authorizationlist').DataTable().ajax.reload();
+        });
+        //Date range as a button
+        $('#daterange-btn').daterangepicker(
+            {"opens": "right",
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+        );
+
+        $('#benefitlist').dataTable({
+            "sAjaxSource": '../Company/GetCompanyBenefitforPlanJson?id=' + @ViewBag.companyPlanId ,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength": 30,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false},
+
+            { "mDataProp": "groupname", "bVisible": false },
+
+                { "mDataProp": "name" },
+
+                { "mDataProp": "description" },
+
+                { "mDataProp": "benefitlimit" },
+
+
+
+
+
+
+            ]
+
+, "drawCallback": function (settings) {
+    var api = this.api();
+    var rows = api.rows({ page: 'current' }).nodes();
+    var last = null;
+
+    api.column(1, { page: 'current' }).data().each(function (group, i) {
+        if (last !== group) {
+            $(rows).eq(i).before(
+                '<tr style="background-color:#0aa89e;font-weight: bold;color:white;" ><td colspan="100%">' + group + '</td></tr>'
+            );
+
+            last = group;
+        }
+    });
+}
+
+
+        });
+        $('#state').on('change', function () {
+
+        });
+        $("#datepicker2").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+        $("#datepicker3").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+        $('#rating').barrating({
+            theme: 'fontawesome-stars'
+        });
+
+        $("#providerDeee").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Select Hospital",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+        //$("#medhist_policynumber").chosen({
+        //    no_results_text: "Oops, nothing found!",
+        //    width: '100%',
+        //    placeholder_text_multiple: "select policy number",
+        //    max_shown_results: 200,
+        //    max_selected_options: 1,
+
+        //});
+
+        $("#providerD").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Select Hospital",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+
+        $("#provider_feedback").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Select Hospital",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+
+        $("#provider").chosen({
+            no_results_text: "Oops, nothing found!",
+            width: '100%',
+            placeholder_text_multiple: "Search Hospital...",
+            max_shown_results: 200,
+            max_selected_options: 1,
+
+        });
+
+        $('#state').on('change', function () {
+
+            $.getJSON("../Provider/GetLga/" + $(this).val(), function (data) {
+
+                $("#lga").empty();
+
+                $.each(data, function () {
+                    $("#lga").append($("<option />").val(this.Id).text(this.Name));
+                });
+
+            });
+        });
+        $('.tabbtn').on('click', function (event) {
+           
+            // alert(event.target);
+            $("#tab_title").text($(event.target).attr("data-title"));
+        });
+
+
+        $("#photoInputFileD").val('');
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo_imgD').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        //check if the photoinputfile event change
+        $("#photoInputFileD").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 200) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 200kb');
+                $("#photoInputFileD").val('');
+                $('#photo_imgD').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this);
+            }
+
+
+        });
+
+        $("#photoInputFileP").val('');
+        function readURLP(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo_imgP').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#photoInputFileP").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 200) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 200kb');
+                $("#photoInputFileD").val('');
+                $('#photo_imgD').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURLP(this);
+            }
+
+
+
+        });
+
+
+
+        $("#photoInputFileED").val('');
+        function readURLED(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo_imgED').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#photoInputFileED").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 200) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 200kb');
+                $("#photoInputFileD").val('');
+                $('#photo_imgD').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURLED(this);
+            }
+
+
+
+        });
+    });
+
+</script>

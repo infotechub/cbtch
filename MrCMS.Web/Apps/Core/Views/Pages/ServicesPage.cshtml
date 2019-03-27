@@ -1,0 +1,149 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ServicesPage
+@{
+    ViewBag.Title = "Services";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Manage the services rendered by providers.Create ,Edit and delete Services</p>
+        </div>
+
+              <a href="@Url.Action("Add", "ServicesPage",  new { id = -1})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new Service</i> </a>
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+       
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Service List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="servicelist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                             <th>Id</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                      <tr id="samplerow">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    
+      
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#servicelist').dataTable({
+            "sAjaxSource": '../ServiceService/GetJson',
+            "bPaginate": true,
+            "bLengthChange": false,
+            "bFilter": true,
+            "iDisplayLength": 100,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "Name"  },
+                { "mDataProp": "Code" },
+                { "mDataProp": "Description" },
+                {
+                    "mDataProp": "Status", "mRender": function (data, type, row) {
+                        var response = "";
+                       if(data==true) {
+                           response = '<span class="label label-success"> Active</span>';
+                       } else {
+                           response ='<span class="label label-danger"> Inactive</span>';
+                       }
+                       
+                        return response;
+                    }
+                },
+                { "mDataProp": "Dateadded" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/ServiceService/Edit?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link">Edit</a>' + '  <a href="/ServiceService/Delete?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link">Delete</a>';
+                    }
+                }
+               
+
+            
+
+
+            ]
+
+          
+        });
+       
+        
+    });
+    </script>
+
+

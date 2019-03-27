@@ -1,0 +1,89 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.ServiceTariff
+@{
+    ViewBag.Title = "Upload Service Tariff";
+}
+ 
+
+@using (Html.BeginForm("AddService","TariffPage",FormMethod.Post,new {@id="serviceform"}))
+    {
+      
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Upload Service  Tariff</h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.Label("Service Name")
+@Html.TextBoxFor( x=>x.Name, new { @class = "form-control",@placeholder="Service Name" })
+@Html.ValidationMessageFor(x=>x.Name)
+        <input type="hidden" id="Tariffid" name="Tariffid" value="@ViewBag.TariffID" />
+    </div>
+
+
+   @*<div class="form-group">
+        @Html.Label("Service Category")
+       @Html.DropDownListFor(x=>x.GroupId,new SelectList(ViewBag.ServiceGroup, "Id", "Name"),new { @class = "form-control",@id="groupid"})
+        @Html.ValidationMessageFor(x=>x.Description)
+        
+    </div>*@
+    <div class="form-group">
+        @Html.Label("Service Description")
+        @Html.TextBoxFor( x=>x.Description, new { @class = "form-control",@placeholder="Service Description" })
+        @Html.ValidationMessageFor(x=>x.Description)
+        
+    </div>
+
+
+  <div class="form-group">
+        @Html.Label("Unit")
+        @Html.TextBoxFor( x=>x.Unit, new { @class = "form-control",@placeholder="Unit" })
+        @Html.ValidationMessageFor(x=>x.Unit)
+        
+    </div>
+    <div class="form-group">
+        @Html.Label("Service Price")
+        @Html.TextBox("serviceprice",null, new { @class = "form-control",@placeholder="₦0.00",@type="number" })
+        @Html.ValidationMessageFor(x=>x.Price)
+        
+    </div>
+ 
+
+    <div class="form-group">
+        @Html.Label("Preauthorization Required ?")
+@Html.CheckBoxFor( x=>x.PreauthorizationRequired, new { @class = "form-control" })
+@Html.ValidationMessageFor(x=>x.PreauthorizationRequired)
+        
+    </div>
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="button" id="btnSave" onclick="addService()">Save </button>
+</div>
+
+}
+
+<script>
+
+   
+
+    $(function () {
+
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+
+            $('#modal-container').modal('hide');
+
+        });
+
+
+    });
+
+    
+</script>
+
+
+

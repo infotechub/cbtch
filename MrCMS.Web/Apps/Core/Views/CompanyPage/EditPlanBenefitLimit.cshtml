@@ -1,0 +1,55 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.PlanDefaultBenefit
+@{
+    ViewBag.Title = "Edit Benefit Limit";
+}
+ 
+
+@using (Html.BeginForm("EditBenefitLimit","CompanyPage",FormMethod.Post,new {@id="BenefitLimitform"}))
+    {
+       @Html.HiddenFor(x=>x.Id)
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Edit Benefit Limit</h4>
+ </div>
+<div class="modal-body">
+    <div class="form-group">
+        @Html.Label("Benefit Limit")
+@Html.TextAreaFor( x=>x.BenefitLimit, new { @class = "form-control",@placeholder="Benefit Limit" })
+@Html.ValidationMessageFor(x=>x.BenefitLimit)
+        
+    </div>
+
+
+
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="button" id="btnSave" onclick="EditPlanBenefitLimit()">Save </button>
+</div>
+
+}
+
+<script>
+
+
+
+    $(function () {
+
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+
+            $('#modal-container').modal('hide');
+
+        });
+
+
+    });
+
+
+</script>
+
+
+

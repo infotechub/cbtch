@@ -1,0 +1,18 @@
+﻿@using System
+@using System.Linq
+@using MrCMS.Website
+@using System
+@model MrCMS.Web.Apps.Core.Widgets.SiteMapWidgets
+  <ol class="breadcrumb">
+@{
+   
+foreach(var item in Model.Result.Reverse() )
+{
+ 
+            <li><a href="@item.Value"> @item.Key</a></li>
+           
+}
+    
+          
+}
+</ol>

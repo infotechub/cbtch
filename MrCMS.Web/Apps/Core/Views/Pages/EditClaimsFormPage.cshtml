@@ -1,0 +1,1561 @@
+﻿@using MrCMS.Website
+@model MrCMS.Web.Apps.Core.Pages.EditClaimsFormPage
+
+@{
+    ViewBag.Title = "Edit Claims";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+if (input.Length <= length)
+{
+        @input
+}
+else
+{
+        @input.Substring(0, length)<text>...</text>
+}
+}
+
+@helper StatusColor(bool input)
+{
+var response = "";
+if (input)
+{
+    response =
+            "success";
+
+}
+else
+{
+    response = "danger";
+
+}
+    @response
+}
+
+
+<style>
+    #drug_informationbox {
+  display: block;
+  width: 95%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+</style>
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Edit the claims,Fill the claims form properly before saving.</p>
+        </div>
+        @{
+            if (!ViewBag.HasTariff)
+            {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                    The provider have not been assigned a tariff yet,kindly contact provider unit.
+                </div>
+            }
+        }
+      
+
+    </div>
+</div>
+@using (Html.BeginForm("EditClaimForm", "ClaimsPage", FormMethod.Post, new { @id = "ClaimsForm" }))
+{
+    <input type="hidden" id="hiddenID" name="hiddenID" />
+    <input type="hidden" id="totalclaimcount" value="@ViewBag.TotalCaptured" />
+    <input type="hidden" id="totalclaimamounttotal" value="@ViewBag.TotalAmountdigit" />
+    @Html.AntiForgeryToken()
+<input type="hidden" id="ClaimsID" name="ClaimsID" value="@Model.Claim.Id" />
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon seegreen"><i class="fa fa-clock-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Claim Batch</span>
+                    <span class="info-box-number">@ViewBag.Batchh</span>
+                    <span class="info-box-number"><small>@ViewBag.MonthYear</small></span>
+
+                </div>
+
+
+                <!-- /.info-box-content -->
+            </div>
+
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-maroon-active"><i class="fa fa-hospital-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Provider Name</span>
+                    <span class="info-box-number">@ViewBag.hospital</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon seegreen2"><i class="fa fa-file-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Encouter Captured</span>
+                    <span class="info-box-number" id="claimscountspan">@ViewBag.TotalCaptured</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Amount Captured</span>
+                    <span class="info-box-number" id="claimsamountspan">@ViewBag.TotalAmount</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="box box " style="overflow:visible">
+            <div class="box-header">
+                <h3 class="box-title">Enrollee Information</h3>
+
+
+            </div>
+            <div class="box-body">
+                <div class="row" id="namerow">
+                    <div class="col-xs-3">
+                        <label for="FormNo">Claims Form No</label>
+
+                        @Html.TextBox("FormNo", Model.Claim.ClaimsSerialNo, new { @class = "form-control", @placeholder = "Form No" })
+
+
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="policynumber">Policy Number</label>
+                        @Html.TextBox("policynumber", Model.Claim.enrolleePolicyNumber.Trim(), new { @class = "form-control", @placeholder = "Policy Number", @id = "policynumber" })
+
+
+                    </div>
+                    <div class="col-xs-3">
+
+                        <label for="evscode">EVS Verification Code</label>
+
+                        @Html.TextBox("evscode", Model.Claim.EVSCode.Trim(), new { @class = "form-control", @placeholder = "EVS Verification Code" })
+                    </div>
+                    <div class="col-xs-3">
+
+                        <input type="hidden" id="CompanyID" name="CompanyID" value="@Model.Claim.enrolleeCompanyId" />
+                        <input type="hidden" id="providerID" name="providerID" value="@ViewBag.ProviderId" />
+                        <input type="hidden" id="claimBatchID" name="claimBatchID" value="@ViewBag.ClaimBatchId" />
+                        <input type="hidden" id="enrolleeID" name="enrolleeID" value="@Model.Claim.Enrolleeid"/>
+                        <label for="evscode">Treatment Tag</label>
+
+                        @Html.DropDownList("treatmentTag", new SelectList(ViewBag.treatmentTagList, "Id", "Name", (int)Model.Claim.Tag), new { @class = "form-control" })
+
+
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-xs-3">
+                        <label for="enrolleename">Name Of Enrollee</label>
+
+                        @Html.TextBox("enrolleename", Model.Claim.enrolleeFullname.ToUpper(), new { @class = "form-control", @placeholder = "Enrollee Full Name" })
+
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providersubcode">Enrollee Company</label>
+                        <select id="companylist" name="companylist" class="form-control chosen-select"></select>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <label for="providername">Sex</label>
+                        @Html.TextBox("enrolleesex", Model.Claim.enrolleeGender.ToUpper(), new { @class = "form-control", @placeholder = "Sex" })
+
+
+                    </div>
+
+
+                    <div class="col-xs-3">
+                        <label for="enrolleeage">Age</label>
+                        @Html.TextBox("enrolleeage", Model.Claim.enrolleeage, new { @class = "form-control", @placeholder = "Age" })
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- /.box-body -->
+            <div class="overlay hidden" id="enrolleeloadingdisplay">
+                <i class="fa fa-refresh fa-spin"></i>
+
+
+            </div>
+        </div>
+
+        <div class="box box seegreen " style="overflow:visible">
+            <div class="box-header" style="color: white">
+                <h3 class="box-title">Provider Information</h3>
+
+            </div>
+            <div class="box-body">
+
+                <div class="row hidden">
+
+                    <div class="col-xs-9">
+                        <label for="providercode">Name of Hospital/Clinic</label>
+
+                        @Html.TextBox("providerename", (string)ViewBag.hospital, new { @class = "form-control", @placeholder = "Hospital Name" })
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <label for="providername">Name of Doctor</label>
+                        @Html.TextBox("doctorname", Model.Claim.DoctorsName, new { @class = "form-control", @placeholder = "Doctors Name" })
+
+
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providersubcode">Area of Specialization</label>
+
+                        @Html.TextBox("areaofspecialization", Model.Claim.AreaOfSpecialty, new { @class = "form-control", @placeholder = "Area of Specialization" })
+
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providername">ID Number</label>
+                        @Html.TextBox("Idnumber", Model.Claim.DoctorsId, new { @class = "form-control", @placeholder = "ID Number" })
+
+
+                    </div>
+                    <div class="col-xs-3">
+
+                        <div class="form-group">
+                            <label for="providercode">Date Signed</label>
+
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" id="doctorsigned" name="doctorsigned" checked="@Model.Claim.DoctorSigned"/>
+                                </span>
+                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" id="doctorssigndate" name="doctorssigndate" value="@Convert.ToDateTime(Model.Claim.DoctorSignecDate).ToString("dd/MM/yyyy")"/>
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+
+
+                    </div> 
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <label for="providername">Name of Specialist</label>
+                        @Html.TextBox("specialistname", Model.Claim.specialistName, new { @class = "form-control", @placeholder = "Name of Specialist" })
+
+
+                    </div>
+
+                    <div class="col-xs-3">
+                        <label for="providersubcode">Area of Specialization</label>
+
+                        @Html.TextBox("areaofspecializationSpecialist", Model.Claim.AreaOfSpecialtyforspecialist, new { @class = "form-control", @placeholder = "Area of Specialization" })
+
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providercode">Specialist Phone Number</label>
+
+                        @Html.TextBox("specialistphonenumber", Model.Claim.specialistphonenumber, new { @class = "form-control", @placeholder = "Specialist Phone Number" })
+
+                    </div>
+                    <div class="col-xs-3">
+
+                        <div class="form-group">
+                            <label for="providercode">Date Signed</label>
+
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" id="specialistsigned" name="specialistsigned" checked="@Model.Claim.specialistSigned">
+                                </span>
+                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" id="specialistsigndate" name="specialistsigndate" value="@Convert.ToDateTime(Model.Claim.specialistSignecDate).ToString("dd/MM/yyyy")" />
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- /.box-body -->
+        </div>
+
+
+        <div class="box box seegreen " style="overflow:visible">
+            <div class="box-header" style="color: white">
+                <h3 class="box-title">Treatment Details</h3>
+
+            </div>
+            <div class="box-body">
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="providername">Date of Service</label>
+                        @Html.TextBox("dateofservice", Convert.ToDateTime(Model.Claim.ServiceDate).ToString("dd/MM/yyyy"), new { @class = "form-control", @placeholder = "Date of Service" })
+
+
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="providercode">Duration of Treatment</label>
+
+                        @Html.TextBox("durationoftreatment", Model.Claim.Durationoftreatment, new { @class = "form-control", @placeholder = "Duration of Treatment" })
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="providername">Date of Admission</label>
+                        @Html.TextBox("dateofadmission", @Convert.ToDateTime(Model.Claim.AdmissionDate).ToString("dd/MM/yyyy"), new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+
+
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="providercode">Date Of Discharge</label>
+
+                        @Html.TextBox("dateofdischarge", Convert.ToDateTime(Model.Claim.DischargeDate).ToString("dd/MM/yyyy"), new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="diagnosis">Diagnosis</label>
+
+                        @Html.TextBox("diagnosis", Model.Claim.Diagnosis, new { @class = "form-control", @placeholder = "Diagnosis" })
+                       
+
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="diagnosisList">Diagnosis Tag</label>
+
+                        
+                        <select id="diagnosisList" name="diagnosisList" class="form-control chosen-select" multiple></select>
+
+
+                    </div>
+
+                </div>
+      
+
+
+                <div class="row">
+
+                    <div class="col-xs-6">
+
+                        <label for="dateofdischarge">Treatment Given</label>
+
+                        @Html.TextBox("Treatmentgiven", Model.Claim.TreatmentGiven, new { @class = "form-control", @placeholder = "Treatment Given" })
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="treatmentcode">Treatment Code</label>
+
+                        @Html.TextBox("treatmentcode", Model.Claim.TreatmentCode, new { @class = "form-control", @placeholder = "Treatment Code" })
+
+
+                    </div>
+             
+
+                </div>
+                <div class="row">
+
+                    <div class="col-xs-6">
+
+                        <label for="dateofdischarge">Referral Code</label>
+
+                        @Html.TextBox("referralcode", Model.Claim.referalCode, new { @class = "form-control", @placeholder = "Referral Code" })
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="box box " style="overflow:visible">
+            <div class="box-header">
+                <h3 class="box-title">Service Information</h3>
+
+
+            </div>
+            <div class="box-body ">
+                
+                <div class="row ">
+                    <div class="col-xs-3">
+
+                       
+                        <label for="serviceItemDescription">Item Description</label>
+                       
+                        <input id='serviceItemDescription' class="form-control hidden" name="serviceItemDescription"  />
+                        <select id="serviceItemDescriptionList" name="serviceItemDescriptionList" class="form-control chosen-select" multiple></select>
+          
+                        
+
+                        @*@Html.DropDownList("serviceItemDescription", new SelectList(ViewBag.servicetarifflist, "Id", "Name"), new { @class = "form-control" })*@
+
+                    </div>
+                    <div class="col-xs-2">
+                        <label for="serviceduration">Duration</label>
+                        @Html.TextBox("serviceduration", null, new { @class = "form-control", @placeholder = "Service Duration" })
+
+
+                    </div>
+                    <div class="col-xs-2">
+
+                        <label for="servicerate">Rate</label>
+
+                        @Html.TextBox("servicerate", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Rate" })
+                    </div>
+                    <div class="col-xs-2">
+                        <label for="serviceamount">Amount</label>
+                        <div class="input-group">
+
+                            <span class="input-group-addon">₦</span>
+                            @Html.TextBox("serviceamount", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Amount" })
+
+                            <input id="servicebill_hiddenID" type="hidden" />
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div class="col-xs-2">
+
+                        <p></p>
+                        <button type="button" id="serviceaddbtn" onclick="DoAddServiceRow();" class="btn bg-olive btn-flat margin"><i class="fa fa-plus" aria-hidden="true"></i> ADD</button>
+
+                        <button type="button" id="serviceupdatebtn" onclick="DoAddServiceRow();" class="btn bg-olive btn-sm btn-flat hidden"><i class="fa fa-edit" aria-hidden="true"></i> UPDATE</button>
+                        <button type="button" id="servicecancelbtn" onclick="cancelServiceEditRow();" class="btn bg-red btn-sm btn-flat margin hidden"><i class="fa fa-times" aria-hidden="true"></i> CANCEL</button>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <table id="servicebilllist" class="table table-striped" width="100%" style="margin-left:5px;">
+                        <thead class="seegreen">
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric">Item Description</th>
+                                <th class="mdl-data-table__cell--non-numeric">Duration</th>
+                                <th class="mdl-data-table__cell--non-numeric">Rate</th>
+                                <th class="mdl-data-table__cell--non-numeric">Amount (₦)</th>
+                                <th class="mdl-data-table__cell--non-numeric"></th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="hidden" id="servicebillRow_0" name="servicebillRow_0">
+                                <td>
+                                    <input id='serviceEditID' type="hidden" name="serviceEditID" />
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0ItemDescription" name="servicebill0ItemDescription" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0Duration" name="servicebill0Duration" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0Rate" name="servicebill0Rate" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control serviceamount" value="0" readonly="readonly" id="servicebill0amount" name="servicebill0amount" style="font-size: 18px; font-weight: bold;" />
+                                    <input type="hidden" id="servicebill0itemID" name="servicebill0itemID" />
+                                    <input type="hidden" id="servicebillCount" name="servicebillCount" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                    <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow2(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                </td>
+
+                            </tr>
+                            @{
+                                var servicecount = 1;
+                                foreach (var item in Model.Claim.ServiceList)
+                                {
+                                    <tr name="@string.Format("servicebillRow_{0}", servicecount)" id="@string.Format("servicebillRow_{0}", servicecount)">
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.ServiceDescription" readonly="readonly" id="@string.Format("servicebill{0}ItemDescription", servicecount)" name="@string.Format("servicebill{0}ItemDescription", servicecount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.Duration" readonly="readonly" id="@string.Format("servicebill{0}Duration", servicecount)" name="@string.Format("servicebill{0}Duration", servicecount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.rate" readonly="readonly" id="@string.Format("servicebill{0}Rate", servicecount)" name="@string.Format("servicebill{0}Rate", servicecount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control serviceamount" value="@Convert.ToDecimal(item.InitialAmount).ToString("N")" readonly="readonly" id="@string.Format("servicebill{0}amount", servicecount)" name="@string.Format("servicebill{0}amount", servicecount)" style="font-size: 18px; font-weight: bold;" />
+                                            <input type="hidden" value="@item.ServiceId" id="@string.Format("servicebill{0}itemID", servicecount)" name="@string.Format("servicebill{0}itemID", servicecount)" />
+
+                                            <input type="hidden" value="@item.VettedAmount" id="@string.Format("servicebill{0}vettedamount", servicecount)" name="@string.Format("servicebill{0}vettedamount", servicecount)" />
+                                            <input type="hidden" value="@item.VettingComment" id="@string.Format("servicebill{0}vettedcomment", servicecount)" name="@string.Format("servicebill{0}vettedcomment", servicecount)" />
+
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                            <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow2(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                        </td>
+
+                                    </tr>
+
+                                    servicecount++;
+
+                                }
+
+
+
+                            }
+
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Total</span>
+                                        <input type="text" class="form-control" value="₦ 0.00" readonly="readonly" id="servicebilltotal" name="servicebilltotal" style="font-size: 18px; font-weight: bold;" />
+                                    </div>
+
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tfoot>
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+            </div>
+
+            <!-- /.box-body -->
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="box box " style="overflow:visible">
+            <div class="box-header">
+                <h3 class="box-title">Drug Information</h3>
+
+
+            </div>
+            <div class="box-body ">
+                <div class="row">
+                    <div class="col-lg-10">
+
+                        <span  id="drug_informationbox">...</span>
+                    </div>
+                </div>
+                <div class="row " id="druginputrow">
+                    <div class="col-xs-3">
+                        <label for="drugItemDescription">Item Description</label>
+                        @*@Html.DropDownList("drugItemDescription", new SelectList(ViewBag.drugtarifflist, "Id", "Name"), new { @class = "form-control" })*@
+                        <input id='drugEditID' type="hidden" name="drugEditID" />
+                        <input id='drugItemDescription' class="form-control hidden" name="drugItemDescription" />
+
+                        <select id="drugItemDescriptionList" name="drugItemDescriptionList" class="form-control chosen-select" multiple></select>
+
+                    </div>
+                    <div class="col-xs-2">
+                        <label for="serviceduration">Unit</label>
+                        @Html.TextBox("drugunit", null, new { @class = "form-control", @placeholder = "Service Duration" })
+
+
+                    </div>
+                    <div class="col-xs-2">
+
+                        <label for="servicerate">Rate</label>
+
+                        @Html.TextBox("drugrate", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Rate" })
+                    </div>
+                    <div class="col-xs-2">
+                        <label for="serviceamount">Amount</label>
+                        <div class="input-group">
+
+                            <span class="input-group-addon">₦</span>
+                            @Html.TextBox("drugamount", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Amount" })
+
+                            <input id="drugbill_hiddenID" type="hidden" />
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div class="col-xs-2">
+
+                        <p></p>
+                        <button type="button" id="drugaddbtn" onclick="DoAddDrugRow();" class="btn bg-olive btn-flat margin"><i class="fa fa-plus" aria-hidden="true"></i> ADD</button>
+                        <button type="button" id="drugupdatebtn" onclick="DoAddDrugRow();" class="btn bg-olive btn-sm btn-flat hidden"><i class="fa fa-edit" aria-hidden="true"></i> UPDATE</button>
+                        <button type="button" id="drugcancelbtn" onclick="cancelEditRow();" class="btn bg-red btn-sm btn-flat margin hidden"><i class="fa fa-times" aria-hidden="true"></i> CANCEL</button>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <table id="drugbilllist" class="table table-striped" width="100%" style="margin-left:5px;">
+                        <thead class="seegreen">
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric">Item Description</th>
+                                <th class="mdl-data-table__cell--non-numeric">Unit</th>
+                                <th class="mdl-data-table__cell--non-numeric">Rate</th>
+                                <th class="mdl-data-table__cell--non-numeric">Amount (₦)</th>
+                                <th class="mdl-data-table__cell--non-numeric"></th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="hidden" id="drugbillRow_0" name="drugbillRow_0">
+                                <td>
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0ItemDescription" name="drugbill0ItemDescription" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0Unit" name="drugbill0Unit" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0Rate" name="drugbill0Rate" style="font-size: 18px; font-weight: bold;" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control drugamount" value="0" readonly="readonly" id="drugbill0amount" name="drugbill0amount" style="font-size: 18px; font-weight: bold;" />
+                                    <input type="hidden" id="drugbill0itemID" name="drugbill0itemID" />
+                                    <input type="hidden" id="drugbillCount" name="drugbillCount" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                    <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                </td>
+
+                            </tr>
+
+                            @{
+
+                                var drugcount = 1;
+                                foreach (var item in Model.Claim.DrugList)
+                                {
+                                    <tr name="@string.Format("drugbillRow_{0}", drugcount)" id="@string.Format("drugbillRow_{0}", drugcount)">
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.DrugName" readonly="readonly" id="@string.Format("drugbill{0}ItemDescription", drugcount)" name="@string.Format("drugbill{0}ItemDescription", drugcount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.Quantity" readonly="readonly" id="@string.Format("drugbill{0}Unit", drugcount)" name="@string.Format("drugbill{0}Unit", drugcount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" value="@Convert.ToDecimal(item.rate).ToString()" readonly="readonly" id="@string.Format("drugbill{0}Rate", drugcount)" name="@string.Format("drugbill{0}Rate", drugcount)" style="font-size: 18px; font-weight: bold;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control drugamount" value="@Convert.ToDecimal(item.InitialAmount).ToString("N")" readonly="readonly" id="@string.Format("drugbill{0}amount", drugcount)" name="@string.Format("drugbill{0}amount", drugcount)" style="font-size: 18px; font-weight: bold;" />
+                                            <input type="hidden"  value="@item.DrugId" id="@string.Format("drugbill{0}itemID", drugcount)" name="@string.Format("drugbill{0}itemID", drugcount)" />
+
+
+                                            <input type="hidden" value="@item.VettedAmount" id="@string.Format("drugbill{0}vettedamount", drugcount)" name="@string.Format("drugbill{0}vettedamount", drugcount)" />
+                                            <input type="hidden" value="@item.VettingComment" id="@string.Format("drugbill{0}vettedcomment", drugcount)" name="@string.Format("drugbill{0}vettedcomment", drugcount)" />
+                                            @*<input type="hidden" id="drugbillCount" name="drugbillCount" />*@
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                            <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                        </td>
+
+                                    </tr>
+                                    drugcount++;
+                                }
+
+
+
+                            }
+
+
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Total</span>
+                                        <input type="text" class="form-control" value="₦ 0.00" readonly="readonly" id="drugbilltotal" name="drugbilltotal" style="font-size: 18px; font-weight: bold;" />
+                                    </div>
+
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tfoot>
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+            </div>
+
+            <!-- /.box-body -->
+        </div>
+
+    </div>
+    <div class="row">
+
+
+        <div class="box box seegreen " style="overflow:visible">
+            <div class="box-header" style="color: white">
+                <h3 class="box-title">Additional Information</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-3">
+
+                        <div class="form-group">
+                            <label for="Enrolleesigned">Date Enrollee Signed</label>
+
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" id="Enrolleesigned" name="Enrolleesigned"  checked="@Model.Claim.enrolleeSigned">
+                                </span>
+                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" id="EnrolleesignedDate" name="EnrolleesignedDate"  value="@Convert.ToDateTime(Model.Claim.EnrolleeSignDate).ToString("dd/MM/yyyy")" />
+                            </div>
+                            <!-- /.input group -->
+                        </div>
+
+
+                    </div>
+                    <div class="col-xs-2">
+
+                        <label for="AllprescibedDrugs">Check for Yes</label>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="AllprescibedDrugs" name="AllprescibedDrugs" checked="@Model.Claim.AllprescibedDrugs">
+                                All Prescribed Drugs
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-2">
+
+
+                        <label for="LaboratoryInvestigation">Check for Yes</label>
+                        <div class="checkbox">
+
+                            <label>
+                                <input type="checkbox" id="LaboratoryInvestigation" name="LaboratoryInvestigation" checked="@Model.Claim.LaboratoryInvestigation">
+                                Laboratory Investigation
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+
+
+                        <label for="Admission">Check for Yes</label>
+                        <div class="checkbox">
+
+                            <label>
+                                <input type="checkbox" id="Admission" name="Admission" checked="@Model.Claim.Admission">
+                                Admission
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+
+
+                        <label for="Feeding">Check for Yes</label>
+                        <div class="checkbox">
+
+                            <label>
+                                <input type="checkbox" id="Feeding" name="Feeding" checked="@Model.Claim.Feeding">
+                                Feeding
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+
+                        <div class="form-group">
+                            <label>Remark</label>
+                            <textarea class="form-control" rows="3" placeholder="Remark ..." id="Remark" name="Remark">@Model.Claim.Note</textarea>
+                        </div>
+
+
+
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+
+                        <div class="form-group">
+                            <label for="exampleInputFile">Upload File</label>
+                            <input id="exampleInputFile" type="file">
+
+                            <p class="help-block">Upload Laboratory result or any relevant document.</p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <!-- /.box-body -->
+            <div class="box-footer">
+
+                <button class="btn btn-primary pull-right" type="submit" style="margin-left:4px;" id="savebtn">Save</button>
+                <a href="@CurrentRequestData.CurrentContext.Request.Url.AbsoluteUri" class="btn btn-flat btn-warning pull-right">Reset </a>
+
+     </div>
+        </div>
+    </div>
+}
+<script>
+
+
+    
+
+    $(window).keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+
+            return false;
+        }
+    });
+    $(function () {
+        CalculateTotalService();
+        CalculateTotalDrug();
+       
+        var options6 = {
+            url: function (phrase) {
+                return "../Enrollee/GetEnrolleePolicyNumberName?phrase=" + phrase;
+            },
+
+
+
+            getValue: "Policynumber",
+
+            template: {
+                type: "description",
+                fields: {
+                    description: "Name"
+                }
+            },
+            list: {
+                match: {
+                    enabled: true
+                },
+                onSelectItemEvent: function () {
+
+
+                    var value = $("#policynumber").getSelectedItemData().Policynumber;
+                    $("#policynumber").val(value).trigger("change");
+                    //checkpolicy(value);
+                    //$("#servicerate").val(price);
+
+                }
+            },
+
+            theme: "plate-dark"
+        };
+
+
+        $("#policynumber").easyAutocomplete(options6);
+
+
+
+        window.VettingProtocolLocal.getItem("lastupdate", function (err, value) {
+            // if err is non-null, we got an error. otherwise, value is the value
+
+            if (value === null) {
+
+                //clear the database
+                window.VettingProtocolLocal.clear().then(function () {
+                    // Run this code once the database has been entirely deleted.
+                    console.log('vetting protocol Database is now empty.');
+                }).catch(function (err) {
+                    // This code runs if there were any errors
+                    console.log(err);
+                });
+
+
+                //does not exist
+                $.getJSON("../Claims/GetAllVettingProtocol", function (data) {
+                    //console.log(data );
+                    $('#diagnosisList').html('');
+                    $.each(data, function (index, value) {
+                        // alert( index + ": " + value.Name );
+                        $('#diagnosisList').append($('<option>', {
+                            value: value.Id,
+                            text: value.Diagnosis
+                        }));
+                    });
+
+                    var datee=new Date();
+
+                    window.VettingProtocolLocal.setItem("lastupdate", datee).then(function () {
+                        return localforage.getItem('key');
+                    }).then(function (value) {
+                       
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+
+                    window.VettingProtocolLocal.setItem("data", data).then(function () {
+                        return localforage.getItem('key');
+                    }).then(function (value) {
+                        $("#diagnosisList").chosen({
+                            no_results_text: "Oops, nothing found!",
+                            width: '100%',
+                            max_shown_results: 12,
+                            
+                        });
+                        //select the selected
+
+                        var ids = "@Model.Claim.diagnosticsIDString";
+
+                        //$('#diagnosisList').val('@Model.Claim.diagnosticsIDString');
+
+                        $.each(ids.split(","), function (index, value) {
+                            $("#diagnosisList option[value=" + value.id + "]").attr("selected", "selected");
+                            $("#diagnosisList").trigger("chosen:updated");
+                        });
+        
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+
+
+                   
+                    
+                })
+    .done(function() {
+        //console.log( "second success" );
+    })
+    .fail(function() {
+        //console.log( "error" );
+    })
+    .always(function() {
+        //console.log( "complete" );
+    });
+
+            }
+            else{
+                //Clear the Tariff table 
+
+                $('#diagnosisList').html('');
+
+                window.VettingProtocolLocal.getItem("data", function (err, data) {
+                    $.each(data, function( index, value ) {
+                        // alert( index + ": " + value.Name );
+                        $('#diagnosisList').append($('<option>', {
+                            value: value.Id,
+                            text: value.Diagnosis
+                         }));
+                    });
+                }).then(function (value) {
+                    $("#diagnosisList").chosen({
+                        no_results_text: "Oops, nothing found!",
+                        width: '100%',
+                        max_shown_results: 12,
+                  
+                    });
+
+                    //select the selected
+
+                    var ids = "@Model.Claim.diagnosticsIDString";
+
+                    $('#diagnosisList').val('@Model.Claim.diagnosticsIDString');
+
+                    $.each(ids.split(","), function (index, value) {
+                        $("#diagnosisList option[value=" + value.id + "]").attr("selected", "selected");
+                        $("#diagnosisList").trigger("chosen:updated");
+                    });
+        
+                  
+
+
+                }).catch(function (err) {
+                    // we got an error
+                });
+
+
+                
+
+            }
+        });
+
+  
+        //Drugshii
+        $('#diagnosisList').on('change', function (evt, params) {
+          
+            //$('#diagnosis').val($('#diagnosisList option:selected').text());
+            
+        });
+
+       
+
+        window.drugtariffLocal.getItem($("#providerID").val(), function (err, value) {
+            // if err is non-null, we got an error. otherwise, value is the value
+           
+            if(value === null ){
+                //Clear the Tariff database
+                window.drugtariffLocal.clear().then(function () {
+                    // Run this code once the database has been entirely deleted.
+                    console.log('Tariff Database is now empty.');
+                }).catch(function (err) {
+                    // This code runs if there were any errors
+                    console.log(err);
+                });
+               
+                //does not exist
+                $.getJSON( "../Tariff/GetProviderDrugTariffJson?providerid=" +$("#providerID").val(), function(data) {
+                    //console.log(data );
+                    $('#drugItemDescriptionList').html('');
+                    $.each(data, function (index, value) {
+                        // alert( index + ": " + value.Name );
+                        $('#drugItemDescriptionList').append($('<option>', {
+                            value: value.Id,
+                            text: value.Name
+                        }));
+                    });
+                    window.drugtariffLocal.setItem($("#providerID").val(), data).then(function () {
+                        return localforage.getItem('key');
+                    }).then(function (value) {
+                        $("#drugItemDescriptionList").chosen({
+                            no_results_text: "drug not found but you can hit 'Enter' to add drug.",
+                            width: '100%',
+                            max_shown_results: 12,
+                            max_selected_options: 1,
+                        });
+
+
+                        $(".chosen-container").bind('keyup', function (e) {
+                            cleartheview();
+                        });
+                        //alert('saved');
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+                    
+                })
+    .done(function() {
+        //console.log( "second success" );
+    })
+    .fail(function() {
+        //console.log( "error" );
+    })
+    .always(function() {
+        //console.log( "complete" );
+    });
+
+            }
+            else{
+              
+                $('#drugItemDescriptionList').html('');
+
+                window.drugtariffLocal.getItem($("#providerID").val(), function (err, data) {
+                    $.each(data, function( index, value ) {
+                        // alert( index + ": " + value.Name );
+                        $('#drugItemDescriptionList').append($('<option>', {
+                            value: value.Id,
+                            text : value.Name
+                        }));
+                    });
+                }).then(function (value) {
+                  $("#drugItemDescriptionList").chosen({
+                        no_results_text: "drug not found but you can hit 'Enter' to add drug.",
+                        width: '100%',
+                        max_shown_results: 12,
+                        max_selected_options: 1,
+                    });
+
+
+                    $(".chosen-container").bind('keyup', function (e) {
+                        cleartheview();
+                    });
+                
+
+                }).catch(function (err) {
+                    // we got an error
+                });
+
+
+               
+
+            }
+        });
+
+
+        window.servicetariffLocal.getItem($("#providerID").val(), function (err, value) {
+            // if err is non-null, we got an error. otherwise, value is the value
+
+            if (value === null) {
+
+                //clear the database
+                window.servicetariffLocal.clear().then(function () {
+                    // Run this code once the database has been entirely deleted.
+                    console.log('Tariff Database is now empty.');
+                }).catch(function (err) {
+                    // This code runs if there were any errors
+                    console.log(err);
+                });
+
+
+                //does not exist
+                $.getJSON("../Tariff/GetProviderServiceTariffJson?providerid=" + $("#providerID").val(), function (data) {
+                    //console.log(data );
+                    $('#serviceItemDescriptionList').html('');
+                    $.each(data, function (index, value) {
+                        // alert( index + ": " + value.Name );
+                        $('#serviceItemDescriptionList').append($('<option>', {
+                            value: value.Id,
+                            text: value.Name
+                        }));
+                    });
+
+
+                    window.servicetariffLocal.setItem($("#providerID").val(), data).then(function () {
+                        return localforage.getItem('key');
+                    }).then(function (value) {
+                        $("#serviceItemDescriptionList").chosen({
+                            no_results_text: "Service not found but you can hit 'Enter' to add service.",
+                            width: '100%',
+                            max_shown_results: 12,
+                            max_selected_options: 1,
+                        });
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+
+                })
+    .done(function () {
+        //console.log( "second success" );
+    })
+    .fail(function () {
+        //console.log( "error" );
+    })
+    .always(function () {
+        //console.log( "complete" );
+    });
+
+            }
+            else {
+                //Clear the Tariff table 
+
+                $('#serviceItemDescriptionList').html('');
+
+                window.servicetariffLocal.getItem($("#providerID").val(), function (err, data) {
+                    $.each(data, function (index, value) {
+                        // alert( index + ": " + value.Name );
+                        $('#serviceItemDescriptionList').append($('<option>', {
+                            value: value.Id,
+                            text: value.Name
+                        }));
+                    });
+                }).then(function (value) {
+                    $("#serviceItemDescriptionList").chosen({
+                        no_results_text: "Service not found but you can hit 'Enter' to add service.",
+                        width: '100%',
+                        max_shown_results: 12,
+                        max_selected_options: 1,
+                    });
+
+
+
+
+
+                }).catch(function (err) {
+                    // we got an error
+                });
+
+
+
+
+            }
+        });
+
+
+
+        $('#companylist').html('');
+        window.companyLocal.iterate(function (value, key, iterationNumber) {
+            //console.log(value);
+
+            $('#companylist').append($('<option>', {
+                value: key,
+                text : value
+            }));
+            $('#companylist').val(@Model.Claim.enrolleeCompanyId);
+        }).then(function (value) {
+            //.chosen-select
+            $("#companylist").chosen({
+                no_results_text: "Oops, nothing found!",
+                width: '100%'
+            });
+
+
+         
+
+        }).catch(function (err) {
+            // we got an error
+        });
+
+
+
+        $('#hiddenID').val(guid(0));
+        //Datemask2 DD/MM/YYYY
+        //$("#datemask2").inputmask("DD/MM/YYYY", {"placeholder": "DD/MM/YYYY"});
+
+
+        //trigger remote drug search
+        $('#drugItemDescriptionList').on('chosen:no_results', function (evt, params) {
+            
+            //find the text online
+            FindOnline(params.chosen.get_search_text());
+            //$("#drugrate").notify("Hello Box");
+            //$("#drugamount").notify("Hello Box");
+        });
+       
+     
+        //$('#drugItemDescriptionList').on('change', function (evt, params) {
+           
+        //        cleartheview();
+        //});
+
+        $('#drugItemDescriptionList').on('change', function (evt, params) {
+
+            $('#drugbill_hiddenID').val(params.selected);
+        });
+
+        $('#serviceItemDescriptionList').on('change', function (evt, params) {
+
+            $('#servicebill_hiddenID').val(params.selected);
+        });
+
+        //$('#savebtn').on("click",
+        //    function() {
+        //        //alert('about to submit');
+        //        var claimscount = parseFloat( $('#totalclaimcount').val());
+        //        var claimsamounttotal =  parseFloat( $('#totalclaimamounttotal').val());
+
+        //        var totalservicecharge =0;
+        //        var totaldrugcharge = 0;
+
+
+        //        $('.drugamount').each(function () {
+
+        //            //console.log($(this).val());
+        //            totaldrugcharge += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+
+        //            //alert(sum);
+        //        });
+
+        //        $('.serviceamount').each(function () {
+
+        //            //console.log($(this).val());
+        //            totalservicecharge += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+
+        //            //alert(sum);
+        //        });
+
+        //        console.log(totalservicecharge);
+        //        console.log(totaldrugcharge);
+        //        console.log(claimsamounttotal);
+
+        //        if ((totaldrugcharge + totalservicecharge) < 1) {
+        //            //low amount halla
+        //            toastr["error"]("The claim amount cannot be  N0.00.", "Total Amount is too Low");
+        //            return false;
+        //        }
+
+        //        if ($('#treatmentTag').val() == "-1") {
+        //            $("#treatmentTag").notify("Kindly select a tag,this is used for analysis.");
+        //            $("#treatmentTag").focus();
+        //            return false;
+        //        }
+
+        //        var newtotalamount = (totalservicecharge + totaldrugcharge + claimsamounttotal);
+
+
+
+        //        $('#claimscountspan').text((claimscount + 1).toString() + '  Claims Forms.');
+        //        $('#claimsamountspan').text('₦ ' + (newtotalamount).toFixed(2).toString() );
+        //        $('#claimsamountspan').formatCurrency();
+
+        //        $('#totalclaimamounttotal').val(newtotalamount.toFixed(2).toString());
+        //        $('#totalclaimcount').val(claimscount + 1);
+        //        var keyholder = 0;
+        //        //save the form for later submition
+        //        var formstorre = $('#ClaimsForm').serialize();
+        //        localforage.length().then(function (value) {
+        //            keyholder = value + 1;
+        //            //alert(keyholder);
+        //        });
+
+
+        //        //localforage.getItem('0001').then(function (value) {
+        //        //    console.log(value);
+        //        //});
+               
+        //        //
+        //        $('#drugbilllist > tbody  > tr').each(function() {
+
+        //            if ($(this).hasClass('hidden')) {
+
+        //            } else {
+        //                $(this).remove();
+        //            }
+        //        });
+        //        $('#servicebilllist > tbody  > tr').each(function() {
+
+        //            if ($(this).hasClass('hidden')) {
+
+        //            } else {
+        //                $(this).remove();
+        //            }
+        //        });
+
+        //        localforage.setItem( $('#hiddenID').val(), formstorre).then(function () {
+        //            return localforage.getItem($('#hiddenID').val());
+        //        }).then(function (value) {
+        //            console.log('shiitt logged');
+        //            $('#ClaimsForm')[0].reset();
+        //            $('.chosen-select').val('-1');
+        //            $('.chosen-select').trigger('chosen:updated');
+        //            toastr["success"]("Saved Successfully.", "Captured");
+        //            $('#hiddenID').val(guid(0));
+        //            $("html, body").animate({ scrollTop: 0 }, "slow");
+        //        }).catch(function (err) {
+        //            // we got an error
+        //            console.log(err);
+        //        });
+
+        //    });
+
+        var keyholder = 0;
+        $('#ClaimsForm').on('submit', function (e) {
+            //e.preventDefault();
+
+        });
+
+        $.datepicker.regional['en'];
+        //Date picker
+        $.datepicker.regional['en'];
+        //Date picker
+
+
+        $("#dateofdischarge").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+
+        $("#doctorssigndate").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        $("#specialistsigndate").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        $("#dateofservice").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        $("#EnrolleesignedDate").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        $("#dateofadmission").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        $("#dateofdischarge").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+
+        //$('#doctorssigndate').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+
+        //});
+        //$('#specialistsigndate').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+        //});
+        //$('#dateofservice').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+        //});
+        //$('#EnrolleesignedDate').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+        //});
+        //$('#dateofadmission').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+        //});
+        //$('#dateofdischarge').datepicker({
+        //    format: 'dd/mm/yyyy',
+        //    autoclose: true
+        //});
+
+
+
+
+        //$('#serviceItemDescription').editableSelect();
+        //ResetSelecteable();
+
+
+
+
+        $("#serviceItemDescription").keyup(function () {
+            //Clear the selected id
+            //alert('hello');
+            $('#servicerate').val('');
+        });
+        $("#drugItemDescription").keyup(function () {
+            //Clear the selected id
+            //alert('hello');
+            $('#drugrate').val('');
+        });
+
+        //$('#drugItemDescription').editableSelect();
+
+
+
+    });
+    $("#policynumber").focusout(function () {
+
+        checkpolicy2($("#policynumber").val());
+        console.log('focusout');
+    });
+
+
+    $('#serviceItemDescriptionList').on('change', function(evt, params) {
+        //update the service id
+        $('#serviceItemDescriptionList').val(params.selected) ;
+        //alert(params.selected);
+    });
+    function checkpolicy2(value) {
+
+        if (true) {
+
+            if (value.length > 15) {
+
+
+
+                $.ajax({
+                    "type": "GET",
+                    "url": '../Enrollee/GetEnrolleeDetailsClaim/?policyNumber=' + value,
+                    "data": '',
+                    beforeSend: function (xhr) {
+
+                        $("#enrolleeloadingdisplay").removeClass("hidden");
+
+
+                    },
+                    "success": function (msg) {
+
+                        if (msg.respCode == 0) {
+                            //alert(msg);
+                            $("#enrolleename").val(msg.EnrolleeName);
+                            $("#companylist").val(msg.CompanyId);
+                            $('#companylist').trigger("chosen:updated");
+
+
+                            $("#enrolleesex").val(msg.EnrolleeGender);
+                            $("#enrolleeID").val(msg.Id);
+                            $("#CompanyID").val(msg.CompanyId);
+
+
+                        } else {
+                            toastr["error"](msg.errorMsg, "Input Error");
+                            $("#enrolleename").val('');
+                            $("#companyname").val('');
+                            $("#enrolleesex").val('');
+                            $("#enrolleeID").val('');
+                            $("#CompanyID").val('');
+                            $("#companylist").val(-1);
+                            $('#companylist').trigger("chosen:updated");
+                        }
+
+                        $("#enrolleeloadingdisplay").addClass("hidden");
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            $("#enrolleeloadingdisplay").addClass("hidden");
+
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+
+
+
+            }
+
+        }
+    }
+
+
+    function FindOnline(txt) {
+
+        if (txt.length > 3) {
+            $('#drug_informationbox').html('<small>searching online...</small>');
+            $.getJSON("https://api.fda.gov/drug/label.json?api_key=zpLEAJxpOjzfXowdmtaNvPPT82n8gtQgygGDenAN&search=" + txt + "&limit=1", function (data) {
+                //console.log(data.results[0].spl_product_data_elements);
+
+                var resultt = data.results[0].openfda.generic_name[0];
+                $('#drug_informationbox').html('<small>Am guessing the generic names for <b>' + txt + '</b> are ' + resultt + ' </small>');
+
+                //$.each(data.results[0].spl_product_data_elements, function (index, value) {
+                //    console.log(index + ": " + value);
+                //});
+                //.spl_product_data_elements
+            })
+      .done(function () {
+        
+      })
+      .fail(function () {
+          cleartheview();
+      })
+      .always(function () {
+         
+      });
+        }
+        
+    }
+    
+
+
+
+
+    function cleartheview() {
+        $('#drug_informationbox').html('...');
+    }
+
+
+  
+</script>

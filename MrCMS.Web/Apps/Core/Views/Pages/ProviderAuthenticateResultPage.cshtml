@@ -1,0 +1,104 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Pages
+@model MrCMS.Web.Apps.Core.Pages.ProviderAuthenticateResultPage
+  @using (Html.BeginForm("PostProviderAuthenticate","EnrolleePage",FormMethod.Post))
+  {
+      <section class="section-account">
+			
+          <div class="spacer"></div>
+          <div class="card contain-sm style-transparent">
+              <div class="card-body" style="background-color: white">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="row">
+                              <div class="col-3">
+                                  <img src="~/Apps/../Apps/Core/Content/Images/logo.png" alt="Smiley face" height="52" width="171"> 
+                                  
+                              </div>
+                              <div class="col-lg-9">
+                                  <h2>Enrollee Authentication Result Page </h2>
+                              </div>
+                          </div>
+                          <div>
+                              <p>Below is the enrollee Details.</p>
+                              <br/>
+                              <div>
+                                  <div class="col-lg-12">
+                                      <div class="card">
+                                          <div class="card-body">
+                                              <div class="table-responsive">
+                                                  <table class="table no-margin">
+                                                      <thead>
+                                                          <tr>
+														
+                                                          </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                          <tr>
+             
+                                                              <td colspan="2">
+                                                    
+                                                                  <img src="data:image/png;base64,@Model.Passport"  style="max-height: 160px; max-width: 160px;"
+                                                                       class="img-rounded" id="photo_img">
+                                                       
+
+                                                    
+  
+                                                              </td>
+                                                          </tr>
+                                                          <tr>
+                                                              <td>Full Name</td>
+                                                              <td>@Html.DisplayFor(x=>x.Fullname)</td>
+                                                          </tr>
+
+                                                          <tr>
+                                                              <td>Policy Number</td>
+                                                              <td> @Html.DisplayFor(x=>x.PolicyNumber)</td>
+                                                          </tr>
+
+                                                          <tr>
+                                                              <td>Gender</td>
+                                                              <td>@Html.DisplayFor(x=>x.Gender)</td>
+                                                          </tr>
+ 
+                                                          <tr>
+                                                              <td>Company</td>
+                                                              <td>@Html.DisplayFor(x=>x.Company)</td>
+                                                          </tr>
+<tr>
+                                                              <td>Verification Code</td>
+                                                              <td>@Html.DisplayFor(x=>x.Verificationcode)</td>
+                                                          </tr>
+ <tr>
+                                                              <td>Hospital Used</td>
+                                                              <td>@Html.DisplayFor(x=>x.Hospital)</td>
+                                                          </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </div><!--end .table-responsive -->
+                                          </div><!--end .card-body -->
+                                      </div><!--end .card -->
+                                  </div>
+  <div class="col-xs-12 text-right ">
+                                       <a href="@Url.Action("ProviderAuthenticate", "EnrolleePage",  new { id = -1})" class="btn btn-primary btn-raised"><span class="glyphicon glyphicon-menu-left">New Authentication</span> </a>   
+                                      
+                                  </div><!--end .col -->
+                              </div>
+
+                          </div>
+                      </div><!--end .col -->
+                     
+                  </div><!--end .row -->
+                  @if (!String.IsNullOrEmpty(Model.Message))
+                  {
+                      <br />
+                      <br />
+                      <div class="alert alert-success">@Model.Message</div>
+                  }
+              </div><!--end .card-body -->
+          </div><!--end .card -->
+
+
+      </section>
+
+}

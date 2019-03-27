@@ -1,0 +1,7 @@
+﻿@using System.Collections.Generic
+@model MrCMS.Web.Apps.Faqs.Widgets.FeaturedFaq
+<div class="form-group">
+    @Html.LabelFor(x => x.Faq, "Select Featured FAQ")
+    @Html.DropDownListFor(x => x.Faq.Id, ViewData["faqs"] as IEnumerable<SelectListItem>,
+    new { data_val = "true", data_val_required = "Please choose an FAQ", @class = "form-control" })
+</div>

@@ -1,0 +1,343 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.VetClaimsPage
+@{
+    ViewBag.Title = "Vet Claims";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+        @input
+    }
+    else
+    {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+        response =
+                "success";
+
+    }
+    else
+    {
+        response = "danger";
+
+    }
+    @response
+}
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Vet claims by batch,claims batches have been fully captured.</p>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Claim</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            @using (Html.BeginForm("IncomingClaims", "ClaimsPage", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="box-body">
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="year">Batch</label>
+                        <div class="col-sm-3">
+                            @Html.DropDownList("Batch", new SelectList(ViewBag.BatchList, "Id", "Name"), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="Provider_list">Provider</label>
+                        <div class="col-sm-5">
+                            @Html.DropDownList("Provider_list", new SelectList(ViewBag.MyProvidersList, "Id", "Name"), new { @class = "form-control chosen-select" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="Month_list">Month</label>
+                        <div class="col-sm-3">
+                            <select id='Month_list' class="form-control" name="Month_list">
+                                
+                                <option value='1'>Janaury</option>
+                                <option value='2'>February</option>
+                                <option value='3'>March</option>
+                                <option value='4'>April</option>
+                                <option value='5'>May</option>
+                                <option value='6'>June</option>
+                                <option value='7'>July</option>
+                                <option value='8'>August</option>
+                                <option value='9'>September</option>
+                                <option value='10'>October</option>
+                                <option value='11'>November</option>
+                                <option value='12'>December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="year">Year</label>
+                        <div class="col-sm-3">
+                            @Html.DropDownList("Year", new SelectList(ViewBag.YearList, "Id", "Name"), new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="year">Zone</label>
+                        <div class="col-sm-3">
+                            @Html.DropDownList("Zone", new SelectList(ViewBag.ZoneList, "Id", "Name"), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="channel">Channel</label>
+                        <div class="col-sm-3">
+                            <select id="channel" class="form-control">
+                                <option value="1">All</option>
+                                <option value="2">Portal</option>
+                                <option value="3">In-house</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="claimbatchidd">Batch ID</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="claimbatchidd" class="form-control " />
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <label class="col-sm-2 control-label" for="Delivered_By">Delivered By</label>
+
+                            <div class="col-sm-7">
+
+                                @Html.TextBox("Delivered_By", null, new { @class = "form-control", @placeholder = "Enter Full Name" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="User_list">Transfered To</label>
+
+                            <div class="col-sm-7">
+
+                                @Html.DropDownList("User_list", new SelectList(ViewBag.UserList, "Id", "Name"), new { @class = "form-control" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="User_list">Date Received From</label>
+
+                            <div class="col-sm-2">
+
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><input type="checkbox"  class="input-group-addon"/></span>
+                                    @Html.TextBox("DateReceived", (string)ViewBag.Defaultdate, new { @class = "form-control", @placeholder = "MM/DD/YYYY" })
+                                </div>
+
+                            </div>
+                            <div class="col-sm-2">
+
+                                <div class="input-group">
+
+
+                                    @Html.TextBox("DateReceived", (string)ViewBag.Defaultdate, new { @class = "form-control", @placeholder = "MM/DD/YYYY" })
+                                </div>
+
+                            </div>
+
+                        </div>*@
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <button class="btn btn-default" type="submit">Reset</button>
+                    <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+                </div>
+            }
+        </div>
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Claim Batch List</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+                <table id="incomingclaimlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Id</th>
+                            <th class="mdl-data-table__cell--non-numeric">Zone</th>
+                            <th class="mdl-data-table__cell--non-numeric">Provideraddress</th>
+                            <th class="mdl-data-table__cell--non-numeric">Provider</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claims Period</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claim Batch</th>
+                            <th class="mdl-data-table__cell--non-numeric">Delivery Count</th>
+                            <th class="mdl-data-table__cell--non-numeric">Claims Count</th>
+                            <th class="mdl-data-table__cell--non-numeric">Initial Amount</th>
+                            <th class="mdl-data-table__cell--non-numeric">Processed Amount</th>
+                            <th class="mdl-data-table__cell--non-numeric">Difference</th>
+                            <th class="mdl-data-table__cell--non-numeric">Submitted By</th>
+                            <th class="mdl-data-table__cell--non-numeric">Date Sumitted</th>
+                            <th class="mdl-data-table__cell--non-numeric"></th>
+
+                        </tr>
+                    </thead>
+
+                 
+                        <tbody></tbody>
+
+                    </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+
+        $.ajaxSetup({
+            cache: false
+        });
+
+
+        $('#incomingclaimlist').dataTable({
+
+            "sAjaxSource": '../ClaimsPage/GetClaimBatchVetJson',
+
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': [0, 1, 2, 3, 4, 5, 6, 7],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "claimbatchidd", "value": $('#claimbatchidd').val() }, { "name": "Provider_list", "value": $('#Provider_list').val() }, { "name": "Month_list", "value": $('#Month_list').val() }, { "name": "year", "value": $('#Year').val() }, { "name": "Batch", "value": $('#Batch').val() }, { "name": "Zone", "value": $('#Zone').val() }, { "name": "channel", "value": $('#channel').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                { "mDataProp": "Id", "bVisible": true, sClass: "row_id" },
+                { "mDataProp": "GroupName", "bVisible": true },
+                { "mDataProp": "PRoviderAddress", "bVisible": false },
+
+
+                {
+                    "mRender": function (data, type, row) {
+                        return '<span  title="' + row.PRoviderAddress + '" >' + row.Provider + '</span>';
+                    }
+                },
+                { "mDataProp": "month_string", "bVisible": true },
+                { "mDataProp": "Batch" },
+                { "mDataProp": "deliveryCount" },
+                { "mDataProp": "claimscount" },
+                { "mDataProp": "totalAmount" },
+                { "mDataProp": "totalProccessed" },
+                { "mDataProp": "difference" },
+                { "mDataProp": "CapturedBy" },
+                { "mDataProp": "DateSubmitedForVetting" },
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/claims/expandclaim?Id=' + row.Id + '" class="btn bg-navy btn-flat btn-xs"><i class="fa fa-expand" aria-hidden="true"></i> Expand Batch</a> <a href="/ClaimsPage/SubmitClaimReview?Id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link"> <i class="fa fa-check-square-o" aria-hidden="true"> Submit for Review </i></a>' + '<button data-id="' + row.Id + '"  class="btn btn-info btn-flat btn-xs recapturebtn"> <i class="fa fa-undo" aria-hidden="true"> Re-Capture </i></button>';
+                    }
+                }
+
+
+
+
+
+            ]
+
+
+
+
+        });
+        //$('#datepicker').datepicker({
+        //    autoclose: true
+        //});
+        //$('#datepicker2').datepicker({
+        //    autoclose: true
+        //});
+
+        $('#scr_button').on('click', function (e) {
+            refreshTable();
+        });
+        function refreshTable() {
+            $('#incomingclaimlist').DataTable().ajax.reload();
+        }
+    });
+
+    $("#incomingclaimlist").delegate(".recapturebtn", "click", function (e) {
+
+
+
+
+        swal({
+            title: "Are you sure?",
+            text: "You are about to return this bill back to the capturer.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.replace("../Claim/RejectToCapture?id=" + $(e.currentTarget).data("id"));
+                } else {
+                    swal("You changed your mind!");
+                }
+            });
+
+        //refreshTable();
+    });
+
+
+</script>
+

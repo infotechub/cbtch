@@ -1,0 +1,32 @@
+﻿@using System.Linq
+@using System.Web.Mvc.Html
+@model MrCMS.Web.Apps.Faqs.Pages.ShowFaqs
+@if (Model.Faqs.Any())
+{
+    <table class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th>Questions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Faqs)
+            {
+                <tr>
+                    <td>
+                        @item.Question
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @Html.ActionLink("Edit", "Edit", "Faq", new { id = item.Id }, new { @class = "btn btn-default btn-mini", data_toggle = "fb-modal" })
+                                @Html.ActionLink("Delete", "Delete", "Faq", new { id = item.Id }, new { @class = "btn btn-mini btn-danger", data_toggle = "fb-modal" })
+                            </div>
+                        </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a href="@Url.Action("Add", "Faq", new { id = Model.Id })" class="btn btn-success" data-toggle="fb-modal">Add Item</a>

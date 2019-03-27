@@ -1,0 +1,591 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.EnrolleeListPage
+@{
+    ViewBag.Title = "Enrollee List";
+}
+<div class="row">
+
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen" style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>View all enrollees,including those that have been expunged.Use the search boxes to streamline the result.</p>
+        </div>
+        <div class="box box-info" style="overflow:hidden">
+            <div class="box-header with-border">
+                <h3 class="box-title">Search Enrollees</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <input type="text" placeholder="Policy Number" class="form-control" id="src_policynumber">
+                    </div>
+                    <div class="col-xs-8">
+                        <input type="text" placeholder="Name Search" class="form-control" id="scr_othername">
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-3">
+                        <input type="text" placeholder="Mobile Number" class="form-control" id="scr_mobilenumber">
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownList("scr_provider", new SelectList(ViewBag.providerlist, "Id", "Name"), new { @class = "form-control" })
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownList("scr_company", new SelectList(ViewBag.Companylist, "Id", "Name"), new { @class = "form-control", @onchange = "SelectChangeIT(this)" })
+                    </div>
+
+                    <div class="col-xs-3">
+                        @Html.DropDownList("CompanySubsidiaryStaff", new SelectList(ViewBag.sublist, "Id", "Name"), new { @class = "form-control", @id = "CompanySubsidiaryStaff" })
+
+
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+
+
+                    <div class="col-xs-2">
+                        @Html.CheckBox("scr_useDate", false) <b>Use Date Filter</b>
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker", null, new { @class = "form-control", @placeholder = "From Date", @id = "datepicker" })
+
+
+                    </div>
+                    <div class="col-xs-5">
+
+                        @Html.TextBox("datepicker2", null, new { @class = "form-control", @placeholder = "To Date", @id = "datepicker2" })
+
+
+                    </div>
+
+
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-xs-3">
+                        <span>Enrollee Status : </span>
+                        <select id="scr_expungetype">
+                            <option value="0">All</option>
+                            <option value="1">Not Expunged</option>
+                            <option value="2">Expunged</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <span>Enrollee Type : </span>
+                        <select id="scr_PrincipalType">
+                            <option value="0">All</option>
+                            <option value="1">Principal Only</option>
+                            <option value="2">Dependant Only</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <span>Other Filter : </span>
+                        <select id="scr_otherFilter">
+                            <option value="0">All</option>
+                            <option value="1">Female Only</option>
+                            <option value="2">Male Only</option>
+                            <option value="3">With Mobile Number Only</option>
+                            <option value="4">Without Mobile Number only</option>
+                            <option value="5">With Email Address Only</option>
+                            <option value="6">Without Email Address Only</option>
+                            <option value="7">Above Age Limit</option>
+                            <option value="8">Has Birthday Today</option>
+                            <option value="9">ID Card Not Printed</option>
+                            <option value="10">ID Printed</option>
+                        </select>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <span>Added By User : </span>
+                        @Html.DropDownList("scr_users", new SelectList(ViewBag.userlist, "Id", "Name"))
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span>Region : </span>
+                        @Html.DropDownList("scr_region", new SelectList(ViewBag.regions, "Id", "Name"))
+
+                    </div>
+
+
+                    <div class="col-xs-3">
+                        <span>States : </span>
+                        @Html.DropDownList("states", new SelectList(ViewBag.States, "Id", "Name"))
+
+                    </div>
+
+                    <div class="col-xs-3">
+                        <span>Plan : </span>
+                        @Html.DropDownList("planstype", new SelectList(ViewBag.planlist, "Id", "Name"))
+                       
+                    </div>
+                    <div class="col-xs-3">
+                        <span>Plan Mode :</span>
+
+                        <select id="plansmode">
+                            <option value="-1">All</option>
+                            <option value="0">Individual Only</option>
+                            <option value="1">Family Only</option>
+
+                        </select>
+                    </div>
+                </div>
+
+               
+                </div>
+            </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button class="btn btn-default" type="button">Reset</button>
+                <button class="btn btn-info pull-right" type="button" id="scr_button">Search</button>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Enrollee List</h3>
+          
+               
+                <div class="box-tools">
+                    @using (Html.BeginForm("DoExportIdcard", "EnrolleePage", FormMethod.Post))
+                    {
+                    
+                  
+                        @Html.Hidden("hidden_selectedIDs");
+                      <div  class="pull-left" >
+                          <span>Show: </span>
+                          <select id="iDisplayLength2">
+                              <option value="30" selected>30</option>
+                              <option value="50">50</option>
+                              <option value="100">100</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+
+
+                          </select>
+                      </div>
+                      
+                        <input type="submit" class="btn btn-sm btn-info pull-right" style="margin-left:8px;" value="Export For ID Card For Printing" onclick="submitforIDPRint();" />
+                
+
+                     
+                    }
+
+                </div>
+            
+
+                <!--   <a href="@Url.Action("ExportTable", "EnrolleePage",  new { id = -1})" class="btn btn-sm btn-success pull-right"><i class="fa fa-file-excel-o " style="color: white"> Export List </i> </a>-->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="overflow:scroll">
+               
+                <div>
+
+                    
+                    <span class="alert-danger pull-right hidden" id="TableLoadError"> <i class="fa fa-exclamation-triangle"></i> There was a problem loading the page,this could be due to network issues kindly click on <a href="javascript:refreshTable();" style="color: white">Reload</a> to refresh page.</span>
+                    <table id="enrolleelist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+
+                        <thead>
+                            <tr>
+                                <th>
+
+                                    <input type="checkbox" id="chk_selectall" name="hk_selectall">
+                                </th>
+                                <th>Id</th>
+                                <th>Passport</th>
+                                <th>Name</th>
+                                <th>Policy Number</th>
+                                <th>DOB</th>
+                                <th>Sex</th>
+                                <th>Occupation</th>
+                                <th>Marital Status</th>
+                                <th>State</th>
+                                <th>Address</th>
+                                <th>Company</th>
+                                <th>Subsidiary</th>
+                                <th>Health Plan</th>
+                                <th>Subscription Status</th>
+                                <th>Mobile Number</th>
+                                <th>Hospital</th>
+                                <th>StaffProfileID</th>
+                                <th>Subscription ExpirationDate</th>
+                                <th>Id Card Status</th>
+                                <th>Email</th>
+                                <th>Date Created</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody></tbody>
+
+                    </table>
+
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="overlay" id="enrolleeloadingdisplay">
+                <i class="fa fa-refresh fa-spin"></i>
+
+
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/dataTables.buttons.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.flash.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/jszip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/pdfmake.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/vfs_fonts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.html5.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Apps/Core/Content/Scripts/buttons.print.min.js")" type="text/javascript"></script>
+<script>
+    $(function () {
+
+        $("#scr_region").change(function () {
+            $("#states").html('');
+            $("#states").append($("<option />").val(-1).text("Loading..."));
+            var jqxhr = $.getJSON("../Enrollee/GetStateInZone?id=" + $("#scr_region").val(), function (data) {
+                $("#states").html('');
+                    $("#states").append($("<option />").val(-1).text("All states"));
+                $.each(data, function () {
+                    $("#states").append($("<option />").val(this.Id).text(this.Name));
+                });
+                })
+                .done(function () {
+                    console.log("second success");
+                   
+                })
+                .fail(function () {
+                    console.log("error");
+                })
+                .always(function () {
+                    console.log("complete");
+                });
+        });
+
+        $.ajaxSetup({
+            cache: false
+        });
+
+        bodytable$ = $('#enrolleelist').dataTable({
+            "bLengthChange": true,
+            "iDisplayLength": 30,
+            "bProcessing": true,
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bServerSide": true,
+
+            "sAjaxSource": '../Enrollee/GetEnrolleesJson',
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+               
+                aoData.push({ "name": "plansmode", "value": $('#plansmode').val() }, { "name": "planstype", "value": $('#planstype').val() }, { "name": "CompanySubsidiary", "value": $('#CompanySubsidiaryStaff').val() }, { "name": "src_policynumber", "value": $('#src_policynumber').val() }, { "name": "scr_othername", "value": $('#scr_othername').val() }, { "name": "scr_mobilenumber", "value": $('#scr_mobilenumber').val() }, { "name": "scr_provider", "value": $('#scr_provider').val() }, { "name": "scr_company", "value": $('#scr_company').val() }, { "name": "scr_useDate", "value": $('#scr_useDate').is(':checked') }, { "name": "datepicker", "value": $('#datepicker').val() }, { "name": "datepicker2", "value": $('#datepicker2').val() }, { "name": "scr_expungetype", "value": $('#scr_expungetype').val() }, { "name": "scr_users", "value": $('#scr_users').val() }, { "name": "scr_PrincipalType", "value": $('#scr_PrincipalType').val() }, { "name": "scr_otherFilter", "value": $('#scr_otherFilter').val() }, { "name": "iDisplayLength2", "value": $('#iDisplayLength2').val() }, { "name": "scr_states", "value": $('#states').val() }, { "name": "scr_region", "value": $('#scr_region').val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    beforeSend: function (xhr) {
+
+                        $("#enrolleeloadingdisplay").removeClass("hidden");
+                        $("#TableLoadError").addClass("hidden");
+
+                    },
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+                        $("#enrolleeloadingdisplay").addClass("hidden");
+                        (function blink() {
+                            $('.blink_me').fadeOut(500).fadeIn(500, blink);
+                        })();
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            $("#enrolleeloadingdisplay").addClass("hidden");
+                            $("#TableLoadError").removeClass("hidden");
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 3, 4, 5, 13, 14]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                  {
+                      'searchable': false,
+                      'orderable': false,
+                      render: function (data, type, row) {
+
+                          return '<input type="checkbox" class="mdl-checkbox__input chkbox_datatable"  >';
+
+                      },
+                  },
+                 { "mDataProp": "Id", "bVisible": true, sClass: "row_id" },
+                  {
+                      "mDataProp": "Img", "bVisible": false,
+
+
+
+                      "mRender": function (data, type, row) {
+                          var resp = '<img src="data:image/png;base64,' + row.Img + '" style="max-height: 140px; max-width:140px;" class="img-rounded" >';
+                          return resp;
+                      }
+                  },
+                { "mDataProp": "Name" },
+             {
+                 "mDataProp": "PolicyNum", "mRender": function (data, type, row) {
+
+                     if (row.IsDuplicate) {
+                         if (row.IsChild) {
+                             var resp = "";
+
+                              resp='<a href="enrollee-details?Mode=2&id=' +
+                                 row.StaffProfileId +
+                                 '&enrolleeID=' +
+                                 row.Id +
+                                 '" ><span class="badge bg-orange" title="This enrollee has duplicate policy number.">' +
+                                 row.PolicyNum +
+                                 '</span></a>';
+                             return resp;
+                         } else {
+                             var resp2 = '<a href="enrollee-details?Mode=1&id=' +
+                                 row.StaffProfileId +
+                                 '&enrolleeID=' +
+                                 row.Id +
+                                 '" ><span class="badge bg-orange " title="This enrollee has duplicate policy number.">' +
+                                 row.PolicyNum +
+                                 '</span></a>';
+                             return resp2;
+
+                         }
+                     } else {
+                         if (row.IsChild) {
+                             var resp = "";
+                             if (row.AboveLimit) {
+                                 resp = '<a href="enrollee-details?Mode=2&id=' + row.StaffProfileId + '&enrolleeID=' + row.Id + '" ><span class="badge bg-black blink_me">' + row.PolicyNum + '</span></a>';
+                             } else {
+                                 resp = '<a href="enrollee-details?Mode=2&id=' + row.StaffProfileId + '&enrolleeID=' + row.Id + '" ><span class="badge bg-black">' + row.PolicyNum + '</span></a>';
+                             }
+
+                             return resp;
+                         } else {
+                             var resp2 ="";
+                             if (row.AboveLimit) {
+                                 resp2 = '<a href="enrollee-details?Mode=1&id=' + row.StaffProfileId + '&enrolleeID=' + row.Id + '" ><span class="badge bg-green blink_me">' + row.PolicyNum + '</span></a>';
+                             } else {
+                                 resp2 = '<a href="enrollee-details?Mode=1&id=' + row.StaffProfileId + '&enrolleeID=' + row.Id + '" ><span class="badge bg-green">' + row.PolicyNum + '</span></a>';
+                             }
+
+                             return resp2;
+
+                         }
+                     }
+
+
+                 }
+             },
+                { "mDataProp": "DoB" },
+                 { "mDataProp": "Sex" },
+                     { "mDataProp": "Occupation" },
+                {
+                    "mDataProp": "Maritalstatus",
+                    "width": "700px"
+                },
+                      { "mDataProp": "State" },
+                 { "mDataProp": "Address" },
+
+
+                    { "mDataProp": "Company" },
+                   { "mDataProp": "Subsidiary" },
+
+                   { "mDataProp": "HealthPlan" },
+                    {
+                        "mDataProp": "HasSubscription", "mRender": function (data, type, row) {
+                            var response = "";
+                            if (data == true) {
+                                response = '<span class="label label-success"> Active</span>';
+                            } else {
+                                response = '<span class="label label-danger"> Inactive</span>';
+                            }
+
+                            return response;
+                        }
+                    },
+                {
+                    "mDataProp": "Mobile", "mRender": function (data, type, row) {
+
+
+                        var resp = '<a href="../Enrollee/GenerateVerificationCode/?id=' + row.Id + '" class="modal-link"><span class="badge bg-blue"> <i class="fa fa-mobile"></i>  ' + row.Mobile + '</span></a>';
+                        return resp;
+
+
+
+                    }
+                },
+                 { "mDataProp": "Provider" },
+                   { "mDataProp": "StaffProfileId", "bVisible": false },
+
+                  { "mDataProp": "SubscriptionExpirationDate", "bVisible": true },
+
+                {
+                    "mDataProp": "IdPrinted", "mRender": function (data, type, row) {
+                        var response = "";
+                        if (data == true) {
+                            response = '<span class="label label-success">Printed</span>';
+                        } else {
+                            response = '<span class="label label-danger">Not-Printed</span>';
+                        }
+
+                        return response;
+                    }
+                },
+
+                    { "mDataProp": "Email", "bVisible": true },
+
+                       { "mDataProp": "DateCreated", "bVisible": true },
+
+            ], "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                //if (aData.IsChild && ! aData.IsExpunged) {
+
+                //    $('td', nRow).css('background-color', 'khaki');
+                //    $('td', nRow).css('color', 'black');
+                //}
+                if (aData.IsExpunged) {
+                    $('td', nRow).css('background-color', 'Red');
+                    $('td', nRow).css('color', 'White');
+                }
+                if (aData.isrenewal) {
+                    $('td', nRow).css('background-color', 'orange');
+                    $('td', nRow).css('color', 'White');
+                }
+
+            },
+
+
+
+        });
+
+        $('#datepicker').datepicker({
+            autoclose: true
+        });
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+    });
+    $("#chk_selectall").change(function () {
+
+        if (this.checked) {
+            //Do stuff
+            //$('.chkbox_datatable')
+            bodytable$.$('tr').each(function (index, rowhtml) {
+                $('.chkbox_datatable').prop('checked', true);
+
+            });
+        } else {
+
+
+            // $('.chkbox_datatable').removeAttr('checked');
+            bodytable$.$('tr').each(function (index, rowhtml) {
+                $('.chkbox_datatable').prop('checked', false);
+
+            });
+
+
+        }
+    });
+
+    function submitforIDPRint() {
+        var checkIds = [];
+        bodytable$.$('tr').each(function (index, rowhtml) {
+            var checked = $('input[type="checkbox"]:checked', rowhtml).length;
+            if (checked == 1) {
+                checkIds.push($('.row_id', rowhtml).text());
+            }
+        });
+        $('#hidden_selectedIDs').val(checkIds);
+        //alert($('#hidden_selectedIDs').val());
+
+    }
+    $('#scr_button').on('click', function (e) {
+        refreshTable();
+    });
+    function refreshTable() {
+        $('#enrolleelist').DataTable().ajax.reload();
+    }
+    $('#iDisplayLength2').on('change', function (e) {
+       
+       
+        bodytable$.fnSettings()._iDisplayLength = $('#iDisplayLength2').val(); //variable from your question
+        bodytable$.fnDraw(); //redraws the table
+        //alert(bodytable$.fnSettings()._iDisplayLength);
+    });
+    
+    function SelectChangeIT(e) {
+        $.getJSON("../Company/GetSubsidiary/" + $(e).val(), function (data) {
+
+            $("#CompanySubsidiaryStaff").empty();
+            $("#CompanySubsidiaryStaff").append($("<option  />").val("-1").text("All Subsidiary"));
+            //alert('removed');
+            $.each(data, function () {
+                $("#CompanySubsidiaryStaff").append($("<option  />").val(this.Id).text(this.Subsidaryname));
+            });
+
+        });
+    }
+</script>
+
+
+

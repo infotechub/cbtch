@@ -1,0 +1,122 @@
+﻿@model MrCMS.Web.Apps.Core.Entities.Claim
+
+@{
+    ViewBag.Title = "Submit Claim Batch";
+}
+@using (Html.BeginForm("ExportMemo", "ClaimsPage", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+    @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Export Memo</h4>
+ </div>
+<div class="modal-body">
+    <div class="alert alert-info alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+        You are about to export memo.
+    </div>
+   
+        <!-- /.box-header -->
+        <!-- form start -->
+      
+
+    <div class="row">
+
+
+        <div class="form-group" >
+
+            <label class="col-sm-2 control-label" for="year">Batch</label>
+            <div class="col-sm-8">
+                @Html.DropDownList("Batch", new SelectList(ViewBag.BatchList, "Id", "Name"), new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label" for="Provider_list">Provider</label>
+            <div class="col-sm-8">
+                @Html.DropDownList("Provider_list", new SelectList(ViewBag.PrvidersList, "Id", "Name"), new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label" for="Month_list">Month</label>
+            <div class="col-sm-8">
+                <select id='Month_list' class="form-control" name="Month_list">
+                    <option selected value='-1'>All Reviewed Claim</option>
+                    <option value='1'>Janaury</option>
+                    <option value='2'>February</option>
+                    <option value='3'>March</option>
+                    <option value='4'>April</option>
+                    <option value='5'>May</option>
+                    <option value='6'>June</option>
+                    <option value='7'>July</option>
+                    <option value='8'>August</option>
+                    <option value='9'>September</option>
+                    <option value='10'>October</option>
+                    <option value='11'>November</option>
+                    <option value='12'>December</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label" for="year">Year</label>
+            <div class="col-sm-8">
+                @Html.DropDownList("Year", new SelectList(ViewBag.YearList, "Id", "Name"), new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label" for="year">Zone</label>
+            <div class="col-sm-8">
+                @Html.DropDownList("Zone", new SelectList(ViewBag.ZoneList, "Id", "Name"), new { @class = "form-control chosen-select", @multiple="multiple"})
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+<div class="modal-footer">
+  
+            <input type="hidden" id="mode" name="mode" value="@ViewBag.Mode" />
+                <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-success" type="submit" id="btnSave">Proceed </button>
+    
+</div>
+        }
+
+
+<script>
+
+    $(function () {
+        $('#modal-container').on('shown.bs.modal', function () {
+            
+            $(".chosen-select").chosen({
+                no_results_text: "Not Found",
+                width: '100%',
+                max_shown_results: 12,
+               
+            });
+
+           
+        });
+
+        
+
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+
+
+    
+    
+</script>

@@ -1,0 +1,336 @@
+﻿@model MrCMS.Web.Apps.Core.Models.Provider.ProviderVm
+
+@{
+    ViewBag.Title = "Provider Details";
+}
+@using (Html.BeginForm("Edit", "ProviderPage", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">Edit Provider</h4>
+    </div>
+    <div class="modal-body">
+        <div class="callout-warning callout  ">
+            <h4>EDIT  @Html.DisplayFor(x => x.Name) .</h4>
+            <p>Has a total of @Html.DisplayFor(x => x.Numberofenrollees) enrollee.</p>
+        </div>
+
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="false">Details</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="true">Services & Opening Hours</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane  active" id="tab_1">
+                    <table class="table table-condensed table-striped">
+                        <tbody>
+                            <tr>
+
+                                <th>Field</th>
+                                <th>Value</th>
+
+                            </tr>
+                            <tr>
+                                @Html.HiddenFor(x => x.Id)
+                                <td>Name</td>
+                                <td>
+                                    @Html.TextBox("providername", Model.Name, new { @class = "form-control", @placeholder = "Provider name", @id = "providername", @title = "This is the name of the provider." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Code</td>
+                                <td>
+                                    @Html.TextBox("providercode", Model.Code, new { @class = "form-control", @placeholder = "Provider code", @id = "providercode", @title = "This is the provider code,leave it blank if there's no code for this provider the system will generate a code." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Subcode</td>
+                                <td>
+                                    @Html.TextBox("providersubcode", Model.SubCode, new { @class = "form-control", @placeholder = "Provider Subcode", @id = "providersubcode", @title = "This is the provider sub code,leave it blank if there's no sub code for this provider , the system will generate a subcode." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>
+                                    @Html.TextBox("provideremail", Model.Email, new { @class = "form-control", @placeholder = "Provider email", @type = "email", @id = "provideremail", @title = "This is the provider email address." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Payment Email</td>
+                                <td>
+                                    @Html.TextBox("PaymentEmail1", Model.paymentemail1, new { @class = "form-control", @placeholder = "Provider email", @type = "email", @id = "provideremail", @title = "This is the provider email address." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Payment Email 2</td>
+                                <td>
+                                    @Html.TextBox("PaymentEmail2", Model.paymentemail2, new { @class = "form-control", @placeholder = "Provider email", @type = "email", @id = "provideremail", @title = "This is the provider email address." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td>@Html.TextBox("providerphone1", Model.Phone, new { @class = "form-control", @placeholder = "Provider Phone", @id = "providerphone1", @title = "This is the provider phone number." })</td>
+                            </tr>
+                            <tr>
+                                <td>Mobile</td>
+                                <td>
+                                    @Html.TextBox("providerphone2", Model.Phone2, new { @class = "form-control", @placeholder = "Provider Mobile", @id = "providerphone2", @title = "This is the provider mobile number." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Website</td>
+                                <td>@Html.TextBox("providerwebsite", Model.Website, new { @class = "form-control", @placeholder = "Provider Website", @id = "providerwebsite", @title = "This is the provider website." })</td>
+                            </tr>
+
+                            <tr>
+                                <td>State</td>
+
+                                <td>@Html.DropDownList("providerState", (SelectList)ViewBag.StateList, new { @class = "form-control", @id = "providerstate" })</td>
+                            </tr>
+                            <tr>
+                                <td>LGA </td>
+                                <td>@Html.DropDownList("providerlga", new SelectList(ViewBag.LGAList, "Id", "Name", Model.Lgaid), new { @class = "form-control", @id = "providerlga" })</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td>@Html.TextBox("provideraddress", Model.Address, new { @class = "form-control", @placeholder = "Provider Address", @id = "provideraddress", @title = "This is the provider physical address." })</td>
+                            </tr>
+                            <tr>
+                                <td>Area</td>
+                                <td>@Html.TextBox("providerArea", Model.Area, new { @class = "form-control", @placeholder = "Area", @id = "providerArea" })</td>
+                            </tr>
+                            <tr>
+                                <td>Services</td>
+                                <td>
+                                    @Html.ListBox("servicelist", ViewBag.servicelist2 as MultiSelectList, new { @class = "form-control chzn-select", data_placeholder = "Choose  Services..." })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Plans</td>
+                                <td>
+                                    @Html.ListBox("planlist", ViewBag.planlist2 as MultiSelectList,
+                                  new { @class = "form-control chzn-select", data_placeholder = "Choose  Plans..." })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Tariffs</td>
+                                <td>
+                                    @Html.ListBox("tarifflist", ViewBag.tarifflist2 as MultiSelectList,
+                                  new { @class = "form-control chzn-select", data_placeholder = "Choose  Tariff..." })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Consessions</td>
+                                <td>
+                                    @Html.ListBox("consessions2", new MultiSelectList(ViewBag.companylistandselect, "Id", "Name",ViewBag.selectedconsession),
+                                  new { @class = "form-control chzn-select", data_placeholder = "Consessions" })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Provider Category</td>
+                                <td>@Html.DropDownList("providercategory", (SelectList)ViewBag.Pcategory, new { @class = "form-control", @id = "providercategory" })</td>
+
+                            </tr>
+                            <tr>
+                                <td>Provider Status</td>
+                                <td>@Html.CheckBox("providerStatus", Model.Status)</td>
+
+                            </tr>
+
+
+                            <tr>
+                                <td>Bank Account Details</td>
+                                <td>
+
+                                    <table class="table table-condensed table-striped">
+                                        <tr>
+                                            <td>Provider Bank Name</td>
+                                            <td>
+                                                @Html.DropDownList("providerbankname", (SelectList)ViewBag.BankList, new { @class = "form-control", @id = "providerbank" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Account Name</td>
+                                            <td>@Html.TextBox("providerbankaccname", Model.Provideraccount.Bankaccountname, new { @class = "form-control", @placeholder = "Provider bank account Name", @id = "providerbankaccname", @title = "This is the provider bank account name." })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Account Number</td>
+                                            <td>
+                                                @Html.TextBox("providerbankaccnum", Model.Provideraccount.Bankaccountnum, new { @class = "form-control", @placeholder = "Provider Bank Account Number", @id = "providerbankaccnum", @title = "This is the provider bank account number." })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Branch</td>
+                                            <td>
+                                                @Html.TextBox("providerbankbranch", Model.Provideraccount.Bankbranch, new { @class = "form-control", @placeholder = "Provider Bank Branch", @id = "providerbankbranch", @title = "This is the provider bank branch." })
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Bank Account Details (Alternative)</td>
+                                <td>
+
+                                    <table class="table table-condensed table-striped">
+                                        <tr>
+                                            <td>Provider Bank Name</td>
+                                            <td>
+                                                @Html.DropDownList("providerbankname2", (SelectList)ViewBag.BankList2, new { @class = "form-control", @id = "providerbankname2" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Account Name</td>
+                                            <td>@Html.TextBox("providerbankaccname2", Model.Provideraccount2.Bankaccountname, new { @class = "form-control", @placeholder = "Provider bank account Name", @id = "providerbankaccname2", @title = "This is the provider bank account name." })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Account Number</td>
+                                            <td>
+                                                @Html.TextBox("providerbankaccnum2", Model.Provideraccount2.Bankaccountnum, new { @class = "form-control", @placeholder = "Provider Bank Account Number", @id = "providerbankaccnum2", @title = "This is the provider bank account number." })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bank Branch</td>
+                                            <td>
+                                                @Html.TextBox("providerbankbranch2", Model.Provideraccount2.Bankbranch, new { @class = "form-control", @placeholder = "Provider Bank Branch", @id = "providerbankbranch2", @title = "This is the provider bank branch." })
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.tab-pane -->
+                <div class="tab-pane" id="tab_2">
+
+
+                    <table class="table table-responsive">
+                        <tr>
+                            <td><input type="text" class="form-control" id="nametxt" name="nametxt" placeholder="Name" /></td>
+                            <td><input type="text" class="form-control" id="openingjourstxt" name="openingjourstxt" placeholder="Opening Days / Hours" /></td>
+                            <td><div class="btn btn-xs btn-success" id="addbtnservice">Add</div></td>
+                        </tr>
+
+
+                    </table>
+
+                    <table class="table table-responsive">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Open Hours</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.tab-pane -->
+                <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+        </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+
+        <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="btnSave">Save</button>
+
+    </div>
+
+}
+
+<script>
+
+    $(function () {
+       
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+     
+
+        @*$('#modal-container').on('shown.bs.modal', function () {
+            alert("shown");
+          //$('#addbtnservice').off();
+        $('#addbtnservice').click(function () {
+            if ($('#nametxt').val() == '') {
+                toastr["error"]("Enter Name.", "Input Error");
+                return false;
+            }
+            if ($('#openingjourstxt').val() == '') {
+                toastr["error"]("Enter Opening Hours.", "Input Error");
+                return false;
+            }
+
+
+            var jqxhr = $.getJSON("../Provider/AddProviderService?providerid=@Model.Id" + "&id= @Model.Id" + "&name=" + $('#nametxt').val() + "&openinghours=" + $('#openingjourstxt').val(), function () {
+                console.log("success");
+            })
+            .done(function () {
+                console.log("second success");
+            })
+            .fail(function () {
+                console.log("error");
+            })
+            .always(function () {
+                console.log("complete");
+            });
+        });
+    
+        });*@
+        //$('#providerstate').on('change', function () {
+
+
+
+        //    $.getJSON("GetLga/" + $(this).val(), function (data) {
+
+        //        $("#providerlga").empty();
+
+        //        $.each(data, function () {
+        //            $("#providerlga").append($("<option />").val(this.Id).text(this.Name));
+        //        });
+
+        //    });
+        //});
+        $('#modal-container').on('shown.bs.modal', function () {
+            //alert(@Model.Lgaid);
+        });
+
+        $("#modal-container").delegate("#providerstate", "change", function () {
+
+
+            $.getJSON("GetLga/" + $(this).val(), function (data) {
+
+                $("#providerlga").empty();
+
+                $.each(data, function () {
+                    $("#providerlga").append($("<option />").val(this.Id).text(this.Name));
+                });
+
+            });
+        });
+    });
+</script>
+<script>
+
+
+</script>
+

@@ -1,0 +1,10 @@
+/*{
+  "DatabaseProviderType": "MrCMS.DbConfiguration.SqlServer2012Provider",
+  "ConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=DB_A0009D_NovoHub;Integrated Security=True;Persist Security Info=True;MultipleActiveResultSets=True"
+}*/
+/*{
+  "DatabaseProviderType": "MrCMS.DbConfiguration.SqlServer2012Provider",
+  "ConnectionString": "Data Source=197.149.64.102;Initial Catalog=DB_A0009D_NovoHub;Integrated Security=False;Persist Security Info=True;User ID=SA;Password=D0r0thyJnn@m@n1$$$;MultipleActiveResultSets=True"
+}*/
+
+{"DatabaseProviderType":"MrCMS.DbConfiguration.SqlServerAzureProvider","ConnectionString":"Data Source=novoerpdb.database.windows.net;Initial Catalog=DB_A0009D_NovoHub;Integrated Security=False;Persist Security Info=False;User ID=novoadmin;Password=N0v0he@lth1234*;MultipleActiveResultSets=True"}

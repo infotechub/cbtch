@@ -1,0 +1,12 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Pages
+
+
+<form method="get" class="sidebar-form" role="search" action="@(UniquePageHelper.GetUrl<SearchPage>())">
+            <div class="input-group">
+              <input type="text"  class="form-control" name="term" placeholder="Enter your keyword"/>
+              <span class="input-group-btn">
+                <button type='button' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </form>

@@ -1,0 +1,150 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.Enrollee
+@{
+    ViewBag.Title = "Expunge Dependent";
+}
+  @helper DateShort(DateTime? input)
+{
+     var resp = Convert.ToDateTime(input).ToString("MM/dd/yyyy");
+
+@resp;
+ }
+
+@using (Html.BeginForm("ExpungeDependent","EnrolleePage",FormMethod.Post,new {enctype ="multipart/form-data",id="Dependentform" }))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Expunge Dependent</h4>
+ </div>
+<div class="modal-body">
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+       You are about to expunge the dependent,you cannot undo this action.
+    </div>
+    <table class="table table-condensed ">
+        <tbody>
+
+            <tr>
+
+                <td colspan="2">
+                    <div class="form-group" id="photo_grpD">
+                        <img src="data:image/png;base64,@ViewBag.enrolleeimg" style="max-height: 140px; max-width: 140px;"
+                            class="img-rounded" id="photo_imgED">
+                   
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Relationship with principal enrollee</td>
+                <td> @Html.Label((string)ViewBag.relationship)
+              
+                
+                
+                </td>
+
+
+            </tr>
+            <tr>
+                @Html.Hidden("dependantID",Model.Id)
+                                            
+            </tr>
+            <tr>
+                <td>Policy Number</td>
+                <td>@Html.DisplayFor(x=>x.Policynumber)</td>
+            </tr>
+            <tr>
+                <td>Surname</td>
+
+                <td>
+                    @Html.DisplayFor( x=>x.Surname)
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>Other Names</td>
+                <td> @Html.DisplayFor( x=>x.Othernames)
+                </td>
+            </tr>
+            <tr>
+                <td>Expunge Note</td>
+                <td> @Html.TextArea("ExpungeNote")</td>
+            </tr>
+          
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave">Save </button>
+</div>
+
+}
+
+<script>
+
+    $(function () {
+
+        //Do validation for yourself.
+        $('#btnSave').click(function (e) {
+
+            $('#modal-container').modal('hide');
+        });
+        //Date picker
+        $('#datepicker2').datepicker({
+            autoclose: true
+        });
+
+        $("#photoInputFileED").val('');
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo_imgED').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        //check if the photoinputfile event change
+        $("#photoInputFileED").change(function () {
+
+
+            //this.files[0].size gets the size of your file.
+            var size = (this.files[0].size / 1024);
+            if (size > 50) {
+                //file too large
+
+                alert('Passport is too large, size cannot be greater than 50kb');
+                $("#photoInputFileED").val('');
+                $('#photo_imgED').attr('src', '/../Apps/Core/Content/Images/placeholder-photo.png');
+            } else {
+                readURL(this);
+            }
+            //   
+
+            //    $("#errormsg").html('Avatar cannot be greater than 20kb,use a smaller image file.');
+            //    $("#errortab").removeClass("hidden");
+
+            //    $('#photo_img').attr('src', '~/Content/dist/img/no_pic.png');
+            //    return;
+            //}
+            //else remove error
+            //$("#errormsg").html('');
+            //$("#errortab").addClass("hidden");
+
+
+        });
+
+
+    });
+</script>
+
+
+

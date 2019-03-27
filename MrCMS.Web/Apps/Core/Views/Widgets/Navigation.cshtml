@@ -1,0 +1,44 @@
+﻿@using System
+@using System.Linq
+@using MrCMS.Website
+@model MrCMS.Web.Apps.Core.Models.Navigation.NavigationList
+@{
+    var currentPage = CurrentRequestData.CurrentPage;
+    var activePages = currentPage.ActivePages.Select(webpage => "/" + webpage.LiveUrlSegment).ToList();
+}
+  @foreach (var page in Model)
+{
+
+if (@page.Children != null && @page.Children.Any() )
+{
+
+    <li class="treeview @(activePages.Contains(page.Url.ToString(), StringComparer.OrdinalIgnoreCase) ? "active" : "") ">
+        <a href="@page.Url">
+            <i class="fa @page.FaIcon"></i> <span>@page.Text</span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+              @foreach (var record in page.Children)
+              {
+  <li class="@(activePages.Contains(record.Url.ToString(), StringComparer.OrdinalIgnoreCase) ? "active" : "")"><a href="@record.Url"><i class="fa fa-circle-o"></i>@record.Text </a></li>
+              }
+          
+        </ul>
+    </li>
+}
+else
+{
+<li class="treeview">
+           
+<a href="@page.Url">
+    <i class="fa @page.FaIcon "></i> <span>@page.Text</span>
+    <i class="fa fa-angle-left pull-right"></i>
+</a>
+  </li>
+}
+
+}
+
+
+
+

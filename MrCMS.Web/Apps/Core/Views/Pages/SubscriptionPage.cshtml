@@ -1,0 +1,444 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.SubscriptionPage
+@{
+    ViewBag.Title = "Manage Subscription";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px">
+            <h4>Tip!</h4>
+            <p>Manage Company Subscription , Add,edit, start and terminate subscription. View subscription summary ,the subscription list contains all subscription including in-active subscriptions.  </p>
+        </div>
+
+ <a href="@Url.Action("AddSubscription", "CompanyPage",  new { id = 0})" class="btn btn-success btn-box-tool modal-link"><i class="fa fa-plus" style="color: white">Add Subscription </i> </a>
+
+        <div class="box">
+            <div class="box-header">
+                
+                <h3 class="box-title">Subscription Summary </h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-6">
+
+                    <table class="table table-responsive " id="summarytable">
+                        <tbody>
+                            <tr>
+
+                                <th>Field</th>
+                                <th>Value</th>
+
+                            </tr>
+
+                            <tr>
+                                <td>Total No of Companies</td>
+                                <td><span class="badge bg-yellow" id="companycount">--</span></td>
+                            </tr>
+                            <tr>
+                                <td>No of Companies with active subscription</td>
+                                <td><span class="badge bg-green" id="companywithsubcount">--</span></td>
+                            </tr>
+                            <tr>
+                                <td>No of Companies without subscription</td>
+                                <td><span class="badge bg-red" id="companywithnosubcount">--</span></td>
+                            </tr>
+                           
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="col-sm-6">
+                    <h5 class="box-title">Subscription Expiring Soon</h5>
+                    <table class="table table-condensed" id ="ExpiringTable">
+                        <thead>
+                            <th>Id</th>            
+                            <th>Company</th> 
+                        <th>Subsidiary</th> 
+                            <th>Subscription Code</th>
+                            <th>Start Date</th>
+                            <th>Duration</th>
+                            <th>Expiration Date</th>
+                        </thead>
+
+                               
+                            
+                        <tbody>
+                          
+                            
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+
+@{
+    if((bool)ViewBag.ShowPendingSubscription)
+    {
+      <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Pending Subscription List</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table id="pendingsubscriptionTable" class="table  ">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>GroupName</th>
+                                <th>Subscription Code</th>
+                                <th>Company</th>
+                                <th>Subsidiary</th>
+                                <th>Start Date</th>
+                                <th>Duration</th>
+                                <th>Expiration Date</th>
+                                <th>Status</th>
+                                <th>Date Created</th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div>
+            <!-- /.box-body -->
+        </div>  
+
+    }
+
+}
+        
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Subscription List</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-sm-12">
+                    <table id="subscriptionTable" class="table  ">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>GroupName</th>
+                                <th>Subscription Code</th>
+
+                                <th>Company</th>
+                                <th>Subsidiary</th>
+                                <th>Start Date</th>
+                                <th>Duration</th>
+                                <th>Expiration Date</th>
+                                <th>Status</th>
+                                <th>Date Created</th>
+
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+
+                </div>
+
+
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+
+    </div>
+</div>
+
+
+
+@{
+    if((bool)ViewBag.ShowPendingSubscription)
+    {
+        <script type="text/javascript">
+            $(function () {
+            $('#pendingsubscriptionTable').dataTable({
+                "sAjaxSource": '../Company/GetpendingSubscriptionsJson',
+                "bPaginate": true,
+                "order": [[1, 'asc']],
+                "bLengthChange": false,
+                "iDisplayLength": 20,
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "aoColumns": [
+                    { "mDataProp": "Id", "bVisible": false },
+
+                    { "mDataProp": "groupname", "bVisible": false },
+                    { "mDataProp": "code" },
+                    { "mDataProp": "Company" },
+                      { "mDataProp": "subsidiary" },
+
+                    { "mDataProp": "startdate" },
+
+                    { "mDataProp": "duration" },
+                    { "mDataProp": "expirationdate" },
+                    { "mDataProp": "Status" },
+                    { "mDataProp": "created" },
+
+                    {
+                        "mRender": function (data, type, row) {
+                            var resp = '<a href="/Company/SubscriptionDetails?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link"><i class="fa fa-eye"></i></a>';
+                            //if active show the terminate button if not dont show
+                            if (row.Status == "Active") {
+                                resp = resp + ' <a href="/Company/TerminateSubscription?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times">Terminate </i></a> ';
+                            } else if (row.Status == "Default") {
+                                //show delete button.
+
+                                resp = resp + ' <a href="/Company/EditSubscription?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-pencil-square-o"></i></a>  ';
+                                resp = resp + '  <a href="/Company/DeleteSubscription?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times"></i></a> ';
+
+                            }
+
+                            resp = resp + '  <a href="/Company/ApproveSubscription?id=' + row.Id + '" class="btn btn-success btn-flat btn-xs modal-link"><i class="fa fa-thumbs-up"></i> Approve</a>';
+                            resp = resp + '  <a href="/Company/DisapproveSubscription?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-thumbs-down"></i> Disapprove</a>';
+
+                            return resp;
+
+                        }
+                    }
+
+
+
+
+
+                ]
+
+                , "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+
+                    api.column(1, { page: 'current' }).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr style="background-color:beige;font-weight: bold;color:black;"><td colspan="100%">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    if (aData.Status == "Active") {
+
+                        $('td', nRow).css('background-color', 'Green');
+                        $('td', nRow).css('color', 'white');
+                    }
+                    else if (aData.Status == "Default") {
+                        $('td', nRow).css('background-color', 'orange');
+                        $('td', nRow).css('color', 'white');
+                    } else {
+                        $('td', nRow).css('background-color', 'red');
+                        $('td', nRow).css('color', 'white');
+                    }
+
+                },
+
+
+            });
+            });
+        </script>
+
+            }
+
+            }
+
+                <script type="text/javascript">
+                    $(function () {
+        
+
+                        
+                        $('#subscriptionTable').dataTable({
+                            "sAjaxSource": '../Company/GetSubscriptionsJson',
+                            "bPaginate": true,
+                            "order": [[1, 'asc']],
+                            "bLengthChange": false,
+                            "iDisplayLength": 20,
+                            "bFilter": true,
+                            "bSort": true,
+                            "bInfo": true,
+                            "bAutoWidth": false,
+                            "aoColumns": [
+                                { "mDataProp": "Id", "bVisible": false },
+
+                                { "mDataProp": "groupname", "bVisible": false },
+                                { "mDataProp": "code" },
+                                { "mDataProp": "Company" },
+   { "mDataProp": "subsidiary" },
+
+                                { "mDataProp": "startdate" },
+
+                                { "mDataProp": "duration" },
+                                { "mDataProp": "expirationdate" },
+                                { "mDataProp": "Status" },
+                                { "mDataProp": "created" },
+
+                                {
+                                    "mRender": function (data, type, row) {
+                                        var resp = '<a href="/Company/SubscriptionDetails?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link"><i class="fa fa-eye"></i></a>';
+//if active show the terminate button if not dont show
+                                        if (row.Status == "Active") {
+                                            resp = resp + ' <a href="/Company/TerminateSubscription?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times">Terminate </i></a> ';
+                                        } else if (row.Status == "Default") {
+                                            //show delete button.
+
+                                            resp = resp + ' <a href="/Company/EditSubscription?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"><i class="fa fa-pencil-square-o"></i></a>  ';
+                                            resp = resp + '  <a href="/Company/DeleteSubscription?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times"></i></a> ';
+                            
+                                        }
+
+                      
+
+
+                                        return resp;
+
+                                    }
+                                }
+
+
+
+
+
+                            ]
+
+                            , "drawCallback": function (settings) {
+                                var api = this.api();
+                                var rows = api.rows({ page: 'current' }).nodes();
+                                var last = null;
+
+                                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                                    if (last !== group) {
+                                        $(rows).eq(i).before(
+                                            '<tr style="background-color:beige;font-weight: bold;color:black;"><td colspan="100%">' + group + '</td></tr>'
+                                        );
+
+                                        last = group;
+                                    }
+                                });
+                            },
+                            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                if (aData.Status == "Active") {
+
+                                    $('td', nRow).css('background-color', 'Green');
+                                    $('td', nRow).css('color', 'white');
+                                }
+                                else if (aData.Status == "Default") {
+                                    $('td', nRow).css('background-color', 'orange');
+                                    $('td', nRow).css('color', 'white');
+                                } else {
+                                    $('td', nRow).css('background-color', 'red');
+                                    $('td', nRow).css('color', 'white');
+                                }
+
+                            },
+
+
+                        });
+                        $('#ExpiringTable').dataTable({
+                            "sAjaxSource": '../Company/GetSubscriptionsTop5ExpiringJson',
+                            "bPaginate": false,
+                            "bLengthChange": false,
+                            "iDisplayLength": 10,
+                            "bFilter": false,
+                            "bSort": true,
+                            "bInfo": true,
+                            "bAutoWidth": false,
+                            "aoColumns": [
+                                { "mDataProp": "Id", "bVisible": false },
+                                { "mDataProp": "company" },
+                                    { "mDataProp": "Subsidiary" },
+                                { "mDataProp": "subcode" ,"mRender": function (data, type, row) {
+         
+                                    var resp = '<a href="/Company/SubscriptionDetails?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs modal-link"><i class="fa fa-eye"> ' +  row.subcode + '</i></a>';
+                                    return resp;
+                                } },
+                                {
+                                    "mDataProp": "startdate", "mRender": function (data, type, row) {
+                            
+                                        return '<span class="badge bg-green">' + row.startdate + '</span>';
+
+                                    }
+                                },
+                                { "mDataProp": "duration" ,"mRender": function (data, type, row) {
+         
+                                    return '<span class="badge bg-black">' + row.duration + '</span>';
+
+                                }},
+                                {
+                                    "mDataProp": "expirationdate", "mRender": function (data, type, row) {
+
+                                        return '<span class="badge bg-red">' + row.expirationdate + '</span>';
+
+                                    }
+                                }
+
+
+
+                            ]
+
+
+
+                        });
+
+
+                    });
+
+
+                    $.getJSON("/Company/GetSubscriptionssmmaryJson", function (data) {
+                        var items = [];
+                        //empty ui
+
+                        //$("#categorylist").empty();
+                        $.each(data, function (key, val) {
+
+                            //$("#categorylist").append("<li><a href='#'>" + val.Name + "</a> </li>");
+                            $("#companycount").text(val.companycount);
+                            $("#companywithsubcount").text(val.companywithsub);
+                            $("#companywithnosubcount").text(val.companywithnosub);
+                            //alert(val.companycount);
+                            //alert(val.companywithsub);
+                            //alert(val.companywithnosub);
+
+                        });
+
+
+
+                    });
+                </script>
+
+
+

@@ -1,0 +1,689 @@
+﻿@using System.Web.Optimization
+@using MrCMS.ACL.Rules
+@using MrCMS.Helpers
+@using MrCMS.Settings
+@using MrCMS.Website
+@using MrCMS.Website.Optimization
+@using StackExchange.Profiling
+@model MrCMS.Entities.Documents.Web.Webpage
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <style>
+        .switch { 
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {display:none;}
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+    <title>@(this.PageTitle()) </title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@(this.Description())"/>
+    <meta name="keywords" content="@(this.Keywords())"/>
+    <!-- Font Awesome Icons -->
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/dist/font-awesome-4.5.0/css/font-awesome.css")" rel="stylesheet" type="text/css"/>
+
+    <!-- Ionicons -->
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/dist/css/ionicons_2.0.1_css_ionicons.min.css")" rel="stylesheet" type="text/css"/>
+
+
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+    folder instead of downloading all of them to reduce the load. -->
+
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css"/>
+    <link href="~/Apps/Core/Content/AdminLTE/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/scroller/1.4.2/css/scroller.dataTables.min.css" rel="stylesheet"/>
+
+    <link href="~/Apps/Core/Content/Styles/material.min.css" rel="stylesheet"/>
+
+    <link href="https://cdn.datatables.net/1.10.12/css/dataTables.material.min.css" rel="stylesheet"/>
+
+    <link href="~/Apps/Core/Content/EasyComplete/dist/easy-autocomplete.min.css" rel="stylesheet"/>
+
+    <link href="~/Apps/Core/Content/Tags/bootstrap-tagsinput.css" rel="stylesheet"/>
+
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/dist/css/AdminLTE.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/dist/css/skins/skin-seegreen-light.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/datepicker/datepicker3.css")" rel="stylesheet" type="text/css"/>
+
+    <!-- date-range-picker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+    <link href="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css")" rel="stylesheet" type="text/css" />
+  
+    @*<link href="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/Calculator/jquery.calculator.css")" rel="stylesheet" type="text/css"/>*@
+    <!-- <link href="@Url.Content("~/Apps/Core/Content/Template/css/theme-1/materialadmin.css")" rel="stylesheet" type="text/css"/> -->
+    <link href="@Url.Content("~/Apps/Core/Content/Toast/build/toastr.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Apps/Core/Content/JqueryUi/jquery-ui.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Apps/Core/Content/JqueryUi/jquery-ui.theme.css")" rel="stylesheet" type="text/css"/>
+
+    <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/Scripts/jquery.formatCurrency-1.4.0.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/Scripts/jquery.formatCurrency-1.4.0.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/scripts/numeral.js")" type="text/javascript"></script>
+    @*<script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/Calculator/jquery.calculator.min.js")" type="text/javascript"></script>*@
+    <script src="@Url.Content("~/Apps/Core/Content/EasyComplete/dist/jquery.easy-autocomplete.min.js")" type="text/javascript"></script>
+    <link href="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+    <script src="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/JqueryUi/jquery-ui.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/chartjs/Chart.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <!--<script src="~/Apps/Core/Content/AdminLTE/plugins/datatables/jquery.dataTables.js"></script>-->
+    <script src="~/Apps/Core/Content/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Apps/Core/Content/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/Scripts/notify.js")" type="text/javascript"></script>
+
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.material.min.js"></script>
+    <script src="https://cdn.datatables.net/scroller/1.4.2/js/dataTables.scroller.min.js"></script>
+    <script src="@Url.Content("~/Apps/Core/Content/Choosen/chosen.jquery.js")" type="text/javascript"></script>
+    <link href="@Url.Content("~/Apps/Core/Content/Choosen/chosen.css")" rel="stylesheet" type="text/css"/>
+    @*<link href="@Url.Content("~/Apps/Core/Content/SweetAlert/sweetalert.css")" rel="stylesheet" type="text/css" />*@
+    @*<script src="@Url.Content("~/Apps/Core/Content/SweetAlert/sweetalert.js")" type="text/javascript"></script>*@
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*<script src="@Url.Content("~/Apps/Core/Content/SweetAlert/sweetalert.min.js")" type="text/javascript"></script>*@
+
+
+    @Styles.Render(AppStylesheetBundle.VirtualUrl)
+    @{ Html.RenderCss(); }
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><script src="/Apps/Core/Content/Scripts/respond.min.js"></script><![endif]-->
+    @Html.Raw(SiteSettings<SEOSettings>().TrackingScripts)
+    @Html.Raw(Model.CustomHeaderScripts)
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--Global variables to indicate some variations-->
+    <script language="javascript">
+        window.dashboardMode = "1";
+
+    </script>
+
+</head>
+
+  <body class="skin-green-light sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+      
+      <header class="main-header" >
+        <!-- Logo -->
+        <a href="#" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini">NovoHub</span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><b>NovoHub</b></span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+            @{ RenderZone("User Messages", allowFrontEndEditing: false); }
+              <!-- Notifications: style can be found TONY in dropdown.less -->
+             
+
+
+@{ RenderZone("User Notification", allowFrontEndEditing: false); }
+
+
+
+
+                <!-- Tasks: style can be found in dropdown.less -->
+             @{ RenderZone("User Task", allowFrontEndEditing: false); }
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                
+                 @{ RenderZone("Header Right", allowFrontEndEditing: false); }
+              </li>
+              <!-- Control Sidebar Toggle Button -->
+
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears" id="ControlsidebarBTN"></i></a>
+                </li>
+           
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <!-- =============================================== -->
+
+      <!-- Left side column. contains the sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+  
+          <!-- /.search form -->
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+              <li class="header">MAIN NAVIGATION</li>
+            
+              <li><a href="#" data-toggle="modal" data-target="#authorizationModal"><i class="fa fa-circle-o text-aqua" ></i> <span>New AuthorizationCode</span></a></li>
+              @{ RenderZone("Main Navigation", allowFrontEndEditing: false); }
+</ul>
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- =============================================== -->
+
+      <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+
+                    @{ RenderZone("Page Title"); }
+
+                </h1>
+                <ol class="breadcrumb">
+                    @{ RenderZone("Site Map"); }
+                </ol>
+            </section>
+
+            <!-- Main content -->
+           
+                    <section class="content">
+
+
+
+
+                        @{if (!string.IsNullOrEmpty((string)Session["PageSuccessMessage"]))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="alert alert-success alert-dismissable">
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button" style="color:white">×</button>
+                                            <h4>	<i class="icon fa fa-check"></i> Alert!</h4>
+                                            @Convert.ToString(Session["PageSuccessMessage"])
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+
+
+                            Session["PageSuccessMessage"] = string.Empty;
+
+                        }
+
+                        @{if (!string.IsNullOrEmpty((string)Session["PageErrorMessage"]))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button" style="color:white">×</button>
+                                            <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+                                            @Convert.ToString(Session["PageErrorMessage"])
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+
+
+
+                            Session["PageErrorMessage"] = string.Empty;
+                        }
+
+
+                        @{ RenderZone("Before Content"); }
+                        @RenderBody()
+                        @{ RenderZone("Comments"); }
+                        @{ RenderZone("After Content"); }
+
+
+
+                        <style type="text/css">
+                            html, body {
+                                padding-top: 0;
+                                height: auto;
+                                overflow: auto;
+                            }
+                        </style>
+
+
+                    </section><!-- /.content -->
+                   
+               
+
+
+        </div><!-- /.content-wrapper -->
+       
+      <footer class="main-footer">
+          @{ RenderZone("Footer"); }
+      </footer>
+      
+      <!-- Control Sidebar -->      
+        <aside class="control-sidebar control-sidebar-light smallbar" id="Controlsidebar" >
+                 
+            @{ RenderZone("Right Slide", allowFrontEndEditing: false); }
+        </aside>
+<!-- /.control-sidebar -->
+        <div class='control-sidebar-bg'></div>
+
+   <!-- Chatpane --> 
+        <aside class="control-sidebar control-sidebar-light bigbar" id="ControlChatsidebar" >
+                         
+            @{ RenderZone("Chat Slide", allowFrontEndEditing: false); }
+        </aside>
+<!-- /.control-sidebar -->
+ <div class='control-sidebar-bg'></div>
+
+    
+     
+    </div><!-- ./wrapper -->
+  
+
+  <script src="@Url.Content("~/Apps/Core/Content/Toast/build/toastr.min.js")" type="text/javascript"></script>
+      <script src="@Url.Content("~/Apps/Core/Content/Tags/bootstrap-tagsinput.js")" type="text/javascript"></script>
+      @*<script src="@Url.Content("~/Apps/Core/Content/Tags/bootstrap-tagsinput-angular.js")" type="text/javascript"></script>*@
+  <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/slimScroll/jquery.slimscroll.min.js")" type="text/javascript"></script>
+     
+      <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/fastclick/fastclick.min.js")" type="text/javascript"></script>
+   <script src="@Url.Content("~/Apps/Core/Content/indexeddb/IndexdbPlugin.js")" type="text/javascript"></script>
+      <script src="@Url.Content("~/Apps/Core/Content/Scripts/localforage.min.js")" type="text/javascript"></script>
+
+  <!-- <script src="@Url.Content("~/Apps/Core/Content/Scripts/jquery.signalR-2.0.3.js")" type="text/javascript"></script> -->
+
+     <script src="@Url.Content("~/Areas/Admin/Content/Scripts/lib/jquery.signalR-2.2.0.js")" type="text/javascript"></script>
+      <script type="text/javascript" src="/signalr/hubs"></script>
+   
+     <script src="@Url.Content("~/Apps/Core/Content/Scripts/PersistentNotification.js")" type="text/javascript"></script>
+
+      <!-- Configure AdminLTE options before loading -->
+<script>
+    //var AdminLTEOptions = {
+    //    //Enable sidebar expand on hover effect for sidebar mini
+    //    //This option is forced to true if both the fixed layout and sidebar mini
+    //    //are used together
+    //    sidebarExpandOnHover: true,
+    //    //BoxRefresh Plugin
+    //    enableBoxRefresh: true,
+    //    //Bootstrap.js tooltip
+    //    enableBSToppltip: true,
+
+    //    controlSidebarOptions: {
+    //        //Which button should trigger the open/close event
+    //        toggleBtnSelector: "#ControlsidebarBTN",
+    //        //The sidebar selector
+    //        selector: "#Controlsidebar",
+    //        //Enable slide over content
+    //        slide: true
+    //    },
+    //    //Added by Tony for chat pane
+
+    //    controlChatSidebarOptions: {
+    //        //Which button should trigger the open/close event
+    //        toggleBtnSelector: ".chatToggle",
+    //        //The sidebar selector
+    //        selector: "#ControlChatsidebar",
+    //        //Enable slide over content
+    //        slide: true
+    //    },
+
+    //};
+</script>
+
+
+
+
+
+
+    @if (CurrentRequestData.CurrentUser != null && CurrentRequestData.CurrentUser.CanAccess<AdminBarACL>("Show") && SiteSettings<SiteSettings>().EnableInlineEditing)
+    {
+        Html.RenderAction("InPageEditor", "InPageAdmin", new { id = Model.Id, area = "Admin" });
+    }
+    @if (IsSectionDefined("JavascriptBlockInclude"))
+    {
+        @RenderSection("JavascriptBlockInclude")
+    }
+    @Html.Raw(Model.CustomFooterScripts)
+    @Scripts.Render(AppScriptBundle.VirtualUrl)
+    @{ Html.RenderScripts(); }
+    @MiniProfiler.RenderIncludes()
+
+  <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/dist/js/app.js")" type="text/javascript"></script>
+   <script src="@Url.Content("~/Apps/Core/Content/Scripts/AppScript.js?v=2018041926")" type="text/javascript"></script>
+ <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/datepicker/bootstrap-datepicker.js")" type="text/javascript"></script>
+      <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/input-mask/jquery.inputmask.js")" type="text/javascript"></script>
+      <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/input-mask/jquery.inputmask.extensions.js")" type="text/javascript"></script>
+      <script src="@Url.Content("~/Apps/Core/Content/AdminLTE/plugins/input-mask/jquery.inputmask.date.extensions.js")" type="text/javascript"></script>
+   <!-- Modal -->
+      <div class="modal fade pull-right" id="modal-container" role="dialog" >
+
+          <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+
+                  <div class="modal-body">
+                      <p>Loading...</p>
+                      <div class="overlay">
+                          <i class="fa fa-refresh fa-spin"></i>
+                      </div>
+
+                  </div>
+
+
+
+              </div>
+
+          </div>
+
+      </div>
+
+  <!-- Modal for authorizationcode -->
+  <div class="modal fade" id="authorizationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Authorization Generation Code</h4>
+              </div>
+          <div class="modal-body">
+              <div class="box-body ">
+                  <form id="auth_generateForm">
+              <table class="table table-condensed ">
+                  
+                  
+                  <tbody>
+                  <tr>
+                      <td>
+                          NHIS Switch
+
+                      </td>
+                      
+                      <td>
+                          <label class="switch">
+                              <input type="checkbox" id="NHISSwitch" name="NHISSwitch">
+                              <input type="hidden" id="auth_requestid" name="auth_requestid" />
+                              <div class="slider"></div>
+                          </label>
+                      </td>
+                  </tr>
+                      
+
+                
+                  <tr>
+                      <td>Authorization Code</td>
+                      <td><input type="hidden" id="NormalBUFF" name="NormalBUFF" /><input type="hidden" id="NHISBUFF" name="NHISBUFF" /><input class="form-control" id="auth_authorizationcode" name="auth_authorizationcode" placeholder="Authorization Code" type="text" style="font-size:larger;font-weight: bold;"></td>
+                      
+                     
+                  </tr>
+                  <tr>
+                      <td>Provider</td>
+                      <td>
+                        
+                          <select class="form-control chosen-select" id="auth_provider_list" name="AUTH_provider_list" multiple>
+                          </select>
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Enrollee Policy Number</td>
+                      <td>
+                          <span id="auth_expungederror" style="background-color:red;color:white;font-size:medium" class="hidden">The enrollee has been expunged.</span>
+                          <input id="auth_enrolleeId" name="auth_enrolleeId" value="" type="hidden">
+
+                          <input class="form-control" id="auth_policynumber" name="auth_policynumber" placeholder="Policy Number" value="" type="text">
+
+
+
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Enrollee Full Name</td>
+                      <td>
+                          <input class="form-control" id="auth_enrolleeName" name="auth_enrolleeName" placeholder="Enrollee Full Name" value="" type="text">
+
+
+
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Enrollee Company</td>
+                      <td>
+
+                          <select  class="form-control chosen-select" id="auth_company_list" name="auth_company_list" multiple><option value="-1" >All Companies</option>
+
+                          </select>
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Enrollee Plan</td>
+                      <td>
+                          <input class="form-control" id="auth_Plan" name="auth_Plan" placeholder="Enrollee Plan" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Enrollee Age</td>
+                      <td>
+                          <input class="form-control" data-val="true" data-val-number="The field enrolleeAge must be a number." data-val-required="The enrolleeAge field is required." id="auth_enrolleeAge" name="auth_enrolleeAge" placeholder="Enrollee Age" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Diagnosis</td>
+                      <td>
+                          <input class="form-control" id="auth_Diagnosis" name="auth_Diagnosis" placeholder="Diagnosis e.g Malaria" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+
+                  <tr>
+                      <td>Category</td>
+                      <td>
+                          <input class="form-control" id="auth_TypeofAuthorization" name="auth_TypeofAuthorization" placeholder="Category e.g Secondary Care" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+
+                  <tr>
+                      <td>Requester's Name</td>
+                      <td>
+                          <input class="form-control" id="auth_RequesteeName" name="auth_RequesteeName" placeholder="Requester's name" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Requester's Phone</td>
+                      <td>
+                          <input class="form-control" id="auth_RequesterPhone" name="auth_RequesterPhone" placeholder="Requester Phone number" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+                      <tr>
+                          <td>What is this authorization for </td>
+                          <td>
+                              <textarea placeholder="Enter What you authorized ..." rows="3" class="form-control" id="Whatyouauthorized" name="Whatyouauthorized"></textarea>
+
+                          </td>
+
+
+                      </tr>
+                  <tr>
+                      <td>Is Admission</td>
+                      <td>
+                          <input id="auth_isadmis" name="auth_isadmis"  type="checkbox"/>
+
+                      </td>
+
+
+                  </tr>
+                      <tr>
+                          <td>Is Child Delivery</td>
+                          <td>
+                              <input id="auth_isdelivery" name="auth_isdelivery" type="checkbox" />
+                              <span style="color:forestgreen">This will help us send a congratulatory sms to the enrollee.</span>
+
+                          </td>
+
+
+                      </tr>
+                  <tr>
+                      <td>Admission Date</td>
+                      <td>
+                          <input class="form-control" id="auth_admissiondate" name="auth_admissiondate" placeholder="DD/MM/YYYY" value="" type="text">
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>No Of Days</td>
+                      <td>
+                          <input class="form-control" id="auth_numodays" name="auth_numodays" value="" type="number">
+
+                      </td>
+
+
+                  </tr>
+                  <tr>
+                      <td>Authorized By</td>
+                      <td>
+                          <select class="form-control" id="auth_User_list" name="auth_User_list">
+                          </select>
+                      </td>
+
+
+                  </tr>
+                     
+                  <tr>
+                      <td>Note</td>
+                      <td>
+                          <textarea placeholder="Enter Note ..." rows="3" class="form-control" id="auth_Note_txt" name="auth_Note_txt"></textarea>
+
+                      </td>
+
+                                        
+                  </tr>
+
+              <tr>
+                  <td>@{
+
+                      if (CurrentRequestData.CurrentUser != null)
+                      {
+                        <input type="hidden" id="userinitial" value="@CurrentRequestData.CurrentUser.FirstName.Substring(0,1)@CurrentRequestData.CurrentUser.LastName.Substring(0,1)" />
+                          var roleee = CurrentRequestData.CurrentUser.Roles.Where(x => x.Id == 12 || x.Id == 13).SingleOrDefault();
+
+                          if (roleee != null)
+                          {
+                            <input type="hidden" id="___iscallcenter" value="@roleee.Id" />
+
+                          }
+
+
+                      }
+
+                }</td>
+              </tr>
+
+
+                  </tbody>
+              </table>
+                  </form>
+          </div>
+       
+          </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="auth_submit" name="auth_submit">Save changes</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  </body>
+  
+</html>

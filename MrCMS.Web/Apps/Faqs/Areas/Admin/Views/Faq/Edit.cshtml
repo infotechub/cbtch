@@ -1,0 +1,27 @@
+﻿@model MrCMS.Web.Apps.Faqs.Entities.Faq
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{ Layout = "~/Areas/Admin/Views/Shared/_LayoutPopup.cshtml";}
+@using (Html.BeginForm("Edit", "Faq", FormMethod.Post))
+{
+     @Html.HiddenFor(x => x.Id)
+    <fieldset>
+        <legend>
+            Edit FAQ
+            <span class="btn-group display-inline pull-right">
+                <input type="submit" class="btn-success btn" value="Edit" />
+            </span>
+        </legend>
+        @Html.HiddenFor(item => item.Id)
+        <div class="form-group">
+            @Html.LabelFor(x => x.Question)
+            @Html.TextBoxFor(x => x.Question, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Question)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Answer)
+            @Html.TextAreaFor(x => x.Answer, new { @class = "form-control ckedit-enabled" })
+            @Html.ValidationMessageFor(x => x.Answer)
+        </div>
+    </fieldset>
+}

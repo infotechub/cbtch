@@ -1,0 +1,59 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.Sms
+@{
+    ViewBag.Title = "Quick Sms";
+}
+ 
+
+@using (Html.BeginForm("QuickSms","EnrolleePage",FormMethod.Post,new {enctype ="multipart/form-data",id="SmS" }))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Quick SMS</h4>
+ </div>
+<div class="modal-body">
+    <table class="table table-condensed ">
+        <tbody>
+
+            <tr>
+                @Html.HiddenFor(x=>x.Id)
+                                            
+            </tr>
+            <tr>
+                <td>From ID</td>
+                <td>@Html.TextBoxFor(x=>x.FromId, new {@class = "form-control", @placeholder = "From Who"})</td>
+            </tr>
+            <tr>
+                <td>Destination Phone Number</td>
+
+                <td>@Html.TextBoxFor(x=>x.Msisdn, new {@class = "form-control"})
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>Contacts</td>
+                <td>
+                   @Html.DropDownList("ContactList", new SelectList(ViewBag.CotactList, "Id", "Name"), new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>Message</td>
+                 <td>@Html.TextAreaFor(x=>x.Message, new {@class = "form-control", @placeholder = "Sms Message"})</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave">Send </button>
+</div>
+
+}
+
+
+
+
+

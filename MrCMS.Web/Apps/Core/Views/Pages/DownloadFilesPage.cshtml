@@ -1,0 +1,169 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.DownloadFilesPage 
+@{
+    ViewBag.Title = "Download Exported Files";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Download export files using this panel.</p>
+        </div>
+
+          
+   <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">File List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="filelist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                             <th>Id</th>
+                            <th>Name</th>
+                            <th>Exported By</th>
+                            <th>Download Link</th>
+                            <th>Download Count</th>
+                            <th>Date Exported</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                    </tbody>
+                
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        bodytable$ = $('#filelist').dataTable({
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": '../DownloadPage/GetDownloadFilesJson',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "SearchText", "value":"" });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "order": [[1, 'asc']],
+            "bPaginate": true,
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                   { "mDataProp": "Id", "bVisible": true },
+
+
+
+
+                {
+                    "mDataProp": "Filename", sClass: "row_id"
+                },
+                 { "mDataProp": "CreatedBy", "bVisible": true },
+                   { "mDataProp": "Downloadlink", "bVisible": true },
+                  { "mDataProp": "DownloadCount", "bVisible": true },
+                   { "mDataProp": "Datecreated", "bVisible": true },
+                   
+                {
+                    "mDataProp": "Mobile", "mRender": function (data, type, row) {
+
+
+                        var resp = '<a target="_self" href="' + row.Downloadlink + '"><span class="badge bg-blue"> <i class="fa fa-mobile"></i> Download</span></a>';
+                        return resp;
+
+
+
+                    }
+                },
+
+
+
+
+
+
+
+
+            ]
+
+
+
+        });
+
+
+
+
+
+    });
+
+
+</script>
+
+
+

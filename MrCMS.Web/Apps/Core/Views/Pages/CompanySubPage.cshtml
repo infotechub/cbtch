@@ -1,0 +1,124 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.CompanySubPage
+@{
+    ViewBag.Title = "Company List";
+    Layout = "~/Apps/core/views/shared/_BaseLayout.cshtml";
+}
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper StatusColor(bool input)
+{
+    var response = "";
+    if (input)
+    {
+response=
+        "success";
+
+    }
+    else
+    {
+      response="danger";
+        
+    }
+@response
+} 
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-md-12 ">
+        <div class="callout callout seegreen " style="margin-left: -5px" >
+            <h4>Tip!</h4>
+            <p>Manage company subsidiary. view,create,edit and delete company subsidiary.</p>
+        </div>
+
+              <a href="@Url.Action("AddSubsidiary", "CompanyPage",  new { id = Model.Parentcompanyid})" class="btn btn-flat btn-success modal-link"><i class="fa fa-plus" style="color: white">Add new subsidiary </i> </a>
+        <!-- @Html.ActionLink("Add Service", "Edit", "ServicesPage",  new { id = -1}, new { @class = "btn btn-flat btn-success modal-link"})-->
+       
+   <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Company Subsidiary List [ @Model.ParentcompanyName ]</h3>
+             <span class="pull-right"> <a class="btn" href='../Company/company-list'><i class="fa fa-arrow-left"></i> Go Back to  company List</a> </span>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="servicelist" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                             <th>Id</th>
+                            <th>Name</th>
+                            <th>Profile</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                  
+                    
+      
+                    </tbody>
+                    <tfoot>
+                    
+                    </tfoot>
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+       
+        
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#servicelist').dataTable({
+            "sAjaxSource": '../Company/GetJsonSubsidiary?id=' + @Model.Parentcompanyid,
+           
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "Subsidaryname" },
+                { "mDataProp": "Subsidaryprofile" },
+                { "mDataProp": "CreatedOn" },
+           {
+               "mRender": function (data, type, row) {
+                   return '<a href="../Company/EditSubsidiary?id=' + row.Id + '" class="btn btn-warning btn-flat btn-xs modal-link"> <i class="fa fa-pencil-square-o"> Edit </i></a>  <a href="../Company/DeleteSubsidiary?id=' + row.Id + '" class="btn btn-danger btn-flat btn-xs modal-link"><i class="fa fa-times"> Delete </i></a> ' ;
+               }
+           }
+                 
+
+
+
+
+
+            ]
+
+
+        });
+
+
+    });
+    </script>
+
+

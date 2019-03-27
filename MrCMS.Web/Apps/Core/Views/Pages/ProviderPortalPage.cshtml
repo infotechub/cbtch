@@ -1,0 +1,3869 @@
+﻿@model MrCMS.Web.Apps.Core.Pages.ProviderPortalPage
+@using MrCMS.Web.Apps.Core.Entities
+@{
+    ViewBag.Title = "Provider Portal Page";
+
+}
+
+@helper Truncate(string input, int length)
+{
+if (input.Length <= length)
+{
+        @input
+}
+else
+{
+        @input.Substring(0, length)<text>...</text>
+}
+}
+
+@helper StatusColor(bool input)
+{
+var response = "";
+if (input)
+{
+    response =
+            "success";
+
+}
+else
+{
+    response = "danger";
+
+}
+    @response
+}
+
+<style>
+    .easy-autocomplete {
+        width: 100% !important;
+    }
+
+        .easy-autocomplete input {
+            width: 100%;
+        }
+</style>
+
+
+<div class="row">
+    <div class="box box-default">
+        <div class="box-header">
+
+        </div>
+
+        <div class="box-body">
+            <div style="background-color:white">
+
+                <span class="info-box-icon bg-aqua no-padding" title="@ViewBag.providernameeee"><i class="fa fa-hospital-o"></i></span>
+
+                <div class="col-lg-11">
+
+                    <div style="padding-top:15px">
+
+                        <a class="btn btn-app bg-green-gradient tabbtn" data-toggle="tab" href="#tab_1" data-title="Authenticate Enrollee">
+                            <i class="fa fa-check-square-o " data-title="Authenticate Enrollee"></i> Authenticate Enrollee
+                        </a>
+                        @{if ((int)ViewBag.roleid != 1)
+                            {
+                        <a class="btn btn-app bg-green-gradient tabbtn" data-toggle="tab" href="#tab_2" data-title="Capture Bill" id="capturebillbtn">
+
+                            <i class="fa fa-pencil-square-o" data-title="Capture Bill"></i> Capture Bill
+                        </a>
+                            }
+                            }
+
+                        @{
+                            if ((int)ViewBag.roleid != 1)
+                            {
+                                <a class="btn btn-app bg-maroon-gradient tabbtn" data-toggle="tab" href="#tab_3" data-title="View Bills">
+                                    <span class="badge bg-blue" id="billcountbadge">--</span>
+                                    <i class="fa fa-list-alt" data-title="View Bills"></i>View Bills
+                                </a>
+                            }
+
+                        }
+@{if ((int)ViewBag.roleid != 1)
+    {
+                        <a class="btn btn-app bg-purple-gradient" data-toggle="tab" href="#tab_allsubmitted" data-title="Submitted Bills">
+
+                            <i class="fa fa-th-list" data-title="Submitted Bills"></i> submitted Bills
+                        </a>
+
+        }
+    }
+
+
+
+
+                        <a class="btn btn-app tabbtn bg-light-blue-gradient" data-toggle="tab" href="#tab_AUTHRequest" data-title="Request Authorization Code" id="authrequestbtn">
+                            <i class="fa fa-comments-o" data-title="Request Authorization Code"></i> Request Authorization Code
+                        </a>
+                        <a class="btn btn-app bg-maroon-gradient" data-toggle="tab" href="#tab_helpme" data-title="Settings">
+
+                            <i class="fa fa-cog" data-title="Settings"></i> Settings
+                        </a>
+                        <a class="btn btn-app bg-blue-gradient hidden" data-toggle="tab" href="#tab_helpme" data-title="Help">
+
+                            <i class="fa fa-info-circle " data-title="Help"></i> Help
+                        </a>
+                        <a class="btn btn-app" data-toggle="tab" href="#hmoinfo" data-title="Contact HMO">
+
+                            <i class="fa fa-info-circle " data-title="Contact HMO"></i> Contact HMO
+                        </a>
+                        
+                        <a class="btn btn-app bg-red-gradient" href="../Provider/LogoutfromproviderPortal" target="_self">
+
+                            <i class="fa fa-power-off" data-title="Logout"></i> Logout
+                        </a>
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-12">
+        <!-- Custom Tabs -->
+        <div class="nav-tabs-custom" id="mytab">
+
+            <div class="box box-default  no-border no-padding">
+                <div class="box-header">
+
+                    <div class="box-title"><h4 id="pageTitle">Authenticate Enrollee</h4></div>
+                    <div id="responseMSG"></div>
+
+                </div>
+
+                <div class="box-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <p>Authenticate <b>Novo Health Enrollee </b>, kindly Enter Policy Number or E-VS Code.</p>
+
+
+                            <div>
+
+
+                                <input type="text" id="enrolleeIdorEVS" name="enrolleeIdorEVS" class="form-control border-black input-lg" placeholder="Enter Policy Number or EVS Code" style="background-color:beige" maxlength="23" />
+                                <br />
+                                <select id="evsvisittype" class="form-control input-lg">
+                                    <option value="1">New Visit</option>
+                                    <option value="2">Follow Up</option>
+
+                                </select>
+                                <br />
+                                <button class="btn btn-success btn-sm" id="EVSbtn">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    Authenticate
+                                </button>
+
+
+                            </div>
+
+                            <br />
+
+
+
+                            <hr />
+
+                            <div class="hidden" id="enrolleeverificationResult" style="background-color:beige">
+
+
+
+                                <div class="table-responsive">
+                                    <table class="table  table-striped no-margin ">
+                                        <thead>
+                                            <tr></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+
+                                                <td colspan="2">
+
+                                                    <img src="" style="max-height: 160px; max-width: 160px;"
+                                                         class="img-rounded" id="photo_img">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Full Name</td>
+                                                <td id="EVSFullname"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Policy Number</td>
+                                                <td id="EVSPolicyno"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Plan</td>
+                                                <td id="EVSplan"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gender</td>
+                                                <td id="EVSGender"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Company</td>
+                                                <td id="EVSCompany"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Verification Code</td>
+                                                <td id="EVSCodetabb"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Hospital Used</td>
+                                                <td id="EVSHospital"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!--end .table-responsive -->
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_2">
+                            @using (Html.BeginForm("SubmitClaimsForm", "ClaimsPage", FormMethod.Post, new { @id = "ClaimsForm" }))
+                            {
+                                @*<input type="hidden" id="hiddenID" name="hiddenID" />*@
+                                <input type="hidden" id="totalclaimcount" name="totalclaimcount" value="" />
+                                <input type="hidden" id="totalclaimamounttotal" name="totalclaimamounttotal" value="" />
+                                <input type="hidden" id="totalserviceamount" name="totalserviceamount" value="" />
+                                <input type="hidden" id="totaldrugamount" name="totaldrugamount" value="" />
+
+                                <div class="row">
+                                    <div class="box box " style="overflow:visible">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Enrollee Information</h3>
+
+
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row" id="namerow">
+                                                <div class="col-xs-3">
+                                                    <label for="enrolleeage">Unique ID</label>
+                                                    @Html.TextBox("hiddenID", null, new { @class = "form-control", @placeholder = "ID", @readonly = "readonly" })
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="FormNo">Claims Form No</label>
+
+                                                    @Html.TextBox("FormNo", null, new { @class = "form-control", @placeholder = "Form No" })
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="policynumber">Policy Number</label>
+                                                    @Html.TextBox("policynumber", null, new { @class = "form-control", @placeholder = "Policy Number", @id = "policynumber", @maxlength = "21", @required = "The policy number is required" })
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+
+                                                    <label for="evscode">EVS Verification Code</label>
+
+                                                    @Html.TextBox("evscode", null, new { @class = "form-control", @placeholder = "EVS Verification Code" })
+                                                </div>
+
+
+                                                <input type="hidden" id="CompanyID" name="CompanyID" value="" />
+                                                <input type="hidden" id="companyname" name="companyname" value="" />
+                                                <input type="hidden" id="providerID" name="providerID" value="@ViewBag.provideriddd" />
+                                                @*<input type="hidden" id="claimBatchID" name="claimBatchID" />*@
+                                                <input type="hidden" id="enrolleeID" name="enrolleeID" />
+
+
+
+
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-xs-3">
+                                                    <label for="enrolleename">Name Of Enrollee</label>
+
+                                                    @Html.TextBox("enrolleename", null, new { @class = "form-control", @placeholder = "Enrollee Full Name", @required = "Enrollee Full Name is required"})
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="providersubcode">Enrollee Company</label>
+                                                    <select id="companylist" name="companylist" class="form-control chosen-select" required></select>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="enrolleeage">Age</label>
+                                                    @Html.TextBox("enrolleeage", null, new { @class = "form-control", @placeholder = "Age", @required = "Enrollee Age is required"})
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="providername">Sex</label>
+                                                    @Html.TextBox("enrolleesex", null, new { @class = "form-control", @placeholder = "Sex" })
+
+
+                                                </div>
+
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                        <div class="overlay hidden" id="enrolleeloadingdisplay">
+                                            <i class="fa fa-refresh fa-spin"></i>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="box box seegreen " style="overflow:visible">
+                                        <div class="box-header" style="color: white">
+                                            <h3 class="box-title">Provider Information</h3>
+
+                                        </div>
+                                        <div class="box-body">
+
+                                            <div class="row hidden">
+
+                                                <div class="col-xs-9">
+                                                    <label for="providercode">Name of Hospital/Clinic</label>
+
+                                                    @Html.TextBox("providerename", null, new { @class = "form-control", @placeholder = "Hospital Name" })
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <label for="providername">Name of Doctor</label>
+                                                    @Html.TextBox("doctorname", null, new { @class = "form-control", @placeholder = "Doctors Name" })
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="providersubcode">Area of Specialization</label>
+
+                                                    @Html.TextBox("areaofspecialization", null, new { @class = "form-control", @placeholder = "Area of Specialization" })
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="providername">ID Number</label>
+                                                    @Html.TextBox("Idnumber", null, new { @class = "form-control", @placeholder = "ID Number" })
+
+
+                                                </div>
+                                                <div class="col-xs-3">
+
+                                                    <div class="form-group">
+                                                        <label for="providercode">Date Signed</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                @*<input type="checkbox" id="doctorsigned" name="doctorsigned">*@
+                                                            </span>
+                                                            <input type="text" class="form-control" placeholder="DD/MM/YYYY" id="doctorssigndate" name="doctorssigndate" />
+                                                        </div>
+                                                        <!-- /.input group -->
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <label for="providername">Name of Specialist</label>
+                                                    @Html.TextBox("specialistname", null, new { @class = "form-control", @placeholder = "Name of Specialist" })
+
+
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <label for="providersubcode">Area of Specialization</label>
+
+                                                    @Html.TextBox("areaofspecializationSpecialist", null, new { @class = "form-control", @placeholder = "Area of Specialization" })
+
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <label for="providercode">Specialist Phone Number</label>
+
+                                                    @Html.TextBox("specialistphonenumber", null, new { @class = "form-control", @placeholder = "Specialist Phone Number" })
+
+                                                </div>
+                                                <div class="col-xs-3">
+
+                                                    <div class="form-group">
+                                                        <label for="providercode">Date Signed</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                @*<input type="checkbox" id="specialistsigned" name="specialistsigned">*@
+                                                            </span>
+                                                            <input type="text" class="form-control" placeholder="DD/MM/YYYY" id="specialistsigndate" name="specialistsigndate" />
+                                                        </div>
+                                                        <!-- /.input group -->
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                    </div>
+
+
+                                    <div class="box box seegreen " style="overflow:visible">
+                                        <div class="box-header" style="color: white">
+                                            <h3 class="box-title">Treatment Details</h3>
+
+                                        </div>
+                                        <div class="box-body">
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <label for="providername">Date of Service(Encounter Date)</label>
+                                                    @Html.TextBox("dateofservice", null, new { @class = "form-control", @placeholder = "Date of Service" })
+
+
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <label for="providercode">Duration of Treatment</label>
+
+                                                    @Html.TextBox("durationoftreatment", null, new { @class = "form-control", @placeholder = "Duration of Treatment" })
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <label for="providername">Date of Admission</label>
+                                                    @Html.TextBox("dateofadmission", null, new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+
+
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <label for="providercode">Date Of Discharge</label>
+
+                                                    @Html.TextBox("dateofdischarge", null, new { @class = "form-control", @placeholder = "DD/MM/YYYY" })
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <label for="diagnosis">Diagnosis</label>
+
+                                                    @Html.TextBox("diagnosis", null, new { @class = "form-control", @placeholder = "Diagnosis" })
+
+
+                                                </div>
+
+                                                <div class="col-xs-6">
+
+                                                    <label for="dateofdischarge">Treatment Given</label>
+
+                                                    @Html.TextBox("Treatmentgiven", null, new { @class = "form-control", @placeholder = "Treatment Given" })
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-xs-6">
+                                                    <label for="treatmentcode">Treatment Code</label>
+
+                                                    @Html.TextBox("treatmentcode", null, new { @class = "form-control", @placeholder = "Treatment Code" })
+
+
+                                                </div>
+                                                <div class="col-xs-6">
+
+                                                    <label for="dateofdischarge">Referral Code</label>
+
+                                                    @Html.TextBox("referralcode", null, new { @class = "form-control", @placeholder = "Referral Code" })
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="box box " style="overflow:visible">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Service Information</h3>
+
+
+                                        </div>
+                                        <div class="box-body ">
+
+                                            <div class="row ">
+                                                <div class="col-xs-3">
+
+
+                                                    <label for="serviceItemDescription">Item Description</label>
+
+                                                    <input id='serviceItemDescription' class="form-control hidden" name="serviceItemDescription" />
+                                                    <select id="serviceItemDescriptionList" name="serviceItemDescriptionList" class="form-control chosen-select" multiple></select>
+
+
+
+                                                    @*@Html.DropDownList("serviceItemDescription", new SelectList(ViewBag.servicetarifflist, "Id", "Name"), new { @class = "form-control" })*@
+
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <label for="serviceduration">Duration</label>
+                                                    @Html.TextBox("serviceduration", null, new { @class = "form-control", @placeholder = "Service Duration" })
+
+
+                                                </div>
+                                                <div class="col-xs-2">
+
+                                                    <label for="servicerate">Rate</label>
+
+                                                    @Html.TextBox("servicerate", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Rate" })
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <label for="serviceamount">Amount</label>
+                                                    <div class="input-group">
+
+                                                        <span class="input-group-addon">₦</span>
+                                                        @Html.TextBox("serviceamount", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Amount", @readonly = "readonly" })
+
+                                                        <input id="servicebill_hiddenID" type="hidden" />
+                                                    </div>
+
+
+
+
+                                                </div>
+
+                                                <div class="col-xs-2">
+
+                                                    <p></p>
+                                                    <button type="button" id="serviceaddbtn" onclick="DoAddServiceRow();" class="btn bg-olive btn-flat margin"><i class="fa fa-plus" aria-hidden="true"></i> ADD</button>
+
+                                                    <button type="button" id="serviceupdatebtn" onclick="DoAddServiceRow();" class="btn bg-olive btn-sm btn-flat hidden"><i class="fa fa-edit" aria-hidden="true"></i> UPDATE</button>
+                                                    <button type="button" id="servicecancelbtn" onclick="cancelServiceEditRow();" class="btn bg-red btn-sm btn-flat margin hidden"><i class="fa fa-times" aria-hidden="true"></i> CANCEL</button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <input type="hidden" id="servicebillCount" name="servicebillCount" />
+                                                <input type="hidden" id="drugbillCount" name="drugbillCount" />
+                                                <table id="servicebilllist" class="table table-striped" width="100%" style="margin-left:5px;">
+                                                    <thead class="seegreen">
+                                                        <tr>
+                                                            <th class="mdl-data-table__cell--non-numeric">Item Description</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Duration</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Rate</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Amount (₦)</th>
+                                                            <th class="mdl-data-table__cell--non-numeric"></th>
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr class="hidden" id="servicebillRow_0" name="servicebillRow_0">
+                                                            <td>
+                                                                <input id='serviceEditID' type="hidden" name="serviceEditID" />
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0ItemDescription" name="servicebill0ItemDescription" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0Duration" name="servicebill0Duration" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="servicebill0Rate" name="servicebill0Rate" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control serviceamount" value="0" readonly="readonly" id="servicebill0amount" name="servicebill0amount" style="font-size: 18px; font-weight: bold;" />
+                                                                <input type="hidden" id="servicebill0itemID" name="servicebill0itemID" />
+
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                                                <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow2(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Total</span>
+                                                                    <input type="text" class="form-control" value="₦ 0.00" readonly="readonly" id="servicebilltotal" name="servicebilltotal" style="font-size: 18px; font-weight: bold;" />
+                                                                </div>
+
+                                                            </td>
+
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+
+                                                    </tfoot>
+
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="box box " style="overflow:visible">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Drug Information</h3>
+
+
+                                        </div>
+                                        <div class="box-body ">
+                                            <div class="row">
+                                                <div class="col-lg-10">
+
+                                                    <span id="drug_informationbox">...</span>
+                                                </div>
+                                            </div>
+                                            <div class="row " id="druginputrow">
+                                                <div class="col-xs-3">
+                                                    <label for="drugItemDescription">Item Description</label>
+                                                    @*@Html.DropDownList("drugItemDescription", new SelectList(ViewBag.drugtarifflist, "Id", "Name"), new { @class = "form-control" })*@
+                                                    <input id='drugEditID' type="hidden" name="drugEditID" />
+                                                    <input id='drugItemDescription' class="form-control hidden" name="drugItemDescription" />
+
+                                                    <select id="drugItemDescriptionList" name="drugItemDescriptionList" class="form-control chosen-select" multiple></select>
+
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <label for="serviceduration">Unit</label>
+                                                    @Html.TextBox("drugunit", null, new { @class = "form-control", @placeholder = "Service Duration" })
+
+
+                                                </div>
+                                                <div class="col-xs-2">
+
+                                                    <label for="servicerate">Rate</label>
+
+                                                    @Html.TextBox("drugrate", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Rate", @readonly = "readonly"})
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <label for="serviceamount">Amount</label>
+                                                    <div class="input-group">
+
+                                                        <span class="input-group-addon">₦</span>
+                                                        @Html.TextBox("drugamount", null, new { @class = "form-control", @style = "font-size: 18px; font-weight: bold;", @placeholder = "Service Amount", @readonly = "readonly" })
+                                                        
+                                                        <input id="drugbill_hiddenID" type="hidden" />
+                                                    </div>
+
+
+
+
+                                                </div>
+
+                                                <div class="col-xs-2">
+
+                                                    <p></p>
+                                                    <button type="button" id="drugaddbtn" onclick="DoAddDrugRow();" class="btn bg-olive btn-flat margin"><i class="fa fa-plus" aria-hidden="true"></i> ADD</button>
+                                                    <button type="button" id="drugupdatebtn" onclick="DoAddDrugRow();" class="btn bg-olive btn-sm btn-flat hidden"><i class="fa fa-edit" aria-hidden="true"></i> UPDATE</button>
+                                                    <button type="button" id="drugcancelbtn" onclick="cancelEditRow();" class="btn bg-red btn-sm btn-flat margin hidden"><i class="fa fa-times" aria-hidden="true"></i> CANCEL</button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+                                                <table id="drugbilllist" class="table table-striped" width="100%" style="margin-left:5px;">
+                                                    <thead class="seegreen">
+                                                        <tr>
+                                                            <th class="mdl-data-table__cell--non-numeric">Item Description</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Unit</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Rate</th>
+                                                            <th class="mdl-data-table__cell--non-numeric">Amount (₦)</th>
+                                                            <th class="mdl-data-table__cell--non-numeric"></th>
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr class="hidden" id="drugbillRow_0" name="drugbillRow_0">
+                                                            <td>
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0ItemDescription" name="drugbill0ItemDescription" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0Unit" name="drugbill0Unit" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" value="" readonly="readonly" id="drugbill0Rate" name="drugbill0Rate" style="font-size: 18px; font-weight: bold;" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control drugamount" value="0" readonly="readonly" id="drugbill0amount" name="drugbill0amount" style="font-size: 18px; font-weight: bold;" />
+                                                                <input type="hidden" id="drugbill0itemID" name="drugbill0itemID" />
+
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button>
+                                                                <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Total</span>
+                                                                    <input type="text" class="form-control" value="₦ 0.00" readonly="readonly" id="drugbilltotal" name="drugbilltotal" style="font-size: 18px; font-weight: bold;" />
+                                                                </div>
+
+                                                            </td>
+
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+
+                                                    </tfoot>
+
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                    </div>
+
+                                </div>
+                                <div class="row">
+
+
+                                    <div class="box box seegreen " style="overflow:visible">
+                                        <div class="box-header" style="color: white">
+                                            <h3 class="box-title">Additional Information</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row">
+
+                                                @*
+
+
+                                                        <div class="col-xs-2">
+
+                                                        <label for="AllprescibedDrugs">Check for Yes</label>
+
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" id="AllprescibedDrugs" name="AllprescibedDrugs">
+                                                                All Prescribed Drugs
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xs-2">
+
+
+                                                        <label for="LaboratoryInvestigation">Check for Yes</label>
+                                                        <div class="checkbox">
+
+                                                            <label>
+                                                                <input type="checkbox" id="LaboratoryInvestigation" name="LaboratoryInvestigation">
+                                                                Laboratory Investigation
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-2">
+
+
+                                                        <label for="Admission">Check for Yes</label>
+                                                        <div class="checkbox">
+
+                                                            <label>
+                                                                <input type="checkbox" id="Admission" name="Admission">
+                                                                Admission
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-2">
+
+
+                                                        <label for="Feeding">Check for Yes</label>
+                                                        <div class="checkbox">
+
+                                                            <label>
+                                                                <input type="checkbox" id="Feeding" name="Feeding">
+                                                                Feeding
+                                                            </label>
+                                                        </div>
+
+                                                    </div>*@
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+
+                                                    <div class="form-group">
+                                                        <label>Remark</label>
+                                                        <textarea class="form-control" rows="3" placeholder="Remark ..." id="Remark" name="Remark"></textarea>
+                                                    </div>
+
+
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <button class="btn btn-danger pull-left" type="button" style="margin-left:4px;" id="clearbtn">Clear</button>
+                                            <button class="btn btn-primary pull-right" type="button" style="margin-left:4px;" id="savebtn">Save</button>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="datecreated" name="datecreated" />
+                            }
+                            <script>
+
+                                function checkpolicyRequest(value) {
+                                    //alert(value);
+                                    if (true) {
+
+                                        if (value.length > 15) {
+
+
+
+                                            $.ajax({
+                                                "type": "GET",
+                                                "url": '../Enrollee/GetEnrolleeDetailsClaim/?policyNumber=' + value,
+                                                "data": '',
+                                                beforeSend: function (xhr) {
+
+                                                    $("#requestsendbtn").prop("disabled", true);
+
+
+                                                },
+                                                "success": function (msg) {
+
+                                                    if (msg.respCode == 0) {
+                                                        //alert(msg.EnrolleeName);
+                                                        $("#requestfullname").val(msg.EnrolleeName);
+                                                        $("#requestcompanylist").val(msg.CompanyId);
+                                                        $('#requestcompanylist').trigger("chosen:updated");
+
+
+
+
+
+                                                    } else {
+                                                        toastr["error"](msg.errorMsg, "Input Error");
+                                                        $("#requestfullname").val('');
+
+
+                                                        $("#requestcompanylist").val(-1);
+                                                        $('#requestcompanylist').trigger("chosen:updated");
+                                                    }
+
+                                                    $("#requestsendbtn").prop("disabled", false);
+
+
+                                                },
+                                                error: function (xhr, textStatus, error) {
+                                                    if (typeof console == "object") {
+                                                        $("#requestsendbtn").prop("disabled", false);
+
+                                                        console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                                                    }
+                                                }
+                                            });
+
+
+
+                                        }
+
+                                    }
+                                }
+
+
+                                $(window).keydown(function (event) {
+                                    if (event.keyCode == 13) {
+                                        //event.preventDefault();
+
+                                        //return false;
+                                    }
+                                });
+                                $(function () {
+
+                                    $("#serviceamount").keydown(function (event) {
+                                        if (event.keyCode == 13) {
+                                            $("#serviceaddbtn").trigger("click");
+                                        }
+                                    });
+
+                                    $("#drugamount").keydown(function (event) {
+                                        if (event.keyCode == 13) {
+                                            $("#drugaddbtn").trigger("click");
+                                        }
+                                    });
+                                    //
+                                    $("#treatmentcode").on("focusout", function () {
+
+                                        if ($("#treatmentcode").val().length > 7) {
+                                            $.getJSON("../Claims/VerifyAuthorizationCode?code=" + $("#treatmentcode").val(), function (data) {
+                                                //$("#enrolleeloadingdisplay").removeClass("hidden");
+
+                                                if (data == null) {
+
+                                                    $('#treatmentcode').notify("Invalid", "error");
+                                                    $('#treatmentcode').focus();
+                                                }
+                                                if (data.Id > 0) {
+
+
+                                                    //$('#policynumber').val(data.EnrolleePolicy);
+
+                                                    $('#treatmentcode').notify("Valid", "success");
+                                                    //checkpolicy2(data.EnrolleePolicy);
+                                                } else {
+
+                                                    $('#treatmentcode').notify("Invalid", "error");
+                                                    $('#treatmentcode').focus();
+                                                }
+
+                                            })
+                                                .done(function () {
+                                                    //console.log( "second success" );
+                                                })
+                                .fail(function () {
+                                    //console.log( "error" );
+                                })
+                                .always(function () {
+                                    //console.log( "complete" );
+                                    $("#enrolleeloadingdisplay").addClass("hidden");
+                                });
+                                        }
+
+                                    });
+
+
+
+                                    var options6 = {
+                                        url: function (phrase) {
+                                            return "../Enrollee/GetEnrolleePolicyNumberName?phrase=" + phrase;
+                                        },
+
+
+
+                                        getValue: "Policynumber",
+
+                                        template: {
+                                            type: "description",
+                                            fields: {
+                                                description: "Name"
+                                            }
+                                        },
+                                        list: {
+                                            match: {
+                                                enabled: true
+                                            },
+                                            onSelectItemEvent: function () {
+
+
+                                                var value = $("#policynumber").getSelectedItemData().Policynumber;
+                                                $("#policynumber").val(value).trigger("change");
+                                                //checkpolicy(value);
+                                                //$("#servicerate").val(price);
+
+                                            }
+                                        },
+
+                                        theme: "square"
+                                    };
+
+                                    var options7 = {
+                                        url: function (phrase) {
+                                            return "../Enrollee/GetEnrolleePolicyNumberName?phrase=" + phrase;
+                                        },
+
+
+
+                                        getValue: "Policynumber",
+
+                                        template: {
+                                            type: "description",
+                                            fields: {
+                                                description: "Name"
+                                            }
+                                        },
+                                        list: {
+                                            match: {
+                                                enabled: true
+                                            },
+                                            onSelectItemEvent: function () {
+
+
+                                                var value = $("#requestpolicynum").getSelectedItemData().Policynumber;
+                                                $("#requestpolicynum").val(value).trigger("change");
+                                                //checkpolicy(value);
+                                                //$("#servicerate").val(price);
+
+                                            }
+                                        },
+
+                                        theme: "square"
+                                    };
+                                    $("#policynumber").easyAutocomplete(options6);
+
+                                    $("#requestpolicynum").easyAutocomplete(options7);
+
+                                    window.VettingProtocolLocal.getItem("lastupdate", function (err, value) {
+                                        // if err is non-null, we got an error. otherwise, value is the value
+
+                                        if (value === null) {
+
+                                            //clear the database
+                                            window.VettingProtocolLocal.clear().then(function () {
+                                                // Run this code once the database has been entirely deleted.
+                                                console.log('vetting protocol Database is now empty.');
+                                            }).catch(function (err) {
+                                                // This code runs if there were any errors
+                                                console.log(err);
+                                            });
+
+
+                                            //does not exist
+                                            $.getJSON("../Claims/GetAllVettingProtocol", function (data) {
+                                                //console.log(data );
+                                                $('#diagnosisList').html('');
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+                                                    $('#diagnosisList').append($('<option>', {
+                                                        value: value.Id,
+                                                        text: value.Diagnosis
+                                                    }));
+                                                });
+
+                                                var datee = new Date();
+
+                                                window.VettingProtocolLocal.setItem("lastupdate", datee).then(function () {
+                                                    return localforage.getItem('key');
+                                                }).then(function (value) {
+
+                                                }).catch(function (err) {
+                                                    // we got an error
+                                                });
+
+                                                window.VettingProtocolLocal.setItem("data", data).then(function () {
+                                                    return localforage.getItem('key');
+                                                }).then(function (value) {
+                                                    $("#diagnosisList").chosen({
+                                                        no_results_text: "Oops, nothing found!",
+                                                        width: '100%',
+                                                        max_shown_results: 12,
+
+                                                    });
+                                                }).catch(function (err) {
+                                                    // we got an error
+                                                });
+
+
+
+
+                                            })
+                                .done(function () {
+                                    //console.log( "second success" );
+                                })
+                                .fail(function () {
+                                    //console.log( "error" );
+                                })
+                                .always(function () {
+                                    //console.log( "complete" );
+                                });
+
+                                        }
+                                        else {
+                                            //Clear the Tariff table
+
+                                            $('#diagnosisList').html('');
+
+                                            window.VettingProtocolLocal.getItem("data", function (err, data) {
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+                                                    $('#diagnosisList').append($('<option>', {
+                                                        value: value.Id,
+                                                        text: value.Diagnosis
+                                                    }));
+                                                });
+                                            }).then(function (value) {
+                                                $("#diagnosisList").chosen({
+                                                    no_results_text: "Oops, nothing found!",
+                                                    width: '100%',
+                                                    max_shown_results: 12,
+
+                                                });
+
+
+
+
+
+                                            }).catch(function (err) {
+                                                // we got an error
+                                            });
+
+
+
+
+                                        }
+                                    });
+
+
+                                    //Drugshii
+                                    $('#diagnosisList').on('change', function (evt, params) {
+
+                                        //$('#diagnosis').val($('#diagnosisList option:selected').text());
+
+                                    });
+
+
+
+
+
+                                    window.drugtariffLocal.getItem($("#providerID").val(), function (err, value) {
+                                        // if err is non-null, we got an error. otherwise, value is the value
+
+                                        if (true) {
+                                            //Clear the Tariff database
+                                            window.drugtariffLocal.clear().then(function () {
+                                                // Run this code once the database has been entirely deleted.
+                                                console.log('Tariff Database is now empty.');
+                                            }).catch(function (err) {
+                                                // This code runs if there were any errors
+                                                console.log(err);
+                                            });
+
+                                            //does not exist
+                                            $.getJSON("../Tariff/GetProviderDrugTariffJson?providerid=" + $("#providerID").val(), function (data) {
+                                                //console.log(data );
+                                                $('#drugItemDescriptionList').html('');
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+
+                                                    if (parseInt(value.Id) > -1) {
+                                                        $('#drugItemDescriptionList').append($('<option>', {
+                                                            value: value.Id,
+                                                            text: value.Name + " - ₦" + parseFloat(value.Price).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+                                                        }));
+                                                    }
+
+                                                });
+                                                window.drugtariffLocal.setItem($("#providerID").val(), data).then(function () {
+                                                    return localforage.getItem('key');
+                                                }).then(function (value) {
+                                                    $("#drugItemDescriptionList").chosen({
+                                                        no_results_text: "drug not found but you can hit 'Enter' to add drug.",
+                                                        width: '100%',
+                                                        max_shown_results: 12,
+                                                        max_selected_options: 1,
+                                                    });
+
+
+                                                    $(".chosen-container").bind('keyup', function (e) {
+                                                        cleartheview();
+                                                    });
+                                                    //alert('saved');
+                                                }).catch(function (err) {
+                                                    // we got an error
+                                                });
+
+                                            })
+                                .done(function () {
+                                    //console.log( "second success" );
+                                })
+                                .fail(function () {
+                                    //console.log( "error" );
+                                })
+                                .always(function () {
+                                    //console.log( "complete" );
+                                });
+
+                                        }
+                                        else {
+
+                                            $('#drugItemDescriptionList').html('');
+
+                                            window.drugtariffLocal.getItem($("#providerID").val(), function (err, data) {
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+                                                    $('#drugItemDescriptionList').append($('<option>', {
+                                                        value: value.Id,
+                                                        text: value.Name
+                                                    }));
+                                                });
+                                            }).then(function (value) {
+                                                $("#drugItemDescriptionList").chosen({
+                                                    no_results_text: "drug not found but you can hit 'Enter' to add drug.",
+                                                    width: '100%',
+                                                    max_shown_results: 12,
+                                                    max_selected_options: 1,
+                                                });
+
+
+                                                $(".chosen-container").bind('keyup', function (e) {
+                                                    cleartheview();
+                                                });
+
+
+                                            }).catch(function (err) {
+                                                // we got an error
+                                            });
+
+
+
+
+                                        }
+                                    });
+
+
+                                    window.servicetariffLocal.getItem($("#providerID").val(), function (err, value) {
+                                        // if err is non-null, we got an error. otherwise, value is the value
+
+                                        if (true) {
+
+                                            //clear the database
+                                            window.servicetariffLocal.clear().then(function () {
+                                                // Run this code once the database has been entirely deleted.
+                                                console.log('Tariff Database is now empty.');
+                                            }).catch(function (err) {
+                                                // This code runs if there were any errors
+                                                console.log(err);
+                                            });
+
+
+                                            //does not exist
+                                            $.getJSON("../Tariff/GetProviderServiceTariffJson?providerid=" + $("#providerID").val(), function (data) {
+                                                //console.log(data );
+                                                $('#serviceItemDescriptionList').html('');
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+                                                    if (parseInt(value.Id) > -1) {
+                                                        $('#serviceItemDescriptionList').append($('<option>', {
+
+                                                            value: value.Id,
+
+                                                            text: value.Name + " - ₦" + parseFloat(value.Price).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+
+
+                                                        }));
+                                                    }
+                                                });
+
+
+                                                window.servicetariffLocal.setItem($("#providerID").val(), data).then(function () {
+                                                    return localforage.getItem('key');
+                                                }).then(function (value) {
+                                                    $("#serviceItemDescriptionList").chosen({
+                                                        no_results_text: "Service not found but you can hit 'Enter' to add service.",
+                                                        width: '100%',
+                                                        max_shown_results: 12,
+                                                        max_selected_options: 1,
+                                                    });
+                                                }).catch(function (err) {
+                                                    // we got an error
+                                                });
+
+                                            })
+                                .done(function () {
+                                    //console.log( "second success" );
+                                })
+                                .fail(function () {
+                                    //console.log( "error" );
+                                })
+                                .always(function () {
+                                    //console.log( "complete" );
+                                });
+
+                                        }
+                                        else {
+                                            //Clear the Tariff table
+
+                                            $('#serviceItemDescriptionList').html('');
+
+                                            window.servicetariffLocal.getItem($("#providerID").val(), function (err, data) {
+                                                $.each(data, function (index, value) {
+                                                    // alert( index + ": " + value.Name );
+                                                    $('#serviceItemDescriptionList').append($('<option>', {
+                                                        value: value.Id,
+                                                        text: value.Name
+                                                    }));
+                                                });
+                                            }).then(function (value) {
+                                                $("#serviceItemDescriptionList").chosen({
+                                                    no_results_text: "Service not found but you can hit 'Enter' to add service.",
+                                                    width: '100%',
+                                                    max_shown_results: 12,
+                                                    max_selected_options: 1,
+                                                });
+
+
+
+
+
+                                            }).catch(function (err) {
+                                                // we got an error
+                                            });
+
+
+
+
+                                        }
+                                    });
+
+
+                                    $('#requestcompanylist').html('');
+                                    $('#companylist').html('');
+                                    $('#companylist').append($('<option>', {
+                                        value: -1,
+                                        text: 'Select Company'
+                                    }));
+                                    $('#requestcompanylist').append($('<option>', {
+                                        value: -1,
+                                        text: 'Select Company'
+                                    }));
+                                    window.companyLocal.iterate(function (value, key, iterationNumber) {
+                                        //console.log(value);
+
+                                        $('#companylist').append($('<option>', {
+                                            value: key,
+                                            text: value
+                                        }));
+                                        $('#requestcompanylist').append($('<option>', {
+                                            value: key,
+                                            text: value
+                                        }));
+                                    }).then(function (value) {
+                                        //.chosen-select
+                                        $("#companylist").chosen({
+                                            no_results_text: "Oops, nothing found!",
+                                            width: '100%'
+                                        });
+                                        $("#requestcompanylist").chosen({
+                                            no_results_text: "Oops, nothing found!",
+                                            width: '100%'
+                                        });
+                                        $("#companylist").val(-1);
+                                        $("#companylist").trigger('chosen:updated');
+
+                                        $("#requestcompanylist").val(-1);
+                                        $("#requestcompanylist").trigger('chosen:updated');
+                                    }).catch(function (err) {
+                                        // we got an error
+                                    });
+
+
+
+                                    $('#hiddenID').val(guidProvider(0));
+                                    //Datemask2 DD/MM/YYYY
+                                    //$("#datemask2").inputmask("DD/MM/YYYY", {"placeholder": "DD/MM/YYYY"});
+
+
+                                    //trigger remote drug search
+                                    $('#drugItemDescriptionList').on('chosen:no_results', function (evt, params) {
+
+                                        //find the text online
+                                        //FindOnline(params.chosen.get_search_text());
+                                        //$("#drugrate").notify("Hello Box");
+                                        //$("#drugamount").notify("Hello Box");
+                                    });
+
+
+                                    //$('#drugItemDescriptionList').on('change', function (evt, params) {
+
+                                    //        cleartheview();
+                                    //});
+                                    $('#drugItemDescriptionList').on('chosen:updated', function (evt, params) {
+                                        $('#drugrate').attr('readonly', false);
+
+                                    });
+
+                                    $('#serviceItemDescriptionList').on('chosen:updated', function (evt, params) {
+                                        $('#servicerate').attr('readonly', false);
+
+                                    });
+                                    $('#drugItemDescriptionList').on('change', function (evt, params) {
+                                       
+                                        $('#drugbill_hiddenID').val(params.selected);
+                                    
+                                        
+                                        //if (> 0) {
+                                        //    $('#drugrate').attr('readonly', true);
+                                        //} else {
+                                        //    $('#drugrate').attr('readonly', false);
+                                        //}
+                                       
+                                        $("#drugrate").val('');
+                                        window.drugtariffLocal.getItem($("#providerID").val(), function (err, value) {
+                                            var result = $.grep(value, function (e) { return e.Id == params.selected; });
+                                            //console.log(result);
+
+                                            if (result.length > 0) {
+                                                //alert(parseFloat(result[0].Price));
+                                                if (parseFloat(result[0].Price) > 0) {
+                                                    $('#drugrate').attr('readonly', true);
+                                                } else {
+                                                    $('#drugrate').attr('readonly', false);
+                                                }
+                                            } else {
+                                                $('#drugrate').attr('readonly', false);
+                                            }
+                                           
+
+
+                                            if (result.length == 1) {
+
+
+                                                $("#drugrate").val(parseFloat(result[0].Price).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                            }
+
+                                        });
+
+
+                                    });
+
+                                    $('#serviceItemDescriptionList').on('change', function (evt, params) {
+
+                                        $('#servicebill_hiddenID').val(params.selected);
+                                        $("#servicerate").val('');
+                                        window.servicetariffLocal.getItem($("#providerID").val(), function (err, value) {
+                                            var result = $.grep(value, function (e) { return e.Id == params.selected; });
+                                            //console.log(result);
+                                            if (result.length > 0) {
+                                                //alert(parseFloat(result[0].Price));
+                                                if (parseFloat(result[0].Price) > 0) {
+                                                    $('#servicerate').attr('readonly', true);
+                                                } else {
+                                                    $('#servicerate').attr('readonly', false);
+                                                }
+                                            } else {
+                                                $('#servicerate').attr('readonly', false);
+                                            }
+                                            if (result.length == 1) {
+
+
+                                                $("#servicerate").val(parseFloat(result[0].Price).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                            }
+
+                                        });
+
+                                    });
+                                    $("#clearbtn").on("click", function () {
+
+                                        $(".billrowclass").remove();
+
+
+                                        $('#ClaimsForm')[0].reset();
+                                        $('.chosen-select').val('-1');
+                                        $('.chosen-select').trigger('chosen:updated');
+
+                                        $('#hiddenID').val(guidProvider(0));
+                                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                                    });
+                                    $('#savebtn').on("click",
+                                        function () {
+                                            //alert('about to submit');
+
+                                            var utc = moment().format('DD/MMM/YYYY h:mm:ss a');
+                                            $('#datecreated').val(utc);
+                                            var claimscount = parseFloat($('#totalclaimcount').val());
+                                            var claimsamounttotal = parseFloat($('#totalclaimamounttotal').val());
+
+                                            var totalservicecharge = 0;
+                                            var totaldrugcharge = 0;
+
+                                            //alert($('#dateofservice').is(':empty'));
+                                            if ($('#dateofservice').val().length === 0) {
+                                                toastr["error"]("Date of service cannot be  empty.");
+                                                $("#dateofservice").notify("Kindly enter a service Date.");
+                                                return false;
+                                            }
+
+                                            $('.drugamount').each(function () {
+
+                                                //console.log($(this).val());
+                                                totaldrugcharge += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+
+                                                //alert(sum);
+                                            });
+
+                                            $('.serviceamount').each(function () {
+
+                                                //console.log($(this).val());
+                                                totalservicecharge += parseFloat($(this).val());  // Or this.innerHTML, this.innerText
+
+                                                //alert(sum);
+                                            });
+
+                                            console.log(totalservicecharge);
+                                            console.log(totaldrugcharge);
+                                            console.log(claimsamounttotal);
+
+                                            $('#totalserviceamount').val(totalservicecharge);
+                                            $('#totaldrugamount').val(totaldrugcharge);
+
+                                            //alert($('#totalserviceamount').val());
+
+
+                                            if ((totaldrugcharge + totalservicecharge) < 1) {
+                                                //low amount halla
+                                                toastr["error"]("The claim amount cannot be  N0.00.", "Total Amount is too Low");
+                                                return false;
+                                            }
+                                            if ($('#diagnosis').val() == '') {
+                                                toastr["error"]("Diagnosis can't be empty");
+                                                $("#diagnosis").notify("Kindly enter diagnosis.");
+                                                $("#diagnosis").focus();
+                                                return false;
+                                            }
+                                            if ($('#policynumber').val() == '' && $('#enrolleename').val() == '') {
+                                                toastr["error"]("Policy Number and Enrollee Name can't be empty");
+                                                $("#enrolleename").notify("Kindly enter the enrollee name.");
+                                                $("#enrolleename").focus();
+                                                return false;
+                                            }
+
+                                            if ($('#companylist').val() == '-1') {
+                                                toastr["error"]("You must select a company.");
+                                                $("#companylist_chosen").notify("Kindly select a company.");
+                                                $("#companylist_chosen").focus();
+                                                return false;
+                                            }
+
+                                            if ($('#treatmentTag').val() == "-1") {
+                                                $("#treatmentTag").notify("Kindly select a tag,this is used for analysis.");
+                                                toastr["error"]("You haven't selected any treatment tag.");
+                                                $("#treatmentTag").focus();
+                                                return false;
+                                            }
+
+                                            var newtotalamount = (totalservicecharge + totaldrugcharge + claimsamounttotal);
+
+
+
+                                            $('#claimscountspan').text((claimscount + 1).toString() + '  Claims Forms.');
+                                            $('#claimsamountspan').text('₦ ' + (newtotalamount).toFixed(2).toString());
+                                            $('#claimsamountspan').formatCurrency();
+
+                                            $('#totalclaimamounttotal').val(newtotalamount.toFixed(2).toString());
+                                            $('#totalclaimcount').val(claimscount + 1);
+                                            var keyholder = 0;
+                                            //save the form for later submition
+
+                                            //update companyid
+
+                                            $("#CompanyID").val($('#companylist').val());
+                                            $("#companyname").val($("#companylist option:selected").text());
+                                            var formstorre = $('#ClaimsForm').serializeArray(); //$('#ClaimsForm').serialize();
+                                            window.providerportalclaim.length().then(function (value) {
+                                                keyholder = value + 1;
+                                                //alert(keyholder);
+                                            });
+
+
+                                            //localforage.getItem('0001').then(function (value) {
+                                            //    console.log(value);
+                                            //});
+
+                                            //
+                                            $('#drugbilllist > tbody  > tr').each(function () {
+
+                                                if ($(this).hasClass('hidden')) {
+
+                                                } else {
+                                                    $(this).remove();
+                                                }
+                                            });
+                                            $('#servicebilllist > tbody  > tr').each(function () {
+
+                                                if ($(this).hasClass('hidden')) {
+
+                                                } else {
+                                                    $(this).remove();
+                                                }
+                                            });
+
+                                            window.claimtopush.setItem($('#hiddenID').val(), "").then(function () {
+                                                //return window.claimtopush.getItem($('#hiddenID').val());
+
+                                            }).then(function (value) {
+                                                // we got our value
+                                                //alert($('#hiddenID').val());
+                                            }).catch(function (err) {
+                                                // we got an error
+                                            });
+
+                                            window.providerportalclaim.setItem($('#hiddenID').val(), formstorre).then(function () {
+                                                return window.providerportalclaim.getItem($('#hiddenID').val());
+                                            }).then(function (value) {
+                                                console.log('shiitt logged');
+                                                $('#ClaimsForm')[0].reset();
+                                                $('.chosen-select').val('-1');
+                                                $('.chosen-select').trigger('chosen:updated');
+                                                toastr["success"]("Saved Successfully.", "Captured");
+
+                                                //save in the push to server shitt
+                                                pushtoserver();
+
+
+                                                $('#hiddenID').val(guidProvider(0));
+                                                $("html, body").animate({ scrollTop: 0 }, "slow");
+
+                                            }).catch(function (err) {
+                                                // we got an error
+                                                console.log(err);
+                                            });
+
+                                        });
+
+                                    var keyholder = 0;
+                                    $('#ClaimsForm').on('submit', function (e) {
+                                        e.preventDefault();
+
+                                    });
+
+                                    $.datepicker.regional['en'];
+                                    //Date picker
+                                    $.datepicker.regional['en'];
+                                    //Date picker
+
+
+                                    $("#dateofdischarge").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+                                    $("#doctorssigndate").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                                    $("#specialistsigndate").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                                    $("#dateofservice").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                                    $("#EnrolleesignedDate").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                                    $("#dateofadmission").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                                    $("#dateofdischarge").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+
+                                    //$('#doctorssigndate').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+
+                                    //});
+                                    //$('#specialistsigndate').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+                                    //});
+                                    //$('#dateofservice').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+                                    //});
+                                    //$('#EnrolleesignedDate').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+                                    //});
+                                    //$('#dateofadmission').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+                                    //});
+                                    //$('#dateofdischarge').datepicker({
+                                    //    format: 'dd/mm/yyyy',
+                                    //    autoclose: true
+                                    //});
+
+
+
+
+                                    //$('#serviceItemDescription').editableSelect();
+                                    //ResetSelecteable();
+
+
+
+
+                                    $("#serviceItemDescription").keyup(function () {
+                                        //Clear the selected id
+                                        //alert('hello');
+                                        $('#servicerate').val('');
+                                    });
+                                    $("#drugItemDescription").keyup(function () {
+                                        //Clear the selected id
+                                        //alert('hello');
+                                        $('#drugrate').val('');
+                                    });
+
+                                    //$('#drugItemDescription').editableSelect();
+
+
+
+                                });
+                                $("#policynumber").focusout(function () {
+
+                                    checkpolicy2($("#policynumber").val());
+                                    console.log('focusout');
+
+                                });
+
+
+
+                                $("body").delegate("#requestpolicynum", "focusout", function () {
+
+                                    checkpolicyRequest($("#requestpolicynum").val());
+                                    console.log('focusout');
+                                });
+
+                                $("body").delegate("#requestsendbtn", "click", function () {
+                                    //alert('here');
+                                    $.ajax({
+                                        "type": "GET",
+                                        "url": '../Claims/Requestforauthcode?providerid=' + $('#providerID').val() + '&policynumber=' + $("#requestpolicynum").val() + '&fullname=' + $("#requestfullname").val() + '&companyname=' + $("#requestcompanylist option:selected").text() + '&diagnosis=' + $("#requestdiagnosis").val() + '&reason=' + $("#reasonforcode").val(),
+                                        "data": '',
+                                        beforeSend: function (xhr) {
+
+                                            // $("#enrolleeloadingdisplay").removeClass("hidden");
+
+                                            $("#submitBtnshii").prop("disabled", true);
+                                        },
+                                        "success": function (msg) {
+
+                                            if (msg == 1) {
+                                                //alert(msg);
+
+                                                $("#authRequestform").modal('hide');
+
+                                                swal(
+   'Submitted!',
+   'Kindly check the portal or your email for response.!',
+   'success'
+ )
+
+                                                $("#requestpolicynum").val('');
+                                                $("#requestfullname").val('');
+                                                $("#requestdiagnosis").val('');
+                                                $("#reasonforcode").val('');
+
+                                                $("#requestcompanylist").val(-1);
+                                                $('#requestcompanylist').trigger("chosen:updated");
+                                            } else {
+                                                toastr["error"](msg.errorMsg, "Kindly check your input properly.");
+
+                                            }
+
+                                            //$("#enrolleeloadingdisplay").addClass("hidden");
+
+                                            $("#submitBtnshii").prop("disabled", false);
+                                        },
+                                        error: function (xhr, textStatus, error) {
+                                            if (typeof console == "object") {
+                                                $("#submitBtnshii").prop("disabled", false);
+                                                console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                                            }
+                                        }
+                                    });
+
+                                });
+
+                                $('#serviceItemDescriptionList').on('change', function (evt, params) {
+                                    //update the service id
+                                    $('#serviceItemDescriptionList').val(params.selected);
+                                    //alert(params.selected);
+                                });
+                                function checkpolicy2(value) {
+
+                                    if (true) {
+
+                                        if (value.length > 15) {
+
+
+
+                                            $.ajax({
+                                                "type": "GET",
+                                                "url": '../Enrollee/GetEnrolleeDetailsClaim/?policyNumber=' + value,
+                                                "data": '',
+                                                beforeSend: function (xhr) {
+
+                                                    $("#enrolleeloadingdisplay").removeClass("hidden");
+
+
+                                                },
+                                                "success": function (msg) {
+
+                                                    if (msg.respCode == 0) {
+                                                        //alert(msg);
+                                                        $("#enrolleename").val(msg.EnrolleeName);
+                                                        $("#companylist").val(msg.CompanyId);
+                                                        $('#companylist').trigger("chosen:updated");
+
+
+                                                        $("#enrolleesex").val(msg.EnrolleeGender);
+                                                        $("#enrolleeID").val(msg.Id);
+                                                        $("#CompanyID").val(msg.CompanyId);
+
+
+                                                    } else {
+                                                        toastr["error"](msg.errorMsg, "Input Error");
+                                                        $("#enrolleename").val('');
+                                                        $("#companyname").val('');
+                                                        $("#enrolleesex").val('');
+                                                        $("#enrolleeID").val('');
+                                                        $("#CompanyID").val('');
+                                                        $("#companylist").val(-1);
+                                                        $('#companylist').trigger("chosen:updated");
+                                                    }
+
+                                                    $("#enrolleeloadingdisplay").addClass("hidden");
+
+
+                                                },
+                                                error: function (xhr, textStatus, error) {
+                                                    if (typeof console == "object") {
+                                                        $("#enrolleeloadingdisplay").addClass("hidden");
+
+                                                        console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                                                    }
+                                                }
+                                            });
+
+
+
+                                        }
+
+                                    }
+                                }
+
+
+                                function FindOnline(txt) {
+
+                                    if (txt.length > 3) {
+                                        $('#drug_informationbox').html('<small>searching online...</small>');
+                                        $.getJSON("https://api.fda.gov/drug/label.json?api_key=zpLEAJxpOjzfXowdmtaNvPPT82n8gtQgygGDenAN&search=" + txt + "&limit=1", function (data) {
+                                            //console.log(data.results[0].spl_product_data_elements);
+
+                                            var resultt = data.results[0].openfda.generic_name[0];
+                                            $('#drug_informationbox').html('<small>Am guessing the generic names for <b>' + txt + '</b> are ' + resultt + ' </small>');
+
+                                            //$.each(data.results[0].spl_product_data_elements, function (index, value) {
+                                            //    console.log(index + ": " + value);
+                                            //});
+                                            //.spl_product_data_elements
+                                        })
+                                  .done(function () {
+
+                                  })
+                                  .fail(function () {
+                                      cleartheview();
+                                  })
+                                  .always(function () {
+
+                                  });
+                                    }
+
+                                }
+
+
+
+
+
+                                function cleartheview() {
+                                    $('#drug_informationbox').html('...');
+                                }
+
+
+
+                            </script>
+
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_3">
+                            <button type="button" class="btn bg-olive btn-flat margin pull-right " data-toggle="modal" data-target="#submitbillsmodal">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                Submit Bills
+                            </button>
+
+                            <div class="row">
+
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <h6>Total Amount Captured : <b><span id="totalamountcaptured">₦ 0.00</span></b></h6>
+                                    <br />
+
+
+                                </div>
+
+
+                            </div>
+                            <table class="mdl-data-table mdl-data-table--selectable" id="claimtable">
+
+                                <thead>
+                                    <tr>
+
+
+                                        <th class="mdl-data-table__cell--non-numeric">Id</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Claims Form No</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Enrollee Name</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Policy Number</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Company</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Date OF Service</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Diagnosis</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Duration of Treatment</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric">Service Charge</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Drug Charge</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Total Charge</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Date Added</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric"></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="tab_allsubmitted">
+
+                            <table id="incomingclaimlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="mdl-data-table__cell--non-numeric">Id</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric">Provider</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Provideraddress</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric">Claims Period</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Claim Batch</th>
+
+                                        <th>Claims Count</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric">Total Captured</th>
+
+                                        <th class="mdl-data-table__cell--non-numeric">Delivery Date</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Delivered Remotely</th>
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="tab_AUTHRequest">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#authRequestform">
+                                    Request for authorization code
+                                </button>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+
+                                <div class="col-lg-6">
+
+                                        <input type="text" class="form-control input-lg" id="auth_searchstr" />
+                                      
+                                </div>
+                               <div class="col-lg-3">
+                                   <button type="button" class="btn btn-success btn-lg" id="searchbtn">Search</button>
+                               </div>
+                            </div>
+
+                            <br />
+                            <table id="authorizationlist" class="mdl-data-table mdl-data-table--selectable" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Authorization Code</th>
+                                        <th>Provider</th>
+                                        <th>Policy Number</th>
+                                        <th>Enrollee Name</th>
+                                        <th>Company</th>
+                                        <th>Enrollee Plan</th>
+                                        <th>Enrollee Age</th>
+                                        <th>Diagnosis</th>
+                                        <th>Authorization For</th>
+                                        <th>Admission Date</th>
+
+                                        <th>Days Authorized</th>
+
+                                        <th>Date Created</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane" id="tab_helpme">
+
+                            <br />
+
+
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <form method="post" action="../providerportal/updateprofile">
+                                        <div class="box-info">
+                                            <div class="box-header">
+                                                <span class="box-title">Provider Profile</span>
+                                            </div>
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <label>UPN</label>
+
+                                                    <input type="text" class="form-control input-lg" readonly="readonly" value="@ViewBag.provideriddd" id="upnshii" name="upnshii" />
+
+
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Provider Name</label>
+
+                                                    <input type="text" class="form-control input-lg" readonly="readonly" value="@ViewBag.providernameeee" />
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Notification Email</label>
+                                                    @{var provv = (MrCMS.Web.Apps.Core.Entities.Provider)Session["providerportalactive007"];
+
+                                                        var email1 = provv.providerlogin.email;
+                                                        var email2 = provv.providerlogin.Altemail;
+                                                        var email3 = provv.providerlogin.Altemail2;
+                                                        var email4 = provv.providerlogin.Altemail3;
+                                                    }
+                                                    <input type="email" class="form-control input-lg" id="provideremail1" name="provideremail1" value="@email1 " />
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Notification Email(ALT)</label>
+
+                                                    <input type="email" class="form-control input-lg" id="provideremail2" name="provideremail2" value="@email2" />
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Notification Email(ALT)</label>
+
+                                                    <input type="email" class="form-control input-lg" id="provideremail3" name="provideremail3" value="@email3" />
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Notification Email(ALT)</label>
+
+                                                    <input type="email" class="form-control input-lg" id="provideremail4" name="provideremail4" value="@email4" />
+
+                                                </div>
+                                            </div>
+                                            <div class="box-footer">
+                                                <button type="submit" class="btn btn-sm btn-success pull-right">Update Profile</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <form method="post" action="../providerportal/changepassword">
+                                        <div class="box-info">
+                                            <div class="box-header">
+                                                <span class="box-title">Change Password</span>
+                                            </div>
+                                            <div class="box-body">
+
+
+
+                                                <div class="form-group">
+                                                    <label>Current Password</label>
+                                                    <input type="hidden" class="form-control input-lg" readonly="readonly" value="@ViewBag.provideriddd" id="upnshii2" name="upnshii2" />
+
+                                                    <input type="password" class="form-control input-lg" id="currentpassword" name="currentpassword" />
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>New Password</label>
+
+                                                    <input type="password" class="form-control input-lg" id="newpassword" name="newpassword" />
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Confirm New Password</label>
+
+                                                    <input type="password" class="form-control input-lg" id="cnewpassword" name="cnewpassword" />
+
+                                                </div>
+                                            </div>
+                                            <div class="box-footer">
+                                                <button type="submit" class="btn btn-sm btn-info pull-right">Change Password</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane" id="hmoinfo">
+
+
+                            <p><b>Phone numbers</b></p>
+                          
+                            <p><b>01-2906240,01-2900047,09090404387,09090404389</b></p>
+
+                            <p><b>Email</b></p>
+
+                            <p><b>callcentre@novohealthafrica.org</b></p>
+
+                           
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+                <!-- /.tab-pane -->
+
+
+       
+                </div>
+            <!-- /.tab-content -->
+        </div>
+
+        <div class="overlay hidden" id="ajaxloader"><i class="fa fa-refresh fa-spin"></i></div>
+
+    </div>
+</div>
+<!-- nav-tabs-custom -->
+
+
+@{
+    if ((bool)Session["browserchangedshii"])
+    {
+        <text>
+            <script>
+
+
+                if (window.localStorage) {
+                    // do stuff with localStorage
+                    // no need to use window anymore
+                } else {
+                    swal(
+                    'Browser Issues!',
+                    'You are using a browser that does not support local storage.This app requires local stroage to function efficiently.',
+                    'error'
+                    );
+                    
+                }
+
+                $(document).ready(function () {
+
+
+                    //swal(
+                    //'Your web brower have changed!',
+                    //'You are currently using a different browser from the previous one used,kindly note that bills captured previously on that browser cannot be accessed from this browser, however you can access your previous bills by using the previous browser.',
+                    //'error'
+                    //)
+                });
+            </script>
+        </text>
+
+    }
+
+}
+
+<link href="@Url.Content("~/Apps/Core/Content/Styles/buttons.dataTables.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script>
+
+
+
+
+    var distinctmonths = [];
+    var distinctmonthsFigures = [];
+    $(document).ready(function () {
+
+        searchbtn
+        $("#searchbtn").click(function () {
+
+
+            $('#authorizationlist').DataTable().ajax.reload();
+        });
+
+        window.claimstablemain = $('#claimtable').DataTable({
+            fixedHeader: true,
+            'columnDefs': [{
+                'targets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': true,
+                'orderable': true,
+
+
+            }],
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false
+        });
+       //notification from the hub to provider
+        var nhub = $.connection.clientNotificationHub;
+
+        nhub.client.sendAuthCodeToProvider = function (providerid,authcode,enrolleename,authorizedfor) {
+
+
+            if (providerid == $("#providerID").val()) {
+                swal(
+                            'Authorization Code!',
+                            'The folowing authorization code ' + authcode + ' has been given to authorize (' + authorizedfor + ' )  for ' + enrolleename + ' . Thank You',
+                            'success'
+                            );
+
+
+
+                //click tab
+                $('#authrequestbtn').trigger("click");
+            }
+            
+        };
+
+        nhub.client.pushupdatedbillToProvider = function (providerid, data) {
+
+
+            if (providerid == $("#providerID").val()) {
+
+                window.providerportalclaim.setItem(data.key, data.data).then(function () {
+                    //return window.providerportalclaim.getItem($('#hiddenID').val());
+
+                    //alert("value.key");
+
+                }).then(function (data3444) {
+
+                    LoadBillList();
+                }).catch(function (err) {
+                    // we got an error
+                    console.log(err);
+                });
+
+
+             
+
+                //console.log(data);
+                //alert("received");
+
+            }
+
+        };
+
+
+        nhub.client.deletebillProvider = function (providerid, key) {
+
+
+            if (providerid == $("#providerID").val()) {
+
+                window.providerportalclaim.removeItem(key).then(function () {
+                    // Run this code once the key has been removed.
+                    console.log('Key is cleared! by check for delete at start up');
+
+                    LoadBillList();
+
+                }).catch(function (err) {
+                    // This code runs if there were any errors
+
+
+                });
+
+            }
+
+        };
+
+        $("#serviceduration").keyup(function () {
+            //alert("");
+            calculateServiceTotalLine();
+        });
+        $("#servicerate").keyup(function () {
+            calculateServiceTotalLine();
+        });
+        $("#drugunit").keyup(function () {
+            //alert("");
+            calculateDrugTotalLine();
+        });
+        $("#drugrate").keyup(function () {
+            calculateDrugTotalLine();
+        });
+
+
+
+        //PushAllforfirsttime();
+        //RunCheckPortal();
+        //LoadClaimsBK(false);
+        //checkkeysfordeleted();
+
+        //portal
+
+        pushtoserver();
+       ClearLocalDatabase();
+       
+
+        //check to see if theres any update
+        RunCheckPortal();
+
+        $("#submitBtnshii").prop("disabled", true);
+        var Tableuuuu = $('#authorizationlist').dataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 {
+                     extend: 'pdfHtml5',
+                     exportOptions: {
+                         columns: [1, 2, 3, 4, 5, 6]
+                     }
+                 },
+
+{
+    extend: 'copyHtml5',
+    exportOptions: {
+        columns: [0, ':visible']
+    }
+},
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+
+           , 'csv', 'print'
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': 0,
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            fixedHeader: true,
+            "scrollY": '50vh',
+            "scrollX": true,
+            "sAjaxSource": '../ClaimsPage/GetAuthorizationCodes',
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                   {
+                       "mDataProp": "authorizationCode", "mRender": function (data, type, row) {
+
+                           var resp = '<span class="badge bg-black">' + row.authorizationCode + '</span></a>';
+                           return resp;
+
+
+                       },
+                   },
+                { "mDataProp": "provider" },
+                {
+                    "mDataProp": "policynumber", "mRender": function (data, type, row) {
+
+                        var resp = '<span class="badge bg-green">' + row.policynumber + '</span></a>';
+                        return resp;
+
+
+                    },
+                },
+
+                    { "mDataProp": "enrolleename" },
+                 { "mDataProp": "companyname" },
+                   { "mDataProp": "plan" },
+                       { "mDataProp": "age" },
+                         { "mDataProp": "diagnosis" },
+                         { "mDataProp": "whatwasauthorized" },
+
+
+
+
+                                     { "mDataProp": "AdmissionDate" },
+                                         { "mDataProp": "DaysApproved" },
+
+
+
+
+
+                { "mDataProp": "createdDate" }
+
+
+
+
+
+
+            ],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "policynumber_s", "value": '' }, { "name": "provider_searchint", "value": $("#providerID").val() }, { "name": "company_searchint", "value": '' }, { "name": "auth_searchstr", "value": $("#auth_searchstr").val() });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    beforeSend: function (xhr) {
+
+
+                    },
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+                        $("#enrolleeloadingdisplay").addClass("hidden");
+                        (function blink() {
+                            $('.blink_me').fadeOut(500).fadeIn(500, blink);
+                        })();
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            $("#enrolleeloadingdisplay").addClass("hidden");
+                            $("#TableLoadError").removeClass("hidden");
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            }
+
+
+        });
+        $("#evscode").change(function () {
+
+            if ($("#evscode").val().length > 7) {
+                $.getJSON("../enrollee/GetEVSCodeDetails?evcode=" + $("#evscode").val(), function (data) {
+                    $("#enrolleeloadingdisplay").removeClass("hidden");
+
+
+                    if (data.Id != "-1") {
+
+
+                        $('#policynumber').val(data.EnrolleePolicy);
+
+                        $('#evscode').notify("Valid", "success");
+                        checkpolicy2(data.EnrolleePolicy);
+                    } else {
+                        $('#evscode').notify("Invalid", "error");
+                        $('#evscode').focus();
+                    }
+
+                })
+                    .done(function () {
+                        //console.log( "second success" );
+                    })
+    .fail(function () {
+        //console.log( "error" );
+    })
+    .always(function () {
+        //console.log( "complete" );
+        $("#enrolleeloadingdisplay").addClass("hidden");
+    });
+            }
+
+        });
+        $("#evscode").change(function () {
+
+            if ($("#evscode").val().length > 7) {
+                $.getJSON("../enrollee/GetEVSCodeDetails?evcode=" + $("#evscode").val(), function (data) {
+                    $("#enrolleeloadingdisplay").removeClass("hidden");
+
+
+                    if (data.Id != "-1") {
+
+
+                        $('#policynumber').val(data.EnrolleePolicy);
+
+                        $('#evscode').notify("Valid", "success");
+                        checkpolicy2(data.EnrolleePolicy);
+                    } else {
+                        $('#evscode').notify("Invalid", "error");
+                        $('#evscode').focus();
+                    }
+
+                })
+                    .done(function () {
+                        //console.log( "second success" );
+                    })
+    .fail(function () {
+        //console.log( "error" );
+    })
+    .always(function () {
+        //console.log( "complete" );
+        $("#enrolleeloadingdisplay").addClass("hidden");
+    });
+            }
+
+        });
+        $("#encounterPeriod").change(function () {
+            //alert($('#encounterPeriod').val());
+
+            if ($('#encounterPeriod').val() == "") {
+                $('#subbill_claimtotal').val("₦ 0.00");
+                $('#subbill_claimcount').val("0");
+                $("#submitBtnshii").prop("disabled", true);
+
+            } else {
+                //good
+                var monthdetailss = GetItemfromArraylist(distinctmonthsFigures, $('#encounterPeriod').val());
+                $('#subbill_claimtotal').val('₦ ' + parseFloat(monthdetailss.total).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                $('#subbill_claimcount').val(monthdetailss.count);
+                $("#submitBtnshii").prop("disabled", false);
+
+            }
+        });
+        $('#submitbillsmodal').on('shown.bs.modal', function () {
+            $("#modal_msg").text("");
+            $('#encounterPeriod').html('');
+            $('#encounterPeriod').append($("<option />").val("").text("Select Encounter Period"));
+            $('#subbill_claimtotal').val("₦ 0.00");
+            $('#subbill_claimcount').val("0");
+            $.each(distinctmonthsFigures, function (key, value) {
+                var dateyear = moment("01:" + value.Id, "DD:MM:YYYY").format('MMMM,YYYY');
+                $('#encounterPeriod').append($("<option />").val(value.Id).text(dateyear));
+            });
+        });
+        $("#submitBtnshii").click(function () {
+            $("#submitBtnshii").prop("disabled", true);
+            var monthdetailss = GetItemfromArraylist(distinctmonthsFigures, $('#encounterPeriod').val());
+
+            PostToServer($('#encounterPeriod').val(), monthdetailss.count);
+        });
+        //all submitted claims
+        $('#incomingclaimlist').dataTable({
+
+            "sAjaxSource": '../Claims/GetAllClaimBatchJson',
+
+            "scrollY": '50vh',
+            "scrollX": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            'columnDefs': [{
+                'targets': [0, 1, 2, 3, 4, 5, 8],
+                'className': 'mdl-data-table__cell--non-numeric',
+                'searchable': false,
+                'orderable': false,
+
+
+            }],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                aoData.push({ "name": "Provider_list", "value": $('#providerID').val() }, { "name": "Month_list", "value": "" }, { "name": "year", "value": "" }, { "name": "Batch", "value": "" }, { "name": "Zone", "value": "" });
+                $.ajax({
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": function (msg) {
+
+                        fnCallback(msg);
+
+
+                    },
+                    error: function (xhr, textStatus, error) {
+                        if (typeof console == "object") {
+                            console.log(xhr.status + "," + xhr.responseText + "," + textStatus + "," + error);
+                        }
+                    }
+                });
+            },
+            "bPaginate": true,
+            "bLengthChange": true,
+            "iDisplayLength": 50,
+
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                 { "mDataProp": "Id", "bVisible": true, sClass: "row_id" },
+
+             {
+                 "mRender": function (data, type, row) {
+                     return '<span  title="' + row.PRoviderAddress + '" >' + row.Provider + '</span>';
+                 }
+             },
+             { "mDataProp": "PRoviderAddress", "bVisible": false },
+
+
+
+                     { "mDataProp": "month_string", "bVisible": true },
+                 { "mDataProp": "Batch" },
+
+
+
+
+                      { "mDataProp": "claimscount" },
+
+                 { "mDataProp": "totalAmount" },
+
+                  { "mDataProp": "deliverydate" },
+                  { "mDataProp": "isSubmittedRemotely" }
+
+
+
+
+
+
+            ]
+
+
+
+
+        });
+
+    
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+            //clear the error
+            clearErrorMessage();
+            var tittle = $(e.target).attr("data-title");
+            $("#pageTitle").text(tittle);
+            console.log(e.target);
+            if (tittle == "View Bills") {
+                LoadBillList();
+            }
+            if (tittle == "Submitted Bills") {
+                //LoadBillList(table);
+                $('#incomingclaimlist').DataTable().ajax.reload();
+            }
+
+            if (tittle == "Request Authorization Code") {
+                $('#authorizationlist').DataTable().ajax.reload();
+            }
+        });
+
+        //
+        console.log("ready!");
+
+        $("#EVSbtn").click(function () {
+            if ($('#enrolleeIdorEVS').val() == '') {
+                $('#enrolleeIdorEVS').notify("Kindly enter a policy number or EVS Code");
+                return false;
+
+            }
+
+            //make the request
+            DoEvsAuth($('#enrolleeIdorEVS').val(), this);
+
+        });
+
+    });
+
+
+    function pushtoserver() {
+
+        //push edit items to the server for update.
+        window.claimtopush.iterate(function (value, key, iterationNumber) {
+
+            //alert(key);
+            window.providerportalclaim.getItem(key, function (err, data) {
+                var myJsonString = JSON.stringify(data);
+
+             
+                $.ajax({
+                    type: "POST",
+                    url: "../providerportal/Storeforbk",
+                    data: myJsonString,
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (msg) {
+                        //alert(msg);
+                        //alert(msg.d);
+
+                        window.claimtopush.removeItem(msg).then(function () {
+
+
+                        });
+
+                    }
+                });
+
+            }).catch(function(err) {
+               
+                //doesn't exist so delete
+                window.claimtopush.removeItem(key).then(function () {
+
+
+                });
+
+            });
+
+
+
+           
+        }).then(function () {
+
+            //toastr["success"]("success", "Completed pushing pending items to server for backup.");
+            console.log('Iteration has completed');
+        }).catch(function (err) {
+            // This code runs if there were any errors
+            console.log(err);
+        });
+    }
+    function RunCheckPortal() {
+        //check to push pending items to the server.
+
+        pushtoserver();
+        setTimeout(function () { RunCheckPortal(); }, 120000);
+    }
+
+    function checkkeysfordeleted() {
+        var jqxhr01039 = $.getJSON("../claim/getalldeletedclaim?providerid=" + $('#providerID').val() , function (data) {
+            $.each(data, function (key, val) {
+                if (val != '' && val.length > 3) {
+                    window.providerportalclaim.removeItem(val).then(function () {
+                        // Run this code once the key has been removed.
+                        console.log('Key is cleared! by check for delete at start up');
+
+                        //LoadBillList();
+
+                    }).catch(function (err) {
+                        // This code runs if there were any errors
+
+
+                    });
+                }
+
+            });
+        
+        });
+    }
+    function LoadBillList() {
+
+        //alert('ffff');
+       // table = window.claimtableshiii;
+        var countall = 0;
+        var totalbulkamount = 0;
+
+        distinctmonths = [];
+        distinctmonthsFigures = [];
+        //$('#claimtable').dataTable().clear();
+        $('#claimtable').dataTable().fnClearTable();
+
+        window.providerportalclaim.iterate(function (value, key, iterationNumber) {
+
+            
+            //var key = key;
+            var Id = "";
+            var formid = "";
+            var eename = "";
+            var enrolleepolicyno = "";
+            var encompany = "";
+            var dos = "";
+            var diagnosis = "";
+            var dot = "";
+            var billtype = "";
+            var servicecharge = 0;
+            var drugcharge = 0;
+            var totalcharge = 0;
+            var dateadded = "";
+            var totalservicecount = 0;
+            var totaldrugcount = 0;
+            var providerid = "";
+
+            // alert($.parseJSON(value));
+
+
+
+            $.each(value, function (key, value) {
+                //alert(value.name);
+                //alert(value.Id);
+                switch (value.name) {
+
+                    case "FormNo":
+                        formid = value.value;
+                        break;
+
+                    case "providerID":
+                        providerid = value.value;
+                        break;
+
+                    case "enrolleename":
+                        eename = value.value;
+                        break;
+                    case "policynumber":
+                        enrolleepolicyno = value.value;
+                        break;
+                    case "companyname":
+
+                        encompany = value.value;
+                        break;
+                    case "dateofservice":
+                        dos = value.value;
+
+
+                        break;
+
+                    case "diagnosis":
+                        diagnosis = value.value;
+                        break;
+                    case "durationoftreatment":
+                        dot = value.value;
+                        break;
+                    case "billtype":
+                        billtype = value.value;
+                        break;
+                    case "dateofservice":
+                        dos = value.value;
+                        break;
+
+                    case "totalserviceamount":
+
+                        //servicecharge = parseFloat(value.value.replace(/\./g, '').replace(',', '.'));
+                        break;
+                    case "totaldrugamount":
+                        //drugcharge = parseFloat(value.value.replace(/\./g, '').replace(',', '.'));
+
+                        break;
+
+
+                    case "servicebillCount":
+                        totalservicecount = parseInt(value.value);
+                    case "drugbillCount":
+                        totaldrugcount = parseInt(value.value);
+
+
+                    case "datecreated":
+                        dateadded = value.value;
+
+                        break;
+
+
+                }
+                //alert( key + ": " + value.value );
+            });
+
+            //calculate total charge
+           
+            if (providerid === $("#providerID").val()) {
+               
+                for (i = 1; i <= totalservicecount ; i++) {
+
+                    var itemamount = $.grep(value, function (e) {
+
+                        if (e.name == "servicebill" + i.toString() + "amount") {
+
+                            return e;
+                        }
+
+                    });
+
+                    if (itemamount.length > 0) {
+
+                        var mynewmal = numeral(itemamount[0].value);
+                        servicecharge = parseFloat(numeral(servicecharge).value() + mynewmal.value());
+                    }
+
+
+                }
+
+
+                for (i = 1; i <= totaldrugcount ; i++) {
+
+                    var itemamount = $.grep(value, function (e) {
+
+                        if (e.name == "drugbill" + i.toString() + "amount") {
+
+                            return e;
+                        }
+
+                    });
+
+                    if (itemamount.length > 0) {
+                        drugcharge = parseFloat(numeral(drugcharge).value() + numeral(itemamount[0].value).value());
+
+
+                    }
+
+
+                }
+
+                totalcharge = parseFloat(parseFloat(servicecharge) + parseFloat(drugcharge));
+
+
+
+                totalbulkamount = totalbulkamount + totalcharge;
+                totalcharge = '₦ ' + totalcharge.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                //alert(value);
+                var drugchtxt = '₦ ' + parseFloat(drugcharge).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                var servchtxt = '₦ ' + parseFloat(servicecharge).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                //add to the datatable
+
+                var delkeyy = "<button  class='btn btn-danger btn-sm'   onclick='deleteClaim(&quot;" + key + "&quot;);' >Delete </button>"
+
+                var keyy = "<a  data-toggle='tab'  href='#tab_3' data-title='Edit Bill' onclick='LoadClaimDetails(&quot;" + key + "&quot;);' >" + key + " </a>"
+                window.claimstablemain.row.add([keyy, formid, eename, enrolleepolicyno, encompany, dos,
+                    diagnosis, dot, servchtxt, drugchtxt, totalcharge, dateadded, delkeyy])
+                //alert("here loading");
+
+                var mmyyyy = moment(dos, "DD/MM/YYYY").format('MM:YYYY');
+
+                //alert(mmyyyy);
+                var aexist = distinctmonths.indexOf(mmyyyy);
+                //alert(aexist);
+                if (aexist < 0) {
+                    //add to the list
+                    distinctmonths.push(mmyyyy);
+                    var figures = { Id: mmyyyy, count: 1, total: parseFloat(servicecharge + drugcharge) };
+                    distinctmonthsFigures.push(figures);
+                } else {
+                    $.each(distinctmonthsFigures, function (key, value) {
+                        if (value.Id == mmyyyy) {
+
+                            // alert("here");
+                            var oldcount = parseInt(value.count) + 1;
+
+                            var newvalue = value;
+                            newvalue.count = oldcount;
+                            newvalue.total = parseFloat(newvalue.total) + parseFloat(servicecharge + drugcharge)
+                            distinctmonthsFigures[value] = newvalue;
+
+
+
+                        }
+
+                    });
+                }
+
+
+
+                countall++;
+            }
+
+
+
+        }).then(function () {
+            console.log('Iteration has completed');
+            window.claimstablemain.draw();
+            $("#totalamountcaptured").text('₦ ' + parseFloat(totalbulkamount).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+            $("#billcountbadge").text(countall);
+
+        }).catch(function (err) {
+            // This code runs if there were any errors
+            console.log(err);
+        });
+
+
+
+
+
+
+
+
+
+
+    }
+    function calculateServiceTotalLine() {
+
+        var rate = parseFloat(numeral($("#servicerate").val()).value());
+        var duration = parseFloat(numeral($("#serviceduration").val()).value());
+        var total = parseFloat(rate * duration);
+
+        if (isNaN(total)) {
+            $("#serviceamount").val("0");
+        } else {
+            $("#serviceamount").val(total);
+        }
+
+
+
+    }
+
+    function calculateDrugTotalLine() {
+
+        var rate = parseFloat(numeral($("#drugrate").val()).value());
+        var duration = parseFloat(numeral($("#drugunit").val()).value());
+        var total = parseFloat(rate * duration);
+
+        if (isNaN(total)) {
+            $("#drugamount").val("0");
+        } else {
+            $("#drugamount").val(total);
+        }
+
+
+
+    }
+    function PerformDeleteClaim(a) {
+        //deleting will be done from server first before the local
+
+        var jqxhr007 = $.getJSON("../Provider/DeleteBk?providerid=" + $('#providerID').val() + "&clientkey=" + a, function (data) {
+
+            if (data != "") {
+                window.providerportalclaim.removeItem(data).then(function () {
+                    // Run this code once the key has been removed.
+                    console.log('Key is cleared!');
+
+                    //LoadBillList();
+
+                }).catch(function (err) {
+                    // This code runs if there were any errors
+
+
+                });
+            }
+        })
+ .done(function () {
+     console.log("second success");
+ })
+ .fail(function () {
+
+     //setErrorMessage("There was a server error, it could be a network error.Kindly try again.");
+
+ })
+ .always(function () {
+
+ });
+    }
+    function deleteClaim(a) {
+
+
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this bill!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                //delete from server first.
+                PerformDeleteClaim(a);
+                swal("Poof! the bill has been deleted!", {
+                    icon: "success",
+                });
+
+                LoadBillList();
+
+            } else {
+                swal("Great,the bill is still on the system.!");
+            }
+        });
+
+    }
+    function DoEvsAuth(e, s) {
+
+        // clear and hide the result
+
+        $('#responseMSG').html('');
+        $('#photo_img').attr('src', 'data:image/png;base64,');
+        $('#EVSFullname').text('');
+        $('#EVSPolicyno').text('');
+        $('#EVSGender').text('');
+        $('#EVSCompany').text('');
+        $('#EVSCodetabb').text('');
+        $('#EVSHospital').text('');
+        $('#EVSplan').text('');
+        $('#enrolleeverificationResult').addClass('hidden');
+        $('#ajaxloader').removeClass('hidden');
+        $(s).attr('disabled', 'disabled');
+        // Assign handlers immediately after making the request,
+        // and remember the jqxhr object for this request
+        var jqxhr848474774744 = $.getJSON("../Enrollee/AuthenticateEnrolleePPortal?providerid=" + $('#providerID').val() + "&enrolleePolicynumber=" + e + "&evsvisittype=" + $("#evsvisittype").val(), function (data) {
+            $('#enrolleeverificationResult').addClass("hidden");
+            if (data.rcode === "00") {
+
+
+                $('#photo_img').attr('src', 'data:image/png;base64,' + data.Passport);
+                $('#EVSFullname').text(data.Fullname);
+                $('#EVSPolicyno').text(data.PolicyNumber);
+                $('#EVSGender').text(data.Gender);
+                $('#EVSCompany').text(data.Company);
+                $('#EVSCodetabb').text(data.Code);
+                $('#EVSHospital').text(data.Provider);
+                $('#EVSplan').text(data.plan);
+
+                //success
+                setSuccessMessage("The verification was successful. kindly attend to the enrollee, however ,be informed that you will need to request for authorization code for secondary care.");
+
+
+                //only show result if successful
+                $('#enrolleeverificationResult').removeClass('hidden');
+            } else {
+                //set the message gotten from the server.
+                setErrorMessage(data.rmsg);
+
+            }
+        })
+          .done(function () {
+              //console.log("second success");
+          })
+          .fail(function () {
+
+              setErrorMessage("There was a network error, Kindly check your network and try again.");
+
+          })
+          .always(function () {
+
+              $('#ajaxloader').addClass('hidden');
+              $(s).removeAttr("disabled");
+          });
+
+        // Perform other work here ...
+
+        // Set another completion function for the request above
+        jqxhr848474774744.complete(function () {
+            console.log("second complete");
+        });
+
+
+    }
+
+    function ClearLocalDatabase() {
+        window.providerportalclaim.clear().then(function () {
+            // Run this code once the database has been entirely deleted.
+            console.log('provider portal claim database is now empty.');
+            LoadClaimsBK();
+        }).catch(function (err) {
+            // This code runs if there were any errors
+            console.log(err);
+        });
+    }
+    function LoadClaimsBK(a) {
+        var datettt = "";
+        if (a === true) {
+            datettt = localStorage.getItem("pportallastcheck");
+        }
+
+        //var jqxhr222 = $.getJSON("../Provider/Getmybackupfromserver?providerid=" + $('#providerID').val() + "&lasttimedate=" + datettt, function (data) {
+           
+           
+
+        //})
+        // .done(function () {
+        //     console.log("second success");
+        // })
+        // .fail(function () {
+        //     toastr["error"]("Network Error", "Error loading data from server.");
+        //     //setErrorMessage("There was a server error, it could be a network error.Kindly try again.");
+        // })
+        // .always(function () {
+        // async: true,
+        // });
+        $.ajax({
+            "type": "Get",
+            "url": "../Provider/Getmybackupfromserver?providerid=" + $('#providerID').val() + "&lasttimedate=" + datettt,
+            "data": '',
+           // async: false,
+            beforeSend: function (xhr) {
+
+
+            },
+            "success": function (data) {
+                var countt = 0;
+                $.each(data, function (key, value) {
+
+                   
+                    window.providerportalclaim.setItem(value.key, value.data).then(function () {
+                        //return window.providerportalclaim.getItem($('#hiddenID').val());
+
+                        //alert("value.key");
+
+                    }).then(function (value) {
+
+                        countt = countt + 1;
+
+                        if( countt === data.length){
+                            //alert("done");
+                            LoadBillList();
+                        }
+
+                       
+                    }).catch(function (err) {
+                        // we got an error
+                        console.log(err);
+                    });
+                });
+            
+                localStorage.setItem("pportallastcheck", moment().format('MM/DD/YYYY h:mm:ss a'));
+
+                toastr["success"]("Data Loaded", "Data Loaded from server.");
+                       
+                       
+            },
+            error: function (xhr, textStatus, error) {
+
+            },
+            complete: function (xhr, status) {
+               //load the guy
+                //alert('here');
+               
+            }
+        });
+
+
+        //no more pooling
+        //setTimeout(function () { LoadClaimsBK(true); }, 120000);
+
+
+        
+    }
+    function LoadClaimDetails(key) {
+
+        //alert('here');
+
+        swal({
+            title: "You might be  capturing a bill,do you want to proceed with editing?",
+            text: "Are you  currently capturing a bill ? ,you need to save the bill first before editing else you will lose it.",
+            icon: "warning",
+            buttons: ["Cancel", "Ignore and edit!"],
+            dangerMode: true,
+        })
+.then((willDelete) => {
+    if (willDelete) {
+        //clear the form first
+        $('#ClaimsForm')[0].reset();
+        $('.chosen-select').val('-1');
+        $('.chosen-select').trigger('chosen:updated');
+        $(".billrowclass").remove();
+
+        //alert("cleared");
+
+        //this is where the shii happens
+        window.providerportalclaim.getItem(key, function (err, data) {
+            //console.log(data);
+
+            //unserialize the array
+            var myJsonString = JSON.stringify(data);
+
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "../providerportal/Storeforbk",
+            //    data: myJsonString,
+            //    contentType: "application/json",
+            //    dataType: "json",
+            //    success: function (msg) {
+            //        alert(msg.d);
+            //    }
+            //});
+
+
+
+            $.each(data, function (key, value) {
+                //$('input[name="' + value.name + '"]').val(value.value);
+
+                var thelem = document.getElementById(value.name);
+
+                if (thelem) {
+                    thelem.value = value.value;
+
+                    if (value.name == "CompanyID") {
+
+                        $("#companylist").val(value.value);
+                        $('#companylist').trigger("chosen:updated");
+
+                    }
+
+
+                    if (value.name == "drugbillCount") {
+
+                        //window.DglobalNewIndex = $('#drugbilllist tr').length;
+                        window.DglobalNewIndex = parseInt(value.value) + 1;
+                        $("#drugbillCount").val((parseInt(value.value) + 1).toString());
+                        $('#drugbillCount').val(window.DglobalNewIndex);
+                        for (i = 1; i <= parseInt(value.value) ; i++) {
+                            var itemdescription = $.grep(data, function (e) {
+
+
+                                if (e.name == "drugbill" + i.toString() + "ItemDescription") {
+                                    console.log(e);
+                                    return e;
+                                }
+                                //return e.name == "drugbill4ItemDescription";
+                            });
+
+
+                            var itemUnit = $.grep(data, function (e) {
+
+                                if (e.name == "drugbill" + i.toString() + "Unit") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemRate = $.grep(data, function (e) {
+
+                                if (e.name == "drugbill" + i.toString() + "Rate") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemamount = $.grep(data, function (e) {
+
+                                if (e.name == "drugbill" + i.toString() + "amount") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemitemID = $.grep(data, function (e) {
+
+                                if (e.name == "drugbill" + i.toString() + "itemID") {
+
+                                    return e;
+                                }
+
+                            });
+
+                            if (itemdescription.length > 0) {
+                                //alert(itemdescription[0].value);
+
+
+                            }
+                            if (itemUnit.length > 0) {
+                                //alert(itemUnit[0].value);
+                            }
+                            if (itemRate.length > 0) {
+                                //alert(itemRate[0].value);
+                            }
+                            if (itemamount.length > 0) {
+                                //alert(itemamount[0].value);
+                            }
+                            if (itemitemID.length > 0) {
+                                //alert(itemitemID[0].value);
+
+                                var shii = '<tr class="billrowclass" name="drugbillRow_' + i.toString() + '" id="drugbillRow_' + i.toString() + '"> <td> <input type="text" class="form-control" value="' + itemdescription[0].value + '" readonly="readonly" id="drugbill' + i.toString() + 'ItemDescription" name="drugbill' + i.toString() + 'ItemDescription" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control" value="' + itemUnit[0].value + '" readonly="readonly" id="drugbill' + i.toString() + 'Unit" name="drugbill' + i.toString() + 'Unit" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control" value="' + itemRate[0].value + '" name="drugbill' + i.toString() + 'Rate" id="drugbill' + i.toString() + 'Rate" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control drugamount" value="' + itemamount[0].value + '" readonly="readonly" id="drugbill' + i.toString() + 'amount" name="drugbill' + i.toString() + 'amount" style="font-size: 18px; font-weight: bold;" /> <input type="hidden" value="' + itemitemID[0].value + '" name="drugbill' + i.toString() + 'itemID" /><input type="hidden" value="" id="" name="" /> <input type="hidden" value="" name="" /></td> <td> <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button> <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button> </td></tr>';
+
+                                $('#drugbilllist tbody>tr:last').after(shii);
+                            }
+
+                        }
+                    }
+                    if (value.name == "servicebillCount") {
+
+                        $("#servicebillCount").val((parseInt(value.value) + 1));
+                        window.globalNewIndex = (parseInt(value.value) + 1);
+                        //$('#servicebillCount').val(window.globalNewIndex);
+
+
+                        //$("#servicebillCount").val((parseInt(value.value) + 1).toString());
+
+                        for (i = 1; i <= parseInt(value.value) ; i++) {
+                            var itemdescription = $.grep(data, function (e) {
+
+
+                                if (e.name == "servicebill" + i.toString() + "ItemDescription") {
+                                    console.log(e);
+                                    return e;
+                                }
+                                //return e.name == "servicebill4ItemDescription";
+                            });
+
+
+                            var itemUnit = $.grep(data, function (e) {
+
+                                if (e.name == "servicebill" + i.toString() + "Duration") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemRate = $.grep(data, function (e) {
+
+                                if (e.name == "servicebill" + i.toString() + "Rate") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemamount = $.grep(data, function (e) {
+
+                                if (e.name == "servicebill" + i.toString() + "amount") {
+
+                                    return e;
+                                }
+
+                            });
+                            var itemitemID = $.grep(data, function (e) {
+
+                                if (e.name == "servicebill" + i.toString() + "itemID") {
+
+                                    return e;
+                                }
+
+                            });
+
+                            if (itemdescription.length > 0) {
+                                //alert(itemdescription[0].value);
+
+
+                            }
+                            if (itemUnit.length > 0) {
+                                //alert(itemUnit[0].value);
+                            }
+                            if (itemRate.length > 0) {
+                                //alert(itemRate[0].value);
+                            }
+                            if (itemamount.length > 0) {
+                                //alert(itemamount[0].value);
+                            }
+                            if (itemitemID.length > 0) {
+                                //alert(itemitemID[0].value);
+                                //alert(itemitemID[0].value);
+                                var shii = '<tr class="billrowclass" name="servicebillRow_' + i.toString() + '" id="servicebillRow_' + i.toString() + '"> <td> <input type="text" class="form-control" value="' + itemdescription[0].value + '" readonly="readonly" id="servicebill' + i.toString() + 'ItemDescription" name="servicebill' + i.toString() + 'ItemDescription" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control" value="' + itemUnit[0].value + '" readonly="readonly" id="servicebill' + i.toString() + 'Duration" name="servicebill' + i.toString() + 'Duration" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control" value="' + itemRate[0].value + '" name="servicebill' + i.toString() + 'Rate" id="servicebill' + i.toString() + 'Rate" style="font-size: 18px; font-weight: bold;" /> </td> <td> <input type="text" class="form-control serviceamount" value="' + itemamount[0].value + '" readonly="readonly" id="servicebill' + i.toString() + 'amount" name="servicebill' + i.toString() + 'amount" style="font-size: 18px; font-weight: bold;" /> <input type="hidden" value="' + itemitemID[0].value + '" name="servicebill' + i.toString() + 'itemID" /><input type="hidden" value="" id="" name="" /> <input type="hidden" value="" name="" /></td> <td> <button type="button" class="btn bg-maroon btn-flat removebtn" onclick="removeRow(this)"><i class="fa fa-trash" aria-hidden="true"></i>Remove</button> <button type="button" class="btn bg-orange btn-flat editbtn" onclick="editRow2(this)"><i class="fa fa-edit" aria-hidden="true"></i>Edit</button> </td></tr>';
+
+                                $('#servicebilllist tbody>tr:last').after(shii);
+                            }
+
+                        }
+                    }
+                }
+
+            });
+
+
+
+        }).then(function (value) {
+
+
+        }).catch(function (err) {
+            // we got an error
+        });
+
+
+
+
+
+
+
+
+        swal("Bill loaded for editing.", {
+            icon: "success",
+        });
+
+        $('#capturebillbtn').trigger("click");
+    } else {
+
+    }
+});
+    }
+    function clearErrorMessage() {
+        $('#responseMSG').html('');
+    }
+
+    function setErrorMessage(msg) {
+        $('#responseMSG').html('');
+        $('#responseMSG').append(' <div class="alert alert-danger alert-dismissible"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> <h4><i class="icon fa fa-ban"></i> Alert!</h4>' + msg + '</div>')
+    }
+    function setSuccessMessage(msg) {
+        $('#responseMSG').html('');
+        $('#responseMSG').append(' <div class="alert alert-success alert-dismissible"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> <h4><i class="icon fa fa-ban"></i> Alert!</h4>' + msg + '</div>')
+    }
+
+    function GetItemfromArraylist(arry, mmyyyyval) {
+        var response = "";
+        $.each(arry, function (key, value) {
+
+
+            if (value.Id == mmyyyyval) {
+                //alert(value.total);
+                response = value;
+            }
+
+        });
+
+
+
+        return response;
+    }
+
+    function PostToServer(mmyyyyval,claimcount) {
+        //get the batchid first and use to send to server
+        var provideridd = $('#providerID').val();
+        var month = mmyyyyval.split(":")[0];
+        var year = mmyyyyval.split(":")[1];
+
+        var batchidd = -1;
+        $("#submitBtnshii").prop("disabled", true);
+        $("#modal_msg").text("Getting Batch Id from server...");
+        $.getJSON("../claims/providerGetClaimBatch?providerid=" + provideridd + "&month=" + month + "&year=" + year + "&claimcount=" + claimcount, function (data) {
+
+            $("#modal_msg").text("Got batch Id: " + data);
+
+            if (parseInt(data) > 0) {
+
+            }
+
+            //send to server
+            var sentcount = 0;
+            window.providerportalclaim.iterate(function (valuemain, key, iterationNumber) {
+
+                var date4 = "";
+                var billproviderid = "";
+                var editedvalue = valuemain;
+                $.each(valuemain, function (key, value) {
+                    //alert(value.name);
+                    //alert(value.Id);
+                    switch (value.name) {
+                        case "dateofservice":
+                            date4 = value.value;
+                            break;
+
+                        case "providerID":
+                            billproviderid = value.value;
+                            break;
+                    }
+                });
+
+                editedvalue.push({ name: "claimBatchID", value: data });
+
+
+                var mmyyyybill = moment(date4, "DD/MM/YYYY").format('MM:YYYY');
+               
+
+                if (mmyyyybill == mmyyyyval && billproviderid == provideridd) {
+                    //its the month
+                    
+                    $("#modal_msg").text("Sending item " + (parseInt(sentcount) + 1).toString() + " of " + claimcount + " Items");
+                    //alert("submitting");
+                    console.log(editedvalue);
+ //                   var jqxhr = $.post("../ClaimsPage/SubmitClaimsForm2", editedvalue, function (data2) {
+ //                       console.log('Sent to server successfully.');
+ //                       console.log(data2);
+ //                       sentcount++;
+ //                       //PerformDeleteClaim(data2);
+ //                       //window.providerportalclaim.removeItem(data2).then(function () {
+ //                       //    // Run this code once the key has been removed.
+ //                       //    console.log('Key is cleared!');
+ //                       //}).catch(function (err) {
+ //                       //    // This code runs if there were any errors
+ //                       //    console.log(err);
+ //                       //});
+
+ //                   })
+ //.done(function () {
+ //    //console.log("second success");
+ //    //$("#modal_msg").text("Sent!");
+ //})
+ //.fail(function () {
+
+ //})
+
+                    //$.ajax({
+                    //    type: 'POST',
+                    //    url: "../ClaimsPage/SubmitClaimsForm2",
+                    //    data: editedvalue,
+                    //    success: success,
+                    //    dataType: dataType,
+                    //    async: false
+                    //});
+
+                   
+                    $.ajax({
+                        "type": "Post",
+                        "url": '../ClaimsPage/SubmitClaimsForm2',
+                        "data": editedvalue,
+                        async: false,
+                        beforeSend: function (xhr) {
+
+                         
+                        },
+                        "success": function (msg) {
+
+                            console.log('Sent to server successfully.');
+                            console.log(msg);
+                            sentcount++;
+                            //alert(msg);
+                            //delete from the local stuff
+                            window.providerportalclaim.removeItem(msg).then(function () {
+                                                       // Run this code once the key has been removed.
+                                                       console.log('Key is removed after sending to server.');
+                                                   }).catch(function (err) {
+                                                       // This code runs if there were any errors
+                                                       console.log(err);
+                                                   });
+                        },
+                        error: function (xhr, textStatus, error) {
+                            
+                        }
+                    });
+                }
+
+            }).then(function () {
+                console.log('Posting to Server Completed for batch ID :' + data);
+
+                $("#modal_msg").text("Posting complete, getting narration from the server..." );
+
+
+                //console.log(data2);
+                var dateyear = moment("01:" + mmyyyyval, "DD:MM:YYYY").format('MMMM,YYYY');
+                var monthdetailss = GetItemfromArraylist(distinctmonthsFigures, mmyyyyval);
+                var thetotalamountshii = '₦ ' + parseFloat(monthdetailss.total).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                var thetotalcount = (monthdetailss.count);
+
+                $.ajax({
+                    "type": "Get",
+                    "url": '../claim/GetClaimbatchdetails?id=' + data,
+                    "data": '',
+                    async: false,
+                    beforeSend: function (xhr) {
+
+
+                    },
+                    "success": function (msg2) {
+
+                        $('#submitbillsmodal').modal('hide');
+                        swal(
+                     ' Claim for ' + dateyear + ' was submitted successfully.!',
+                     'Claim Batch Id is : ' + data + " ,the batch contains " + msg2.count + ' encounter(s) which sums up to ' + msg2.total + " . Thank you",
+                     'success'
+                     );
+                        pushtoserver();
+                        ClearLocalDatabase();
+                        //LoadBillList();
+
+                    },
+                    error: function (xhr, textStatus, error) {
+
+                    }
+                });
+
+
+
+
+             
+
+                //reload the list
+
+
+              
+               
+
+
+                $("#modal_msg").text("Posting Completed.Kindly print your acknowledment slip.");
+
+
+
+                $("#submitBtnshii").prop("disabled", false);
+
+
+
+
+            }).catch(function (err) {
+                // This code runs if there were any errors
+                console.log(err);
+                $("#submitBtnshii").prop("disabled", false);
+            });
+
+        });
+
+
+
+    }
+    function guidProvider(e) {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+
+
+
+        return 'NHA-' + $('#providerID').val() + moment().format('MMDDhmmss') + s4() + s4() + '-' + s4();
+
+        // return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        //s4() + '-' + s4() + s4() + s4();
+    }
+    function PushAllforfirsttime() {
+        $.getJSON("../Provider/checkiffirsttime?providerid=" + $('#providerID').val(), function (data) {
+            if (data == "1") {
+                //alert("d");
+
+                window.providerportalclaim.iterate(function (value, key, iterationNumber) {
+
+                    window.claimtopush.setItem(key, "").then(function () {
+                        //return window.claimtopush.getItem($('#hiddenID').val());
+
+                    }).then(function (value) {
+                        // we got our value
+                        //alert($('#hiddenID').val());
+                    }).catch(function (err) {
+                        // we got an error
+                    });
+
+                });
+
+            }
+
+
+        });
+
+
+
+    }
+
+</script>
+
+
+<div class="modal fade" id="submitbillsmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Bills</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+
+                    <div class="form-group">
+                        <label> Encounter Period</label>
+                        <select class="form-control" id="encounterPeriod">
+
+                            <option>December,2017</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label> No of Encounter</label>
+                        <input type="text" class="form-control input-lg" value="0" readonly="readonly" id="subbill_claimcount" />
+                    </div>
+                    <div class="form-group">
+                        <label> Total Amount</label>
+                        <input type="text" class="form-control input-lg" value="₦ 0.00" readonly="readonly" id="subbill_claimtotal" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitBtnshii">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                <span id="modal_msg" class="pull-left" style="color:black;font-size:medium"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="authRequestform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request for Authorization Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <br />
+                <div class="form-group">
+                    <label>
+                        Policy Number
+                    </label>
+                    <input type="text" id="requestpolicynum" class="form-control" />
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Fullname
+                    </label>
+                    <input type="text" id="requestfullname" class="form-control input-lg" />
+                </div>
+                <div class="form-group">
+                    <label>
+                        Company
+                    </label>
+                    <select id="requestcompanylist" name="requestcompanylist" class="form-control chosen-select"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Diagnosis
+                    </label>
+
+                    <input type="text" id="requestdiagnosis" class="form-control input-lg" />
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Reason for Code
+                    </label>
+                    <textarea id="reasonforcode" class="form-control" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+               
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="requestsendbtn">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

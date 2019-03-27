@@ -1,0 +1,72 @@
+﻿@model MrCMS.Web.Apps.Core.Entities.Claim
+
+@{
+    ViewBag.Title = "Delete Claim Entry";
+}
+
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Delete Claim</h4>
+ </div>
+<div class="modal-body">
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <h4><i class="icon fa fa-ban"></i>Alert!</h4>
+        Are you sure you want to delete the bill. ?
+    </div>
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+
+                <th>Field</th>
+                <th>Value</th>
+
+            </tr>
+            <tr>
+                <td>Id</td>
+                <td>@Html.DisplayFor(x => x.Id)</td>
+            </tr>
+            <tr>
+                <td>Claim Form No</td>
+                <td>@Html.DisplayFor(x=>x.ClaimsSerialNo)</td>
+            </tr>
+            <tr>
+                <td>Enrollee Name</td>
+                <td>@Html.DisplayFor(x=>x.enrolleeFullname)</td>
+            </tr>
+            <tr>
+                <td>Policy Number</td>
+                <td>@Html.DisplayFor(x => x.enrolleePolicyNumber)</td>
+            </tr>
+            <tr>
+                <td>Company</td>
+                <td>@Html.DisplayFor(x=>x.enrolleeCompanyName)</td>
+            </tr>
+
+
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal-footer">
+    @using (Html.BeginForm("DeleteClaim", "ClaimsPage",FormMethod.Post))
+    {
+                @Html.AntiForgeryToken()
+@Html.HiddenFor(x=>x.Id)
+                <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-success" type="submit" id="btnSave">Confirm </button>
+    }
+</div>
+
+
+
+<script>
+
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

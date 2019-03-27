@@ -1,0 +1,121 @@
+﻿@using MrCMS.Helpers
+@model MrCMS.Web.Apps.Core.Entities.EnrolleeVerificationCode
+@{
+    ViewBag.Title = "Update Verification Code";
+}
+ 
+ @helper DateShort(DateTime? input)
+
+{
+     var resp = "";
+
+if(input !=null)
+{
+   resp=Convert.ToDateTime(input).ToString("MM/dd/yyyy");  
+}
+else
+{
+   resp=DateTime.Now.ToString("MM/dd/yyyy");
+}
+     
+
+@resp;
+ }
+@using (Html.BeginForm("AttendToVerification","EnrolleePage",FormMethod.Post,new {enctype ="multipart/form-data",id="AttendVerification" }))
+    {
+      @Html.AntiForgeryToken()
+ <div class="modal-header">
+     <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+     <h4 class="modal-title">Update Verification Details</h4>
+ </div>
+<div class="modal-body">
+    <table class="table table-condensed ">
+        <tbody>
+            <tr>
+                @Html.HiddenFor(x=>x.Id)
+                                            
+            </tr>
+            <tr>
+                <td>Verification Code</td>
+                <td><b>@Html.DisplayFor(x=>x.VerificationCode)</b></td>
+            </tr>
+
+            <tr>
+                <td>Enrollee Full Name</td>
+                <td><b>@ViewBag.EnrolleeFullName</b></td>
+            </tr>
+
+            <tr>
+                <td>Policy Number</td>
+                <td><b>@ViewBag.policynumber</b></td>
+            </tr>
+            <tr>
+                <td>Provider Name</td>
+                <td><b>@ViewBag.ProviderName</b></td>
+            </tr>
+            <tr>
+                <td>Requrest Date</td>
+                <td><b>@Html.DisplayFor(x=>x.EncounterDate)</b></td>
+            </tr>
+            <tr>
+                <td>Authentication Date</td>
+                <td><b>@Html.DisplayFor(x=>x.DateAuthenticated)</b></td>
+            </tr>
+
+
+            <tr>
+                <td>Services Accessed</td>
+
+                <td>@Html.ListBox("ServiceAccessed2",ViewBag.servicesbag as MultiSelectList,
+                                  new { @class = "form-control chzn-select", data_placeholder = "Choose  Service"  })</td>
+            </tr>
+            <tr>
+                <td>Authorization Code Given</td>
+
+                <td>@Html.TextBoxFor(x=>x.AuthorizationCode, new {@class = "form-control",@type="text"})
+                </td>
+
+
+            </tr>
+            <tr class="form-group">
+                <td>Authorized By</td>
+
+                <td>@Html.DropDownListFor(x=>x.AuthorizedByUserId,new SelectList(ViewBag.usersList, "Id", "Name"),new { @class = "form-control"})
+        
+   
+                </td>
+
+
+            </tr>
+  <tr class="form-group">
+                <td>Authorization Date</td>
+
+                <td>  @Html.TextBox("datepicker",DateShort(Model.DateAuthorized), new { @class = "form-control",@placeholder="Authorization Date" })
+        
+   
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>Additional Note</td>
+                <td><b>@Html.TextAreaFor(x=>x.AgentNote,new {@class = "form-control",@type="text"})</b></td>
+            </tr>
+
+        
+
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+
+    <button data-dismiss="modal" class="btn btn-default pull-left modal-close-btn" type="button">Cancel</button>
+    <button class="btn btn-primary" type="submit" id="btnSave">Save </button>
+</div>
+
+}
+
+
+
+
+

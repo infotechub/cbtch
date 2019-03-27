@@ -1,0 +1,21 @@
+﻿@using System
+@using System.Linq
+@using MrCMS.Services
+@using MrCMS.Website
+@using MrCMS.Apps
+@model MrCMS.Web.Apps.NovoHub.Widgets.RightSideBarWidget
+@foreach(var item in Model.GetUsers)
+{
+   
+
+ <li>
+                <a href='javascript::;' id="@item.Guid.ToString()" class="me">
+                    <i class="menu-icon fa fa-user bg-green"></i>
+                    <div class="menu-info" >
+                        <h4 class="control-sidebar-subheading">  @item.Name.ToString().ToUpper()</h4>
+                        <p>Email : @item.Email</p>
+                       <p>Phone  : +2347065386050</p>
+                    </div>
+                </a>
+            </li>
+}

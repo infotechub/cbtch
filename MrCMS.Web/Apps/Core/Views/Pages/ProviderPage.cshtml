@@ -1,0 +1,245 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.ProviderPage
+@{
+    ViewBag.Title = "Create Provider";
+}
+ <div class="row">
+
+     <div class="col-md-10 ">
+         <div class="callout callout seegreen" style="margin-left: -5px">
+             <h4>Tip!</h4>
+             <p>Create new provider. fill the form below and click on save ,remember that detailed provider location details helps  improve the system.</p>
+         </div>
+
+         @using (Html.BeginForm("Add","ProviderPage",FormMethod.Post))
+    {
+      @Html.AntiForgeryToken()
+
+        <div class="box box " style="overflow:visible">
+            <div class="box-header">
+                <h3 class="box-title">Provider Basic Information</h3>
+            </div>
+            <div class="box-body" >
+
+                <div class="row">
+                    <div class="col-xs-3">
+                        <label for="providername">Provider Name</label>
+                        @Html.TextBox("providername",null, new { @class = "form-control",@placeholder="Provider name",@id="providername",@title="This is the name of the provider." })
+                
+                      
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providercode">Provider Code</label>
+
+                        @Html.TextBox("providercode",null, new { @class = "form-control",@placeholder="Provider code",@id="providercode",@title="This is the provider code,leave it blank if there's no code for this provider the system will generate a code." })
+                
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="providersubcode">Provider SubCode</label>
+
+                        @Html.TextBox("providersubcode",null, new { @class = "form-control",@placeholder="Provider Subcode",@id="providersubcode",@title="This is the provider sub code,leave it blank if there's no sub code for this provider , the system will generate a subcode." })
+                
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="provideremail">Provider Category</label>
+                        @Html.DropDownList("providercategory", new SelectList(ViewBag.Pcategory, "Id", "Name"), new { @class = "form-control", @id = "providercategory" })
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.box-body -->
+        </div>
+         <div class="box box seegreen" style="overflow:visible">
+             <div class="box-header" style="color: white">
+                 <h3 class="box-title">Provider Contact Information</h3>
+             </div>
+             <div class="box-body">
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <label for="provideremail">Provider Email</label>
+                         @Html.TextBox("provideremail",null, new { @class = "form-control",@placeholder="Provider email",@type="email",@id="provideremail",@title="This is the provider email address." })
+      
+                     </div>
+
+               
+                     <div class="col-xs-3">
+                         <label for="providerphone1">Provider Phone</label>
+
+                         @Html.TextBox("providerphone1",null, new { @class = "form-control",@placeholder="Provider Phone",@id="providerphone1",@title="This is the provider phone number." })
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerphone2">Provider Mobile</label>
+                         @Html.TextBox("providerphone2",null, new { @class = "form-control",@placeholder="Provider Mobile",@id="providerphone2",@title="This is the provider mobile number." })
+             
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerwebsite">Provider Website</label>
+
+                         @Html.TextBox("providerwebsite",null, new { @class = "form-control",@placeholder="Provider Website",@id="providerwebsite",@title="This is the provider website." })
+                     </div>
+                 </div>
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <label for="providerState">Provider State</label>
+                         @Html.DropDownList("providerState",new SelectList(Model.States, "Id", "Name"),new { @class = "form-control",@id="providerstate"})
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerlga">Provider LGA</label>
+                         @Html.DropDownList("providerlga",new SelectList(Model.Lgas, "Id", "Name"),new { @class = "form-control",@id="providerlga"})
+                     </div>
+                     <div class="col-xs-4">
+                         <label for="provideraddress">Provider Address</label>
+                         @Html.TextBox("provideraddress",null, new { @class = "form-control",@placeholder="Provider Address",@id="provideraddress",@title="This is the provider physical address." })
+                     </div>
+                     <div class="col-xs-2">
+                         <label for="provideraddress">Area</label>
+                         @Html.TextBox("providerArea", null, new { @class = "form-control", @placeholder = "Area of Address", @id = "providerArea" })
+                     </div>
+                 </div>
+
+                 <div class="row">
+                     <div class="col-xs-4">
+                         <label for="servicelist">Provider Services</label>
+ @Html.ListBox("servicelist",ViewBag.servicelist as MultiSelectList,  new { @class = "form-control chzn-select", data_placeholder = "Choose  Services..."})
+                     </div>
+                     <div class="col-xs-4">
+                         <label for="planlist">Provider Plans</label>
+   @Html.ListBox("planlist",ViewBag.planlist as MultiSelectList,
+                   new { @class = "form-control chzn-select", data_placeholder = "Choose  Plans..."  })
+                        
+                     </div>
+      <div class="col-xs-4">
+                         <label for="planlist">Provider Tariffs</label>
+   @Html.ListBox("tarifflist",ViewBag.tarifflist as MultiSelectList,
+                   new { @class = "form-control chzn-select", data_placeholder = "Choose  Tariff..."  })
+                        
+                     </div>
+                 </div>
+
+                 
+          
+             </div>
+
+             <!-- /.box-body -->
+
+         </div>
+         <div class="box box seegreen " style="overflow:visible">
+             <div class="box-header" style="color: white">
+                 <h3 class="box-title">Provider Bank Account Details</h3>
+             </div>
+             <div class="box-body">
+                
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <label for="providerbank">Provider Bank</label>
+                         @Html.DropDownList("providerbankname",new SelectList(ViewBag.banklist, "Id", "Name"),new { @class = "form-control",@id="providerbank"})
+                
+                      
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankaccname">Provider Bank Account Name</label>
+
+                         @Html.TextBox("providerbankaccname",null, new { @class = "form-control",@placeholder="Provider bank account Name",@id="providerbankaccname",@title="This is the provider bank account name." })
+                
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankaccnum">Provider Bank Account Number</label>
+
+                         @Html.TextBox("providerbankaccnum",null, new { @class = "form-control",@placeholder="Provider Bank Account Number",@id="providerbankaccnum",@title="This is the provider bank account number." })
+                
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankbranch">Provider Bank Branch</label>
+
+                         @Html.TextBox("providerbankbranch",null, new { @class = "form-control",@placeholder="Provider Bank Branch",@id="providerbankbranch",@title="This is the provider bank branch." })
+                
+                     </div>
+                 </div>
+
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <label for="providerbank">Provider Bank</label>
+                         @Html.DropDownList("providerbankname2", new SelectList(ViewBag.banklist, "Id", "Name"), new { @class = "form-control", @id = "providerbank2" })
+
+
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankaccname">Provider Bank Account Name</label>
+
+                         @Html.TextBox("providerbankaccname2", null, new { @class = "form-control", @placeholder = "Provider bank account Name", @id = "providerbankaccname2", @title = "This is the provider bank account name." })
+
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankaccnum">Provider Bank Account Number</label>
+
+                         @Html.TextBox("providerbankaccnum2", null, new { @class = "form-control", @placeholder = "Provider Bank Account Number", @id = "providerbankaccnum2", @title = "This is the provider bank account number." })
+
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="providerbankbranch">Provider Bank Branch</label>
+
+                         @Html.TextBox("providerbankbranch2", null, new { @class = "form-control", @placeholder = "Provider Bank Branch", @id = "providerbankbranch2", @title = "This is the provider bank branch." })
+
+                     </div>
+                 </div>
+                 <div class="row">
+
+                     <div class="col-xs-3">
+                         <label for="provideremail">Payment Email</label>
+                         @Html.TextBox("PaymentEmail1", null, new { @class = "form-control", @placeholder = "Provider email", @type = "email", @id = "provideremail", @title = "This is the payment email address." })
+
+                     </div>
+                     <div class="col-xs-3">
+                         <label for="provideremail">Payment Email 2</label>
+                         @Html.TextBox("PaymentEmail2", null, new { @class = "form-control", @placeholder = "Provider email", @type = "email", @id = "provideremail", @title = "This is the payment email address." })
+
+                     </div>
+
+                     
+                
+                 </div>
+                 <hr />
+                 <div class="row">
+
+                     <div class="col-lg-12">
+                         <label for="planlist">Consessions</label>
+                         @Html.ListBox("consession", ViewBag.companylist as MultiSelectList,
+                   new { @class = "form-control chzn-select", data_placeholder = "Consessions" })
+
+                     </div>
+                 </div>
+             </div>
+
+             <!-- /.box-body -->
+             <div class="box-footer">
+                 <button class="btn btn-primary pull-right" type="submit" style="margin-left:4px;">Submit</button>
+    <a href="@Url.Action("Add", "ProviderPage",  new { id = -1})" class="btn btn-flat btn-warning pull-right">Reset </a>
+               
+                
+             </div>
+         </div>
+         }
+     </div>
+ </div>
+
+
+<script>
+
+    $('#providerstate').on('change', function () {
+
+        $.getJSON("GetLga/" + $(this).val(), function (data) {
+
+            $("#providerlga").empty();
+
+            $.each(data, function () {
+                $("#providerlga").append($("<option />").val(this.Id).text(this.Name));
+            });
+
+        });
+    });
+</script>
+
+
+<script >    $(".chzn-select").chosen(); </script>

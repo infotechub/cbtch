@@ -1,0 +1,183 @@
+﻿@using MrCMS.Helpers
+@using MrCMS.Web.Apps.Core.Entities;
+@model MrCMS.Web.Apps.Core.Pages.SmsPage
+@{
+    ViewBag.Title = "Enrollee Verification";
+}
+ <div class="row">
+
+     <div class="col-md-12 ">
+         
+         <div class="callout callout seegreen " style="margin-left: -5px" >
+             <h4>Tip!</h4>
+             <p>View Sms messages and  status.</p>
+         </div>
+
+            
+
+       
+         <div class="box">
+             <div class="box-header">
+                 <h3 class="box-title">PENDING SMS</h3>
+<a href="@Url.Action("SmsConfig", "EnrolleePage",  new { id = -1})" class="btn btn-sm btn-success pull-right modal-link"><i class="fa fa-cog" style="color: white"> SMS SETTINGS </i> </a>
+             </div><!-- /.box-header -->
+             <div class="box-body">
+                 <table id="pendingsmslist" class="table table-bordered table-striped">
+                     <thead>
+                         <tr>
+                             <th>Id</th>
+                             <th>From </th>
+ <th>Destination</th>
+                             <th>Enrollee Policy No</th>
+                             <th>Enrollee Name</th>
+                             <th>Message</th>
+ <th>Message Type</th>
+                             <th>Status</th>
+  <th>Created Date</th>
+                             <th>Delivery Date</th>
+                             <th>Date Delivered</th>
+  <th>Server Response Code</th>
+                           
+
+                            
+                       
+                        
+
+                         </tr>
+                     </thead>
+                     <tbody>
+            
+      
+                     </tbody>
+                     <tfoot>
+                    
+                     </tfoot>
+                 </table>
+             </div><!-- /.box-body -->
+         </div><!-- /.box -->
+       
+         
+         <div class="box">
+             <div class="box-header">
+                 <h3 class="box-title">SMS LOG</h3>
+<a href="@Url.Action("QuickSms", "EnrolleePage",  new { id = -1})" class="btn btn-sm btn-success pull-right modal-link"><i class="fa fa-envelope-o" style="color: white"> QUICK SMS</i> </a>
+             </div><!-- /.box-header -->
+             <div class="box-body">
+                 <table id="smsloglist" class="table table-bordered table-striped">
+                     <thead>
+                         <tr>
+                             <th>Id</th>
+                             <th>From </th>
+ <th>Destination</th>
+                             <th>Enrollee Policy No</th>
+                             <th>Enrollee Name</th>
+                             <th>Message</th>
+ <th>Message Type</th>
+                             <th>Status</th>
+  <th>Created Date</th>
+                             <th>Delivery Date</th>
+                             <th>Date Delivered</th>
+  <th>Server Response Code</th>
+                           
+
+                            
+                       
+                        
+
+                         </tr>
+                     </thead>
+                     <tbody>
+            
+      
+                     </tbody>
+                     <tfoot>
+                    
+                     </tfoot>
+                 </table>
+             </div><!-- /.box-body -->
+         </div><!-- /.box -->
+         <!-- /.box -->
+     </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+
+        $('#smsloglist').dataTable({
+            "sAjaxSource": '../Enrollee/GetSmsJson/?id=0',
+            "bPaginate": true,
+            "bLengthChange":false,
+            "iDisplayLength": 50,
+            "order": [[ 0, "desc" ]],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "fromid" },
+                
+                  { "mDataProp": "destination" },
+                  { "mDataProp": "enrolleepolicy" },
+                  { "mDataProp": "enrolleename" },
+                  { "mDataProp": "message" },
+                  { "mDataProp": "messageType" },
+                  { "mDataProp": "status" },
+                   { "mDataProp": "created" },
+                   { "mDataProp": "deleiverydate" },
+                   { "mDataProp": "datedelivered" },
+                
+                { "mDataProp": "serverresponse" }   
+                
+
+
+
+
+
+            ]
+
+
+        });
+
+        $('#pendingsmslist').dataTable({
+            "sAjaxSource": '../Enrollee/GetSmsJson/?id=1',
+            "bPaginate": true,
+            "bLengthChange": false,
+            "iDisplayLength": 10,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                 { "mDataProp": "Id", "bVisible": false },
+                { "mDataProp": "fromid" },
+                 
+                  { "mDataProp": "destination" },
+                  { "mDataProp": "enrolleepolicy" },
+                  { "mDataProp": "enrolleename" },
+                  { "mDataProp": "message" },
+                  { "mDataProp": "messageType" },
+                  { "mDataProp": "status" },
+                   { "mDataProp": "created" },
+                   { "mDataProp": "deleiverydate" },
+                   { "mDataProp": "datedelivered" },
+
+                { "mDataProp": "serverresponse" },
+              
+                {
+                    "mRender": function (data, type, row) {
+                        return '<a href="/Company/ManageSubsidiary?id=' + row.Id + '" class="btn btn-info btn-flat btn-xs">Details</a>';
+                    }
+                }
+
+
+
+
+
+            ]
+
+
+        });
+
+    });
+    </script>
